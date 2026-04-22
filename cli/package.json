@@ -1,6 +1,6 @@
 {
   "name": "@tra-bilisim/tra-ui",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "TRA UI Base CLI - Plugin installer for tra-ui-base projects",
   "publishConfig": {
     "access": "public"
@@ -8,8 +8,7 @@
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "tra-ui": "./dist/index.js",
-    "tra-ui-cli": "./dist/index.js"
+    "tra-ui": "./dist/index.js"
   },
   "files": [
     "dist"
@@ -24,12 +23,12 @@
     "commander": "^14.0.0",
     "execa": "^9.6.0",
     "fs-extra": "^11.3.0",
-    "inquirer": "^13.0.1",
+    "inquirer": "^9.3.8",
     "ora": "^8.2.0"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
-    "@types/inquirer": "^9.0.7",
+    "@types/inquirer": "^9.0.9",
     "@types/node": "^24.0.0",
     "tsup": "^8.5.0",
     "typescript": "^5.8.0"

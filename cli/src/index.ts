@@ -17,7 +17,9 @@ import type { PackageManager } from './types.js';
 //   veya subdomain kullanıyorsa:
 //   https://<group>.gitlab.sirket.com.tr/tra-ui-base/r/{name}.json
 const TRA_REGISTRY_URL = 'https://tra-ui-base.vercel.app/r/{name}.json';
+const LOCAL_REGISTRY_URL = 'http://localhost:3030/r/{name}.json';
 const MSI_REGISTRY_URL = 'https://msi-ui-kit.vercel.app/r/{name}.json';
+const TEMPLATE_REPO = 'https://git.trabilisim.tech/developers/tra-ui-base';
 
 const program = new Command();
 
@@ -31,12 +33,21 @@ program
   .command('add [plugins...]')
   .description('Plugin ekler. Argümansız çalıştırılırsa interaktif seçim gösterir.')
   .option('--pm <manager>', 'Paket yöneticisi: npm | pnpm | yarn | bun', 'npm')
-  .action(async (pluginNames: string[], options: { pm: PackageManager }) => {
+  .option('--local', 'Lokal registry kullan (http://localhost:3030) — test amaçlı)', false)
+  .action(async (pluginNames: string[], options: { pm: PackageManager; local: boolean }) => {
     if (pluginNames.length === 0) {
-      await interactiveAdd(options.pm);
+      await interactiveAdd(options.pm, options.local);
     } else {
-      await installPlugins(pluginNames, options.pm);
+      await installPlugins(pluginNames, options.pm, options.local);
     }
+  });
+
+// ─── CREATE komutu ──────────────────────────────────────────────────────────
+program
+  .command('create <project-name>')
+  .description('Yeni bir TRA UI Base projesi oluşturur.')
+  .action(async (projectName: string) => {
+    await createProject(projectName);
   });
 
 // ─── LIST komutu ─────────────────────────────────────────────────────────────
@@ -52,7 +63,7 @@ program
   .action((pluginName: string) => showPluginInfo(pluginName));
 
 // ─── Interaktif seçim ────────────────────────────────────────────────────────
-async function interactiveAdd(pm: PackageManager): Promise<void> {
+async function interactiveAdd(pm: PackageManager, local = false): Promise<void> {
   console.log(`\n${chalk.bold.blue('TRA UI')} ${chalk.grey('— Plugin Yükleyici')}\n`);
 
   const { selected } = await inquirer.prompt<{ selected: string[] }>([
@@ -94,7 +105,7 @@ async function interactiveAdd(pm: PackageManager): Promise<void> {
     return;
   }
 
-  await installPlugins(selected, pm);
+  await installPlugins(selected, pm, local);
 }
 
 // ─── Plugin kurulum motoru ────────────────────────────────────────────────────
@@ -102,6 +113,7 @@ async function installPlugins(
   names: string[],
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _pm: PackageManager,
+  local = false,
 ): Promise<void> {
   const cwd = process.cwd();
 
@@ -119,7 +131,11 @@ async function installPlugins(
   );
 
   // 1. components.json var mı? @tra + @msi registry'leri ekli mi?
-  const registryOk = await ensureRegistries(cwd);
+  const traRegistryUrl = local ? LOCAL_REGISTRY_URL : TRA_REGISTRY_URL;
+  if (local) {
+    console.log(chalk.yellow('  ⚠ Lokal registry kullanılıyor: http://localhost:3030\n'));
+  }
+  const registryOk = await ensureRegistries(cwd, traRegistryUrl);
   if (!registryOk) return;
 
   // 2. shadcn add @tra/plugin-xxx ... — tek çağrıda hepsi
@@ -157,7 +173,7 @@ async function installPlugins(
 }
 
 // ─── Registry yönetimi ────────────────────────────────────────────────────────
-async function ensureRegistries(cwd: string): Promise<boolean> {
+async function ensureRegistries(cwd: string, traUrl = TRA_REGISTRY_URL): Promise<boolean> {
   const componentJsonPath = path.join(cwd, 'components.json');
 
   if (!(await fs.pathExists(componentJsonPath))) {
@@ -176,8 +192,8 @@ async function ensureRegistries(cwd: string): Promise<boolean> {
   if (!json.registries) json.registries = {};
 
   // @tra — plugin'lerin ana kaynağı
-  if (!json.registries['@tra']) {
-    json.registries['@tra'] = TRA_REGISTRY_URL;
+  if (!json.registries['@tra'] || json.registries['@tra'] !== traUrl) {
+    json.registries['@tra'] = traUrl;
     changed = true;
   }
 
@@ -196,6 +212,61 @@ async function ensureRegistries(cwd: string): Promise<boolean> {
   }
 
   return true;
+}
+
+// ─── Create ──────────────────────────────────────────────────────────────────
+async function createProject(projectName: string): Promise<void> {
+  const targetDir = path.resolve(process.cwd(), projectName);
+
+  if (await fs.pathExists(targetDir)) {
+    console.log(chalk.red(`\n✗ "${projectName}" klasörü zaten mevcut.\n`));
+    process.exit(1);
+  }
+
+  console.log(`\n${chalk.bold.blue('TRA UI')} ${chalk.grey('— Yeni Proje')}\n`);
+  console.log(`${chalk.grey('Proje:')} ${chalk.cyan(projectName)}`);
+  console.log(`${chalk.grey('Kaynak:')} ${TEMPLATE_REPO}/template\n`);
+
+  const spinner = ora('Template indiriliyor...').start();
+
+  try {
+    // git clone --depth 1 ile template'i çek
+    await execa('git', [
+      'clone',
+      '--depth', '1',
+      '--filter=blob:none',
+      '--sparse',
+      TEMPLATE_REPO,
+      projectName,
+    ], { cwd: process.cwd() });
+
+    // sparse-checkout ile sadece template/ klasörünü al
+    await execa('git', ['sparse-checkout', 'set', 'template'], { cwd: targetDir });
+
+    // template/ içeriğini root'a taşı
+    const templateDir = path.join(targetDir, 'template');
+    const files = await fs.readdir(templateDir);
+    for (const file of files) {
+      await fs.move(path.join(templateDir, file), path.join(targetDir, file), { overwrite: true });
+    }
+    await fs.remove(templateDir);
+    await fs.remove(path.join(targetDir, '.git'));
+
+    spinner.succeed(chalk.green('Template indirildi!'));
+  } catch (err: any) {
+    spinner.fail(chalk.red('Template indirilemedi.'));
+    console.log(chalk.grey(`  Hata: ${String(err.message)}`));
+    console.log(chalk.grey('  git erişilebilir mi? Ağ bağlantısını kontrol edin.'));
+    await fs.remove(targetDir).catch(() => {});
+    process.exit(1);
+  }
+
+  console.log(`\n${chalk.bold('Sonraki adımlar:')}`);
+  console.log(`  ${chalk.cyan(`cd ${projectName}`)}`);
+  console.log(`  ${chalk.cyan('npm install')}`);
+  console.log(`  ${chalk.cyan('npx msi-ui-cli init')}          ${chalk.grey('# UI Kit kurulumu')}`);
+  console.log(`  ${chalk.cyan('npx @tra-bilisim/tra-ui add')}   ${chalk.grey('# Plugin ekle')}`);
+  console.log();
 }
 
 // ─── List ─────────────────────────────────────────────────────────────────────

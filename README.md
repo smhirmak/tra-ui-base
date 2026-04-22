@@ -10,10 +10,12 @@ Yeni proje iskeleti + sonradan eklenebilen modüler plugin sistemi.
 ### 1. Yeni Proje Oluştur
 
 ```bash
-npx degit https://git.trabilisim.tech/developers/tra-ui-base/template my-project
+npx @tra-bilisim/tra-ui create my-project
 cd my-project
 npm install
 ```
+
+> `create` komutu template'i otomatik indirir, `.git` geçmişini temizler ve sonraki adımları gösterir.
 
 ### 2. MSI UI Kit Başlat
 
