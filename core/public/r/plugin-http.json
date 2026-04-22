@@ -1,0 +1,42 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "plugin-http",
+  "title": "HTTP Client (Axios)",
+  "description": "Axios instance, token interceptor, 401 otomatik token yenileme, merkezi hata yönetimi, AuthContext ve BaseService sınıfı.",
+  "dependencies": [
+    "axios"
+  ],
+  "files": [
+    {
+      "path": "registry/tra-plugins/http/lib/http.ts",
+      "content": "import axios from 'axios';\r\nimport type { AxiosInstance } from 'axios';\r\nimport { setupInterceptors } from './interceptors';\r\n\r\nconst http: AxiosInstance = axios.create({\r\n  baseURL: import.meta.env.VITE_API_BASE_URL ?? '/api',\r\n  timeout: 30_000,\r\n  headers: {\r\n    'Content-Type': 'application/json',\r\n  },\r\n});\r\n\r\nsetupInterceptors(http);\r\n\r\nexport default http;\r\n",
+      "type": "registry:file",
+      "target": "src/lib/http.ts"
+    },
+    {
+      "path": "registry/tra-plugins/http/lib/interceptors.ts",
+      "content": "import type { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';\r\n\r\nexport function setupInterceptors(instance: AxiosInstance) {\r\n  // ─── Request: Token ekle ─────────────────────────────────────────────────\r\n  instance.interceptors.request.use(\r\n    (config: InternalAxiosRequestConfig) => {\r\n      const token = localStorage.getItem('access_token');\r\n      if (token && config.headers) {\r\n        config.headers.Authorization = `Bearer ${token}`;\r\n      }\r\n      return config;\r\n    },\r\n    (error) => Promise.reject(error),\r\n  );\r\n\r\n  // ─── Response: Hata yönetimi ─────────────────────────────────────────────\r\n  instance.interceptors.response.use(\r\n    (response: AxiosResponse) => response,\r\n    async (error: AxiosError) => {\r\n      const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };\r\n\r\n      // 401 — Token yenile\r\n      if (error.response?.status === 401 && !originalRequest._retry) {\r\n        originalRequest._retry = true;\r\n\r\n        try {\r\n          const refreshToken = localStorage.getItem('refresh_token');\r\n          const { data } = await instance.post('/auth/refresh', { refreshToken });\r\n\r\n          localStorage.setItem('access_token', data.accessToken);\r\n          if (originalRequest.headers) {\r\n            originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;\r\n          }\r\n\r\n          return instance(originalRequest);\r\n        } catch {\r\n          // Refresh başarısız → logout\r\n          localStorage.removeItem('access_token');\r\n          localStorage.removeItem('refresh_token');\r\n          window.location.href = '/login';\r\n        }\r\n      }\r\n\r\n      return Promise.reject(error);\r\n    },\r\n  );\r\n}\r\n",
+      "type": "registry:file",
+      "target": "src/lib/interceptors.ts"
+    },
+    {
+      "path": "registry/tra-plugins/http/contexts/auth/AuthContext.tsx",
+      "content": "import { createContext, useContext, useState, useEffect } from 'react';\r\nimport http from '@/lib/http';\r\n\r\nexport interface AuthUser {\r\n  id: string;\r\n  username: string;\r\n  email: string;\r\n  roles: string[];\r\n}\r\n\r\nexport interface AuthContextValue {\r\n  user: AuthUser | null;\r\n  isAuthenticated: boolean;\r\n  isLoading: boolean;\r\n  login: (username: string, password: string) => Promise<void>;\r\n  logout: () => void;\r\n}\r\n\r\nexport const AuthContext = createContext<AuthContextValue | null>(null);\r\n\r\nexport function useAuth() {\r\n  const ctx = useContext(AuthContext);\r\n  if (!ctx) throw new Error('useAuth must be used within AuthProvider');\r\n  return ctx;\r\n}\r\n\r\ninterface AuthProviderProps {\r\n  children: React.ReactNode;\r\n}\r\n\r\nexport function AuthProvider({ children }: AuthProviderProps) {\r\n  const [user, setUser] = useState<AuthUser | null>(null);\r\n  const [isLoading, setIsLoading] = useState(true);\r\n\r\n  // Uygulama açıldığında mevcut token ile kullanıcıyı getir\r\n  useEffect(() => {\r\n    const token = localStorage.getItem('access_token');\r\n    if (!token) {\r\n      setIsLoading(false);\r\n      return;\r\n    }\r\n\r\n    http\r\n      .get<AuthUser>('/auth/me')\r\n      .then((res) => setUser(res.data))\r\n      .catch(() => {\r\n        localStorage.removeItem('access_token');\r\n        localStorage.removeItem('refresh_token');\r\n      })\r\n      .finally(() => setIsLoading(false));\r\n  }, []);\r\n\r\n  const login = async (username: string, password: string) => {\r\n    const { data } = await http.post<{ accessToken: string; refreshToken: string }>(\r\n      '/auth/login',\r\n      { username, password },\r\n    );\r\n    localStorage.setItem('access_token', data.accessToken);\r\n    localStorage.setItem('refresh_token', data.refreshToken);\r\n\r\n    const me = await http.get<AuthUser>('/auth/me');\r\n    setUser(me.data);\r\n  };\r\n\r\n  const logout = () => {\r\n    localStorage.removeItem('access_token');\r\n    localStorage.removeItem('refresh_token');\r\n    setUser(null);\r\n    window.location.href = '/login';\r\n  };\r\n\r\n  return (\r\n    <AuthContext.Provider value={{ user, isAuthenticated: !!user, isLoading, login, logout }}>\r\n      {children}\r\n    </AuthContext.Provider>\r\n  );\r\n}\r\n",
+      "type": "registry:file",
+      "target": "src/contexts/auth/AuthContext.tsx"
+    },
+    {
+      "path": "registry/tra-plugins/http/hooks/useAuth.ts",
+      "content": "import http from '@/lib/http';\r\nimport type { AuthUser } from '@/contexts/auth/AuthContext';\r\n\r\nexport function useAuth() {\r\n  // AuthProvider'dan useAuth'u re-export eder; bu hook burada kullanılır\r\n  // Doğrudan AuthContext'ten import edin: import { useAuth } from '@/contexts/auth/AuthContext'\r\n}\r\n\r\nexport async function getMe(): Promise<AuthUser> {\r\n  const { data } = await http.get<AuthUser>('/auth/me');\r\n  return data;\r\n}\r\n",
+      "type": "registry:file",
+      "target": "src/hooks/useAuth.ts"
+    },
+    {
+      "path": "registry/tra-plugins/http/services/BaseService.ts",
+      "content": "import http from '@/lib/http';\r\nimport type { AxiosRequestConfig } from 'axios';\r\n\r\n/**\r\n * Tüm servis sınıfları için temel sınıf.\r\n * Extend ederek proje servislerinizi oluşturun:\r\n *\r\n * @example\r\n * class UserService extends BaseService {\r\n *   constructor() { super('/users'); }\r\n *   getAll() { return this.get<User[]>(); }\r\n *   getById(id: string) { return this.get<User>(`/${id}`); }\r\n * }\r\n * export const userService = new UserService();\r\n */\r\nexport abstract class BaseService {\r\n  protected readonly basePath: string;\r\n\r\n  constructor(basePath: string) {\r\n    this.basePath = basePath;\r\n  }\r\n\r\n  protected get<T>(path = '', config?: AxiosRequestConfig) {\r\n    return http.get<T>(`${this.basePath}${path}`, config);\r\n  }\r\n\r\n  protected post<T>(path = '', data?: unknown, config?: AxiosRequestConfig) {\r\n    return http.post<T>(`${this.basePath}${path}`, data, config);\r\n  }\r\n\r\n  protected put<T>(path = '', data?: unknown, config?: AxiosRequestConfig) {\r\n    return http.put<T>(`${this.basePath}${path}`, data, config);\r\n  }\r\n\r\n  protected patch<T>(path = '', data?: unknown, config?: AxiosRequestConfig) {\r\n    return http.patch<T>(`${this.basePath}${path}`, data, config);\r\n  }\r\n\r\n  protected delete<T>(path = '', config?: AxiosRequestConfig) {\r\n    return http.delete<T>(`${this.basePath}${path}`, config);\r\n  }\r\n}\r\n",
+      "type": "registry:file",
+      "target": "src/services/BaseService.ts"
+    }
+  ],
+  "type": "registry:block"
+}

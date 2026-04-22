@@ -1,0 +1,36 @@
+stages:
+  - build
+  - deploy
+
+# Registry JSON'larını üret
+build-registry:
+  stage: build
+  image: node:22-alpine
+  cache:
+    key: core-$CI_COMMIT_REF_SLUG
+    paths:
+      - core/node_modules/
+  script:
+    - cd core
+    - npm ci
+    - npm run registry:build
+  artifacts:
+    paths:
+      - core/public/
+    expire_in: 1 hour
+  only:
+    - main
+
+# GitLab Pages — core/public/ → erişilebilir URL
+pages:
+  stage: deploy
+  dependencies:
+    - build-registry
+  script:
+    - mkdir -p public
+    - cp -r core/public/. public/
+  artifacts:
+    paths:
+      - public
+  only:
+    - main

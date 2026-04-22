@@ -1,0 +1,63 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "plugin-forms",
+  "title": "Form Yönetimi (Formik + Yup)",
+  "description": "Formik + Yup form altyapısı. MSI UI Kit bileşenlerine bağlı TextField, Select, Checkbox, DatePicker, RadioButtons ve ortak Validations sabitleri.",
+  "dependencies": [
+    "formik",
+    "yup"
+  ],
+  "registryDependencies": [
+    "@msi/text-field",
+    "@msi/select",
+    "@msi/checkbox",
+    "@msi/date-picker",
+    "@msi/radio-buttons",
+    "@msi/label"
+  ],
+  "files": [
+    {
+      "path": "registry/tra-plugins/forms/components/formik/formik-text-field.tsx",
+      "content": "import { useField } from 'formik';\r\n// UI Kit'ten import edin: import { TextField } from \"@/components/ui/text-field\"\r\n// Bu component UI Kit'e bağlıdır — npx msi-ui-cli add text-field ile kurun\r\n\r\ninterface FormikTextFieldProps {\r\n  name: string;\r\n  label?: string;\r\n  placeholder?: string;\r\n  type?: string;\r\n  disabled?: boolean;\r\n  className?: string;\r\n}\r\n\r\n/**\r\n * Formik bağlantılı TextField.\r\n * Hata mesajı ve touched durumunu otomatik yönetir.\r\n *\r\n * @example\r\n * <FormikTextField name=\"email\" label=\"E-posta\" type=\"email\" />\r\n */\r\nexport function FormikTextField({\r\n  name,\r\n  label,\r\n  placeholder,\r\n  type = 'text',\r\n  disabled,\r\n  className,\r\n}: FormikTextFieldProps) {\r\n  const [field, meta] = useField(name);\r\n\r\n  return (\r\n    <div className={className}>\r\n      {label && (\r\n        <label htmlFor={name} className=\"mb-1 block text-sm font-medium text-neutral-700 dark:text-neutral-300\">\r\n          {label}\r\n        </label>\r\n      )}\r\n      <input\r\n        {...field}\r\n        id={name}\r\n        type={type}\r\n        placeholder={placeholder}\r\n        disabled={disabled}\r\n        className=\"w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-60 dark:border-neutral-600 dark:bg-neutral-800 dark:text-neutral-100\"\r\n      />\r\n      {meta.touched && meta.error && (\r\n        <p className=\"mt-1 text-xs text-red-500\">{meta.error}</p>\r\n      )}\r\n    </div>\r\n  );\r\n}\r\n",
+      "type": "registry:file",
+      "target": "src/components/formik/formik-text-field.tsx"
+    },
+    {
+      "path": "registry/tra-plugins/forms/components/formik/formik-select.tsx",
+      "content": "import { useField } from 'formik';\r\n\r\ninterface Option {\r\n  value: string | number;\r\n  label: string;\r\n}\r\n\r\ninterface FormikSelectProps {\r\n  name: string;\r\n  label?: string;\r\n  options: Option[];\r\n  placeholder?: string;\r\n  disabled?: boolean;\r\n  className?: string;\r\n}\r\n\r\n/**\r\n * Formik bağlantılı Select.\r\n *\r\n * @example\r\n * <FormikSelect name=\"role\" label=\"Rol\" options={[{ value: 'admin', label: 'Admin' }]} />\r\n */\r\nexport function FormikSelect({\r\n  name,\r\n  label,\r\n  options,\r\n  placeholder = 'Seçiniz...',\r\n  disabled,\r\n  className,\r\n}: FormikSelectProps) {\r\n  const [field, meta] = useField(name);\r\n\r\n  return (\r\n    <div className={className}>\r\n      {label && (\r\n        <label htmlFor={name} className=\"mb-1 block text-sm font-medium text-neutral-700 dark:text-neutral-300\">\r\n          {label}\r\n        </label>\r\n      )}\r\n      <select\r\n        {...field}\r\n        id={name}\r\n        disabled={disabled}\r\n        className=\"w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-60 dark:border-neutral-600 dark:bg-neutral-800 dark:text-neutral-100\"\r\n      >\r\n        <option value=\"\">{placeholder}</option>\r\n        {options.map((opt) => (\r\n          <option key={opt.value} value={opt.value}>\r\n            {opt.label}\r\n          </option>\r\n        ))}\r\n      </select>\r\n      {meta.touched && meta.error && (\r\n        <p className=\"mt-1 text-xs text-red-500\">{meta.error}</p>\r\n      )}\r\n    </div>\r\n  );\r\n}\r\n",
+      "type": "registry:file",
+      "target": "src/components/formik/formik-select.tsx"
+    },
+    {
+      "path": "registry/tra-plugins/forms/components/formik/formik-checkbox.tsx",
+      "content": "import { useField } from 'formik';\r\n\r\ninterface FormikCheckboxProps {\r\n  name: string;\r\n  label: string;\r\n  disabled?: boolean;\r\n  className?: string;\r\n}\r\n\r\nexport function FormikCheckbox({ name, label, disabled, className }: FormikCheckboxProps) {\r\n  const [field, meta] = useField({ name, type: 'checkbox' });\r\n\r\n  return (\r\n    <div className={className}>\r\n      <label className=\"flex cursor-pointer items-center gap-2 text-sm text-neutral-700 dark:text-neutral-300\">\r\n        <input\r\n          {...field}\r\n          type=\"checkbox\"\r\n          disabled={disabled}\r\n          className=\"h-4 w-4 rounded border-neutral-300 accent-primary disabled:cursor-not-allowed\"\r\n        />\r\n        {label}\r\n      </label>\r\n      {meta.touched && meta.error && (\r\n        <p className=\"mt-1 text-xs text-red-500\">{meta.error}</p>\r\n      )}\r\n    </div>\r\n  );\r\n}\r\n",
+      "type": "registry:file",
+      "target": "src/components/formik/formik-checkbox.tsx"
+    },
+    {
+      "path": "registry/tra-plugins/forms/components/formik/formik-date-picker.tsx",
+      "content": "import { useField, useFormikContext } from 'formik';\r\n\r\ninterface FormikDatePickerProps {\r\n  name: string;\r\n  label?: string;\r\n  disabled?: boolean;\r\n  min?: string;\r\n  max?: string;\r\n  className?: string;\r\n}\r\n\r\nexport function FormikDatePicker({\r\n  name,\r\n  label,\r\n  disabled,\r\n  min,\r\n  max,\r\n  className,\r\n}: FormikDatePickerProps) {\r\n  const [field, meta] = useField(name);\r\n  const { setFieldValue } = useFormikContext();\r\n\r\n  return (\r\n    <div className={className}>\r\n      {label && (\r\n        <label htmlFor={name} className=\"mb-1 block text-sm font-medium text-neutral-700 dark:text-neutral-300\">\r\n          {label}\r\n        </label>\r\n      )}\r\n      <input\r\n        {...field}\r\n        id={name}\r\n        type=\"date\"\r\n        min={min}\r\n        max={max}\r\n        disabled={disabled}\r\n        onChange={(e) => setFieldValue(name, e.target.value)}\r\n        className=\"w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-60 dark:border-neutral-600 dark:bg-neutral-800 dark:text-neutral-100\"\r\n      />\r\n      {meta.touched && meta.error && (\r\n        <p className=\"mt-1 text-xs text-red-500\">{meta.error}</p>\r\n      )}\r\n    </div>\r\n  );\r\n}\r\n",
+      "type": "registry:file",
+      "target": "src/components/formik/formik-date-picker.tsx"
+    },
+    {
+      "path": "registry/tra-plugins/forms/components/formik/formik-radio-buttons.tsx",
+      "content": "import { useField } from 'formik';\r\n\r\ninterface Option {\r\n  value: string | number;\r\n  label: string;\r\n}\r\n\r\ninterface FormikRadioButtonsProps {\r\n  name: string;\r\n  label?: string;\r\n  options: Option[];\r\n  disabled?: boolean;\r\n  className?: string;\r\n}\r\n\r\nexport function FormikRadioButtons({\r\n  name,\r\n  label,\r\n  options,\r\n  disabled,\r\n  className,\r\n}: FormikRadioButtonsProps) {\r\n  const [field, meta] = useField(name);\r\n\r\n  return (\r\n    <div className={className}>\r\n      {label && (\r\n        <span className=\"mb-2 block text-sm font-medium text-neutral-700 dark:text-neutral-300\">\r\n          {label}\r\n        </span>\r\n      )}\r\n      <div className=\"flex flex-wrap gap-4\">\r\n        {options.map((opt) => (\r\n          <label\r\n            key={opt.value}\r\n            className=\"flex cursor-pointer items-center gap-2 text-sm text-neutral-700 dark:text-neutral-300\"\r\n          >\r\n            <input\r\n              type=\"radio\"\r\n              name={field.name}\r\n              value={opt.value}\r\n              checked={field.value === opt.value}\r\n              onChange={field.onChange}\r\n              onBlur={field.onBlur}\r\n              disabled={disabled}\r\n              className=\"h-4 w-4 accent-primary disabled:cursor-not-allowed\"\r\n            />\r\n            {opt.label}\r\n          </label>\r\n        ))}\r\n      </div>\r\n      {meta.touched && meta.error && (\r\n        <p className=\"mt-1 text-xs text-red-500\">{meta.error}</p>\r\n      )}\r\n    </div>\r\n  );\r\n}\r\n",
+      "type": "registry:file",
+      "target": "src/components/formik/formik-radio-buttons.tsx"
+    },
+    {
+      "path": "registry/tra-plugins/forms/components/formik/index.ts",
+      "content": "export { FormikTextField } from './formik-text-field';\r\nexport { FormikSelect } from './formik-select';\r\nexport { FormikCheckbox } from './formik-checkbox';\r\nexport { FormikDatePicker } from './formik-date-picker';\r\nexport { FormikRadioButtons } from './formik-radio-buttons';\r\n",
+      "type": "registry:file",
+      "target": "src/components/formik/index.ts"
+    },
+    {
+      "path": "registry/tra-plugins/forms/constants/Validations.ts",
+      "content": "import * as Yup from 'yup';\r\n\r\n/**\r\n * Ortak Yup validasyon şemaları ve helper'ları.\r\n * Projeye özgü kuralları buraya ekleyin.\r\n */\r\nexport const Validations = {\r\n  /** Zorunlu metin alanı */\r\n  required: (label = 'Alan') =>\r\n    Yup.string().trim().required(`${label} zorunludur.`),\r\n\r\n  /** E-posta */\r\n  email: (label = 'E-posta') =>\r\n    Yup.string()\r\n      .trim()\r\n      .email('Geçerli bir e-posta adresi giriniz.')\r\n      .required(`${label} zorunludur.`),\r\n\r\n  /** Şifre — min 8 karakter */\r\n  password: () =>\r\n    Yup.string()\r\n      .min(8, 'Şifre en az 8 karakter olmalıdır.')\r\n      .required('Şifre zorunludur.'),\r\n\r\n  /** Telefon — Türkiye formatı */\r\n  phone: () =>\r\n    Yup.string()\r\n      .matches(/^(\\+90|0)?[0-9]{10}$/, 'Geçerli bir telefon numarası giriniz.')\r\n      .required('Telefon zorunludur.'),\r\n\r\n  /** TC Kimlik No */\r\n  tcNo: () =>\r\n    Yup.string()\r\n      .matches(/^[1-9][0-9]{10}$/, 'Geçerli bir TC Kimlik No giriniz.')\r\n      .required('TC Kimlik No zorunludur.'),\r\n\r\n  /** Opsiyonel metin */\r\n  optional: () => Yup.string().trim().optional(),\r\n\r\n  /** Sayı — zorunlu */\r\n  number: (label = 'Alan') =>\r\n    Yup.number()\r\n      .typeError(`${label} sayı olmalıdır.`)\r\n      .required(`${label} zorunludur.`),\r\n\r\n  /** Pozitif sayı */\r\n  positiveNumber: (label = 'Alan') =>\r\n    Yup.number()\r\n      .typeError(`${label} sayı olmalıdır.`)\r\n      .positive(`${label} pozitif olmalıdır.`)\r\n      .required(`${label} zorunludur.`),\r\n};\r\n",
+      "type": "registry:file",
+      "target": "src/constants/Validations.ts"
+    }
+  ],
+  "type": "registry:block"
+}

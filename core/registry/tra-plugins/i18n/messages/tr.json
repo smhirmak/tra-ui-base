@@ -1,0 +1,13 @@
+{
+  "hello": "Merhaba, {name}!",
+  "welcome": "Hoş geldiniz",
+  "loading": "Yükleniyor...",
+  "error": "Bir hata oluştu",
+  "save": "Kaydet",
+  "cancel": "İptal",
+  "confirm": "Onayla",
+  "delete": "Sil",
+  "edit": "Düzenle",
+  "search": "Ara",
+  "noData": "Veri bulunamadı"
+}

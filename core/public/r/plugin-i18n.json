@@ -1,0 +1,55 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "plugin-i18n",
+  "title": "i18n Plugin (Paraglide)",
+  "description": "inlang Paraglide ile compile-time i18n. TR/EN dil desteği, LocaleContext, LocaleProvider, useLocale hook ve örnek dil dosyaları.",
+  "dependencies": [
+    "@inlang/paraglide-js",
+    "@inlang/paraglide-vite"
+  ],
+  "files": [
+    {
+      "path": "registry/tra-plugins/i18n/lib/i18n.ts",
+      "content": "/**\r\n * i18n — Paraglide kurulumu\r\n *\r\n * Bu dosya `npx tra-ui add i18n` tarafından projenize kopyalanır.\r\n *\r\n * Sonraki adım: vite.config.ts'e Paraglide plugin'ini ekleyin:\r\n *   import { paraglide } from \"@inlang/paraglide-vite\"\r\n *   paraglide({ project: \"./project.inlang\", outdir: \"./src/paraglide\" })\r\n */\r\nimport * as m from '@/paraglide/messages';\r\n\r\nexport type AvailableLanguageTag = 'tr' | 'en';\r\n\r\nexport const AVAILABLE_LANGUAGES: { value: AvailableLanguageTag; label: string }[] = [\r\n  { value: 'tr', label: 'Türkçe' },\r\n  { value: 'en', label: 'English' },\r\n];\r\n\r\n/** Mevcut dil etiketini döner */\r\nexport function getCurrentLanguage(): AvailableLanguageTag {\r\n  return (localStorage.getItem('tra-ui-lang') as AvailableLanguageTag) ?? 'tr';\r\n}\r\n\r\n/** Dili değiştirir ve sayfayı yeniler */\r\nexport function setLanguage(lang: AvailableLanguageTag) {\r\n  localStorage.setItem('tra-ui-lang', lang);\r\n  window.location.reload();\r\n}\r\n\r\n/** Paraglide mesaj fonksiyonlarına doğrudan erişim */\r\nexport { m };\r\n",
+      "type": "registry:file",
+      "target": "src/lib/i18n.ts"
+    },
+    {
+      "path": "registry/tra-plugins/i18n/contexts/locale/LocaleContext.tsx",
+      "content": "import { createContext, useContext } from 'react';\r\nimport type { AvailableLanguageTag } from '@/lib/i18n';\r\n\r\nexport interface LocaleContextValue {\r\n  locale: AvailableLanguageTag;\r\n  setLocale: (lang: AvailableLanguageTag) => void;\r\n}\r\n\r\nexport const LocaleContext = createContext<LocaleContextValue | null>(null);\r\n\r\nexport function useLocaleContext() {\r\n  const ctx = useContext(LocaleContext);\r\n  if (!ctx) throw new Error('useLocaleContext must be used within LocaleProvider');\r\n  return ctx;\r\n}\r\n",
+      "type": "registry:file",
+      "target": "src/contexts/locale/LocaleContext.tsx"
+    },
+    {
+      "path": "registry/tra-plugins/i18n/contexts/locale/LocaleProvider.tsx",
+      "content": "import { useState } from 'react';\r\nimport { LocaleContext } from './LocaleContext';\r\nimport { getCurrentLanguage, setLanguage } from '@/lib/i18n';\r\nimport type { AvailableLanguageTag } from '@/lib/i18n';\r\n\r\ninterface LocaleProviderProps {\r\n  children: React.ReactNode;\r\n}\r\n\r\nexport function LocaleProvider({ children }: LocaleProviderProps) {\r\n  const [locale, setLocaleState] = useState<AvailableLanguageTag>(getCurrentLanguage);\r\n\r\n  const handleSetLocale = (lang: AvailableLanguageTag) => {\r\n    setLocaleState(lang);\r\n    setLanguage(lang);\r\n  };\r\n\r\n  return (\r\n    <LocaleContext.Provider value={{ locale, setLocale: handleSetLocale }}>\r\n      {children}\r\n    </LocaleContext.Provider>\r\n  );\r\n}\r\n",
+      "type": "registry:file",
+      "target": "src/contexts/locale/LocaleProvider.tsx"
+    },
+    {
+      "path": "registry/tra-plugins/i18n/hooks/useLocale.ts",
+      "content": "import { useLocaleContext } from '@/contexts/locale/LocaleContext';\r\nimport { AVAILABLE_LANGUAGES } from '@/lib/i18n';\r\n\r\nexport function useLocale() {\r\n  const { locale, setLocale } = useLocaleContext();\r\n  return { locale, setLocale, availableLanguages: AVAILABLE_LANGUAGES };\r\n}\r\n",
+      "type": "registry:file",
+      "target": "src/hooks/useLocale.ts"
+    },
+    {
+      "path": "registry/tra-plugins/i18n/messages/tr.json",
+      "content": "{\r\n  \"hello\": \"Merhaba, {name}!\",\r\n  \"welcome\": \"Hoş geldiniz\",\r\n  \"loading\": \"Yükleniyor...\",\r\n  \"error\": \"Bir hata oluştu\",\r\n  \"save\": \"Kaydet\",\r\n  \"cancel\": \"İptal\",\r\n  \"confirm\": \"Onayla\",\r\n  \"delete\": \"Sil\",\r\n  \"edit\": \"Düzenle\",\r\n  \"search\": \"Ara\",\r\n  \"noData\": \"Veri bulunamadı\"\r\n}\r\n",
+      "type": "registry:file",
+      "target": "messages/tr.json"
+    },
+    {
+      "path": "registry/tra-plugins/i18n/messages/en.json",
+      "content": "{\r\n  \"hello\": \"Hello, {name}!\",\r\n  \"welcome\": \"Welcome\",\r\n  \"loading\": \"Loading...\",\r\n  \"error\": \"An error occurred\",\r\n  \"save\": \"Save\",\r\n  \"cancel\": \"Cancel\",\r\n  \"confirm\": \"Confirm\",\r\n  \"delete\": \"Delete\",\r\n  \"edit\": \"Edit\",\r\n  \"search\": \"Search\",\r\n  \"noData\": \"No data found\"\r\n}\r\n",
+      "type": "registry:file",
+      "target": "messages/en.json"
+    },
+    {
+      "path": "registry/tra-plugins/i18n/project.inlang/settings.json",
+      "content": "{\r\n  \"$schema\": \"https://inlang.com/schema/project-settings\",\r\n  \"sourceLanguageTag\": \"tr\",\r\n  \"languageTags\": [\"tr\", \"en\"],\r\n  \"modules\": [\r\n    \"https://cdn.jsdelivr.net/npm/@inlang/plugin-message-format@4/dist/index.js\",\r\n    \"https://cdn.jsdelivr.net/npm/@inlang/plugin-paraglide-js-adapter@1/dist/index.js\"\r\n  ],\r\n  \"plugin.inlang.messageFormat\": {\r\n    \"pathPattern\": \"./messages/{languageTag}.json\"\r\n  }\r\n}\r\n",
+      "type": "registry:file",
+      "target": "project.inlang/settings.json"
+    }
+  ],
+  "type": "registry:block"
+}
