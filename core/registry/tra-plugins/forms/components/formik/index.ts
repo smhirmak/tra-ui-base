@@ -4,3 +4,5 @@ export { FormikCheckbox } from './formik-checkbox';
 export { FormikDatePicker } from './formik-date-picker';
 export { FormikRadioButtons } from './formik-radio-buttons';
 export { FormikSwitch } from './formik-switch';
+export { FormikErrorText } from './formik-error-text';
+export { getNestedValue } from './utils';

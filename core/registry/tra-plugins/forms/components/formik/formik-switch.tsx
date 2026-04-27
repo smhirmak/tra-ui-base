@@ -1,11 +1,15 @@
-import { useField } from 'formik';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React from 'react';
 import { cn } from '@/lib/utils';
-import Switch from '@/components/switch';
-import Label from '@/components/label';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { FormikErrorText } from './formik-error-text';
+import { getNestedValue } from './utils';
 
 interface FormikSwitchProps {
-    name: string;
-    label?: string;
+    id: string;
+    formik: any;
+    label?: string | React.ReactNode;
     disabled?: boolean;
     className?: string;
     containerClassName?: string;
@@ -14,46 +18,40 @@ interface FormikSwitchProps {
     onChange?: (checked: boolean) => void;
 }
 
-export function FormikSwitch({
-    name,
+export const FormikSwitch: React.FC<FormikSwitchProps> = ({
+    id,
+    formik,
     label,
     disabled,
     className,
     containerClassName,
     labelClassName,
-    labelSide = 'right',
+    labelSide = 'left',
     onChange,
-}: FormikSwitchProps) {
-    const [field, meta, helpers] = useField(name);
-
-    return (
-        <div className={cn('flex flex-col gap-1.5', containerClassName)}>
-            <div className="flex items-center gap-2">
-                {label && labelSide === 'left' && (
-                    <Label htmlFor={name} className={cn(labelClassName)}>
-                        {label}
-                    </Label>
-                )}
-                <Switch
-                    id={name}
-                    checked={field.value ?? false}
-                    onChange={(checked) => {
-                        helpers.setValue(checked);
-                        helpers.setTouched(true);
-                        onChange?.(checked);
-                    }}
-                    disabled={disabled}
-                    className={cn(className)}
-                />
-                {label && labelSide === 'right' && (
-                    <Label htmlFor={name} className={cn(labelClassName)}>
-                        {label}
-                    </Label>
-                )}
-            </div>
-            {meta.touched && meta.error && (
-                <span className="text-xs font-medium text-red-500">{meta.error}</span>
+}) => (
+    <div className={cn('flex flex-col text-start gap-4', containerClassName)}>
+        {label && labelSide === 'left' && (
+            <Label htmlFor={id} className={cn(labelClassName)}>
+                {label}
+            </Label>
+        )}
+        <div className="flex items-center gap-2">
+            <Switch
+                id={id}
+                checked={getNestedValue(formik.values, id) ?? false}
+                onCheckedChange={(checked) => {
+                    formik.setFieldValue(id, checked);
+                    onChange?.(checked);
+                }}
+                disabled={disabled}
+                className={cn(className)}
+            />
+            {label && labelSide === 'right' && (
+                <Label htmlFor={id} className={cn(labelClassName)}>
+                    {label}
+                </Label>
             )}
         </div>
-    );
-}
+        <FormikErrorText id={id} formik={formik} />
+    </div>
+);

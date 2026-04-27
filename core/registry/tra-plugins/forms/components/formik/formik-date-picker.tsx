@@ -1,66 +1,74 @@
-import { useField } from 'formik';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React from 'react';
 import { cn } from '@/lib/utils';
-import DatePicker from '@/components/date-picker';
-import Label from '@/components/label';
+import DatePicker from '@/components/ui/date-picker';
+import { Label } from '@/components/ui/label';
 import type { DayPickerProps } from 'react-day-picker';
+import { FormikErrorText } from './formik-error-text';
+import { getNestedValue } from './utils';
 
 interface FormikDatePickerProps {
-  name: string;
+  id: string;
+  formik: any;
   label?: string;
   disabled?: boolean;
   minDate?: Date;
   maxDate?: Date;
-  className?: string;
+  containerClassName?: string;
   mode?: DayPickerProps['mode'];
   showRequiredIcon?: boolean;
   showCompleteButton?: boolean;
+  showClearButton?: boolean;
+  showMonthYearPicker?: boolean;
   onBlur?: () => void;
 }
 
-export function FormikDatePicker({
-  name,
+export const FormikDatePicker: React.FC<FormikDatePickerProps> = ({
+  id,
+  formik,
   label,
   disabled,
   minDate,
   maxDate,
-  className,
+  containerClassName,
   mode = 'single',
   showRequiredIcon,
+  showCompleteButton,
+  showClearButton = false,
+  showMonthYearPicker = false,
   onBlur,
-}: FormikDatePickerProps) {
-  const [field, meta, helpers] = useField(name);
-
-  return (
-    <div className={cn('flex flex-col gap-1.5', className)}>
-      {label && (
-        <Label htmlFor={name}>
-          {label}
-          {showRequiredIcon && <span className="text-red-500"> *</span>}
-        </Label>
-      )}
-      <DatePicker
-        mode={mode}
-        value={field.value ?? ''}
-        disabled={disabled}
-        minDate={minDate}
-        maxDate={maxDate}
-        error={!!(meta.touched && meta.error)}
-        onChange={(val) => {
+}) => (
+  <div className={cn(containerClassName, 'flex flex-col text-start gap-1.5')}>
+    {label && (
+      <Label htmlFor={id}>
+        {label}
+        {showRequiredIcon && <span className="text-red-500"> *</span>}
+      </Label>
+    )}
+    <DatePicker
+      mode={mode}
+      disabled={disabled}
+      showMonthYearPicker={showMonthYearPicker}
+      value={getNestedValue(formik.values, id) ?? ''}
+      minDate={minDate}
+      maxDate={maxDate}
+      onChange={(e: any) => {
+        if (!disabled) {
           if (mode === 'range') {
-            helpers.setValue(val);
-          } else {
-            const d = val instanceof Date && !Number.isNaN(val.getTime())
-              ? new Date(Date.UTC(val.getFullYear(), val.getMonth(), val.getDate()))
-              : null;
-            helpers.setValue(d);
+            formik.setFieldValue(id, e);
+            return;
           }
-          helpers.setTouched(true);
-        }}
-        onBlur={onBlur}
-      />
-      {meta.touched && meta.error && (
-        <span className="text-xs font-medium text-red-500">{meta.error}</span>
-      )}
-    </div>
-  );
-}
+          const cleanedDate = e instanceof Date && !Number.isNaN(e.getTime())
+            ? new Date(Date.UTC(e.getFullYear(), e.getMonth(), e.getDate()))
+            : null;
+          formik.setFieldValue(id, cleanedDate);
+        }
+      }}
+      error={Boolean(getNestedValue(formik.touched, id) && getNestedValue(formik.errors, id))}
+      showCompleteButton={showCompleteButton}
+      showClearButton={showClearButton}
+      onBlur={onBlur}
+    />
+    <FormikErrorText id={id} formik={formik} />
+  </div>
+);

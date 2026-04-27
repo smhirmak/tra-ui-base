@@ -1,67 +1,77 @@
-import { useField } from 'formik';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React from 'react';
 import { cn } from '@/lib/utils';
-import Select, { type ISelectOption } from '@/components/select';
+import Select from '@/components/ui/select';
+import { FormikErrorText } from './formik-error-text';
+import { getNestedValue } from './utils';
 
-interface FormikSelectOption {
-  value: string | number;
-  label: string;
+interface ISelectOption {
+  content: string | React.ReactNode;
+  value: number | string | boolean;
 }
 
 interface FormikSelectProps {
-  name: string;
+  id: string;
+  formik: any;
   label?: string;
-  options: FormikSelectOption[];
+  options: ISelectOption[];
   placeholder?: string;
   disabled?: boolean;
   className?: string;
+  selectClassName?: string;
   isMulti?: boolean;
   isSearchable?: boolean;
   showRequiredIcon?: boolean;
-  onChange?: (value: unknown) => void;
+  onChange?: (value: any) => void;
+  onlyParentOnChange?: boolean;
+  hideErrorText?: boolean;
+  defaultValue?: string | number | string[] | number[];
 }
 
-export function FormikSelect({
-  name,
+export const FormikSelect: React.FC<FormikSelectProps> = ({
+  id,
+  formik,
   label,
   options,
   placeholder = 'Seçiniz...',
   disabled,
   className,
+  selectClassName,
   isMulti = false,
   isSearchable = false,
   showRequiredIcon,
   onChange,
-}: FormikSelectProps) {
-  const [field, meta, helpers] = useField(name);
-
-  // MSI Select ISelectOption uses `content` field instead of `label`
-  const msiOptions: ISelectOption[] = options.map((o) => ({
-    value: o.value,
-    content: o.label,
-  }));
-
-  return (
-    <div className={cn(className)}>
-      <Select
-        id={name}
-        label={label}
-        showRequiredIcon={showRequiredIcon}
-        value={field.value ?? ''}
-        onChange={(value) => {
-          helpers.setValue(value);
-          helpers.setTouched(true);
+  onlyParentOnChange,
+  hideErrorText,
+  defaultValue,
+}) => (
+  <div className={cn(className)}>
+    <Select
+      id={id}
+      label={label}
+      showRequiredIcon={showRequiredIcon}
+      value={
+        getNestedValue(formik.values, id) !== undefined && getNestedValue(formik.values, id) !== ''
+          ? getNestedValue(formik.values, id)
+          : defaultValue ?? ''
+      }
+      onChange={(value: any) => {
+        if (onlyParentOnChange) {
           onChange?.(value);
-        }}
-        placeholder={placeholder}
-        options={msiOptions}
-        isMulti={isMulti}
-        isSearchable={isSearchable}
-        disabled={disabled}
-        error={!!(meta.touched && meta.error)}
-      />
-      {meta.touched && meta.error && (
-        <span className="text-xs font-medium text-red-500">{meta.error}</span>
-      )}
-    </div>
-  );
-}
+        } else {
+          if (!disabled) formik.setFieldValue(id, value);
+          onChange?.(value);
+        }
+      }}
+      defaultValue={defaultValue}
+      placeHolder={placeholder}
+      options={options}
+      isMulti={isMulti}
+      isSearchable={isSearchable}
+      disabled={disabled}
+      error={Boolean(getNestedValue(formik.touched, id) && getNestedValue(formik.errors, id))}
+      className={selectClassName}
+    />
+    {!hideErrorText && <FormikErrorText id={id} formik={formik} />}
+  </div>
+);

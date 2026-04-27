@@ -1,11 +1,15 @@
-import { useField } from 'formik';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React from 'react';
 import { cn } from '@/lib/utils';
-import TextField from '../text-field';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { FormikErrorText } from './formik-error-text';
+import { getNestedValue } from './utils';
 
 interface FormikTextFieldProps {
-  name: string;
+  id: string;
+  formik: any;
   label?: string;
-  labelClassName?: string;
   placeholder?: string;
   type?: string;
   disabled?: boolean;
@@ -15,14 +19,18 @@ interface FormikTextFieldProps {
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
   textarea?: boolean;
+  rows?: number;
   showRequiredIcon?: boolean;
   onChange?: (value: string) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  autoFocus?: boolean;
+  defaultValue?: string | number;
 }
 
-export function FormikTextField({
-  name,
+export const FormikTextField: React.FC<FormikTextFieldProps> = ({
+  id,
+  formik,
   label,
-  labelClassName,
   placeholder,
   type = 'text',
   disabled,
@@ -32,37 +40,43 @@ export function FormikTextField({
   startIcon,
   endIcon,
   textarea,
+  rows,
   showRequiredIcon,
   onChange,
-}: FormikTextFieldProps) {
-  const [field, meta, helpers] = useField(name);
-
-  return (
-    <div className={cn('flex flex-col gap-1.5', containerClassName)}>
-      <TextField
-        label={label}
-        labelClassName={labelClassName}
-        showRequiredIcon={showRequiredIcon}
-        id={name}
-        value={field.value ?? ''}
-        onChange={(e) => {
-          helpers.setValue(e.target.value);
+  onKeyDown,
+  autoFocus,
+  defaultValue,
+}) => (
+  <div className={cn(containerClassName, 'flex flex-col text-start gap-1.5')}>
+    {label && (
+      <Label htmlFor={id}>
+        {label}
+        {showRequiredIcon && <span className="text-red-500"> *</span>}
+      </Label>
+    )}
+    <Input
+      id={id}
+      value={getNestedValue(formik.values, id) ?? defaultValue ?? ''}
+      onChange={(e) => {
+        if (!disabled) {
+          formik.setFieldValue(id, e.target.value);
           onChange?.(e.target.value);
-        }}
-        onBlur={field.onBlur}
-        type={type}
-        placeholder={placeholder}
-        disabled={disabled}
-        maxLength={maxLength}
-        startIcon={startIcon}
-        endIcon={endIcon}
-        textarea={textarea}
-        error={!!(meta.touched && meta.error)}
-        className={cn(className)}
-      />
-      {meta.touched && meta.error && (
-        <span className="text-xs font-medium text-red-500">{meta.error}</span>
-      )}
-    </div>
-  );
-}
+        }
+      }}
+      onBlur={formik.handleBlur}
+      type={type}
+      placeholder={placeholder}
+      disabled={disabled}
+      maxLength={maxLength}
+      startIcon={startIcon}
+      endIcon={endIcon}
+      textarea={textarea}
+      rows={rows}
+      autoFocus={autoFocus}
+      error={Boolean(getNestedValue(formik.touched, id) && getNestedValue(formik.errors, id))}
+      className={cn(className)}
+      onKeyDown={onKeyDown}
+    />
+    <FormikErrorText id={id} formik={formik} />
+  </div>
+);

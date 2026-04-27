@@ -211,6 +211,16 @@
           "target": "src/components/formik/formik-switch.tsx"
         },
         {
+          "path": "registry/tra-plugins/forms/components/formik/formik-error-text.tsx",
+          "type": "registry:file",
+          "target": "src/components/formik/formik-error-text.tsx"
+        },
+        {
+          "path": "registry/tra-plugins/forms/components/formik/utils.ts",
+          "type": "registry:file",
+          "target": "src/components/formik/utils.ts"
+        },
+        {
           "path": "registry/tra-plugins/forms/components/formik/index.ts",
           "type": "registry:file",
           "target": "src/components/formik/index.ts"

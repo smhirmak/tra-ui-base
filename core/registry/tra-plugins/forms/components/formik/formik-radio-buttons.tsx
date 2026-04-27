@@ -1,60 +1,56 @@
-import { useField } from 'formik';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React from 'react';
 import { cn } from '@/lib/utils';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-buttons';
-
-interface Option {
-  value: string;
-  label?: string;
-}
+import { Label } from '@/components/ui/label';
+import { FormikErrorText } from './formik-error-text';
+import { getNestedValue } from './utils';
 
 interface FormikRadioButtonsProps {
-  name: string;
-  label?: string;
-  options: Option[];
+  id: string;
+  formik: any;
+  options?: { value: string | boolean; label?: string }[];
+  defaultValue?: string | boolean;
   disabled?: boolean;
   className?: string;
-  onChange?: (value: string) => void;
+  onChange?: (value: any) => void;
+  onlyParentOnChange?: boolean;
+  hideErrorText?: boolean;
 }
 
-export function FormikRadioButtons({
-  name,
-  label,
+export const FormikRadioButtons: React.FC<FormikRadioButtonsProps> = ({
+  id,
+  formik,
   options,
+  defaultValue,
   disabled,
   className,
   onChange,
-}: FormikRadioButtonsProps) {
-  const [field, meta, helpers] = useField(name);
-
-  return (
-    <div className={cn('flex flex-col gap-1.5', className)}>
-      {label && (
-        <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
-          {label}
-        </span>
-      )}
-      <RadioGroup
-        defaultValue={field.value ?? ''}
-        onChange={(val) => {
-          helpers.setValue(val);
-          helpers.setTouched(true);
-          if (val !== undefined) onChange?.(String(val));
-        }}
-      >
-        {options.map((opt) => (
-          <RadioGroupItem
-            key={opt.value}
-            id={`${name}-${opt.value}`}
-            value={opt.value}
-            label={opt.label}
-            name={name}
-            disabled={disabled}
-          />
-        ))}
-      </RadioGroup>
-      {meta.touched && meta.error && (
-        <span className="text-xs font-medium text-red-500">{meta.error}</span>
-      )}
-    </div>
-  );
-}
+  onlyParentOnChange,
+  hideErrorText = false,
+}) => (
+  <div className="flex flex-col">
+    <RadioGroup
+      defaultValue={defaultValue as any}
+      value={getNestedValue(formik.values, id) ?? ''}
+      className={cn(className)}
+      disabled={disabled}
+      onValueChange={(selected: string) => {
+        if (onlyParentOnChange) {
+          onChange?.(selected);
+        } else {
+          onChange?.(selected);
+          formik.setFieldValue(id, selected);
+        }
+      }}
+    >
+      {options?.map((option) => (
+        <div className="flex items-center space-x-2" key={String(option.value)}>
+          <RadioGroupItem value={option.value as any} id={String(option.value)} />
+          {option?.label && <Label htmlFor={String(option.value)}>{option.label}</Label>}
+        </div>
+      ))}
+    </RadioGroup>
+    {!hideErrorText && <FormikErrorText id={id} formik={formik} />}
+  </div>
+);

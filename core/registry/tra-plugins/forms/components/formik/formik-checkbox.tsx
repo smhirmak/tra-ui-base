@@ -1,20 +1,26 @@
-import { useField } from 'formik';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React from 'react';
 import { cn } from '@/lib/utils';
-import Checkbox from '@/components/checkbox';
+import { Checkbox } from '@/components/ui/checkbox';
+import { FormikErrorText } from './formik-error-text';
+import { getNestedValue } from './utils';
 
 interface FormikCheckboxProps {
-  name: string;
-  label?: string;
+  id: string;
+  formik: any;
+  label?: string | React.ReactNode;
   disabled?: boolean;
   className?: string;
   containerClassName?: string;
   labelClassName?: string;
   labelSide?: 'left' | 'right';
-  onChange?: (checked: boolean) => void;
+  onChange?: (value: any) => void;
+  onlyParentOnChange?: boolean;
 }
 
-export function FormikCheckbox({
-  name,
+export const FormikCheckbox: React.FC<FormikCheckboxProps> = ({
+  id,
+  formik,
   label,
   disabled,
   className,
@@ -22,30 +28,25 @@ export function FormikCheckbox({
   labelClassName,
   labelSide = 'right',
   onChange,
-}: FormikCheckboxProps) {
-  const [field, meta, helpers] = useField({ name, type: 'checkbox' });
-
-  return (
-    <div className={cn('flex flex-col gap-1', containerClassName)}>
-      <div className="flex items-center gap-2">
-        <Checkbox
-          id={name}
-          checked={field.value ?? false}
-          onChange={(checked) => {
-            helpers.setValue(checked);
-            helpers.setTouched(true);
-            onChange?.(checked as boolean);
-          }}
-          disabled={disabled}
-          className={cn(className)}
-          label={label}
-          labelSide={labelSide}
-          labelClassName={cn(labelClassName)}
-        />
-      </div>
-      {meta.touched && meta.error && (
-        <span className="text-xs font-medium text-red-500">{meta.error}</span>
-      )}
-    </div>
-  );
-}
+  onlyParentOnChange,
+}) => (
+  <div className={cn('flex gap-2 items-center', containerClassName)}>
+    <Checkbox
+      id={id}
+      checked={getNestedValue(formik.values, id) ?? false}
+      onCheckedChange={(checked) => {
+        onChange?.(checked);
+        if (!onlyParentOnChange) {
+          formik.setFieldValue(id, checked);
+        }
+      }}
+      disabled={disabled}
+      className={cn('peer', className)}
+      containerClassName={cn(containerClassName)}
+      labelClassName={cn(labelClassName)}
+      label={label}
+      labelSide={labelSide}
+    />
+    <FormikErrorText id={id} formik={formik} />
+  </div>
+);
