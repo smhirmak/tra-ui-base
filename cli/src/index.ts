@@ -143,13 +143,17 @@ async function installPlugins(
   //    @msi components in registryDependencies are pulled automatically by shadcn
   const shadcnTargets = names.map((n) => `@tra/plugin-${n}`);
 
+  const spinner = ora('Installing plugins...').start();
+
   try {
     await execa('npx', ['shadcn@latest', 'add', ...shadcnTargets, '-s'], {
-      stdio: 'inherit',
+      stdio: 'pipe',
       cwd,
     });
+    spinner.succeed(chalk.green('Plugins installed'));
   } catch (err: any) {
-    console.log(chalk.red(`\n✗ shadcn add failed: ${String(err.message)}`));
+    spinner.fail(chalk.red('Plugin installation failed'));
+    console.log(chalk.red(`\n✗ Installation error: ${String(err.stderr || err.message)}`));
     return;
   }
 
