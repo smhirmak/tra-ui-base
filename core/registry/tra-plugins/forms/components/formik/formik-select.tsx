@@ -52,7 +52,7 @@ export function FormikSelect({
           helpers.setTouched(true);
           onChange?.(value);
         }}
-        placeHolder={placeholder}
+        placeholder={placeholder}
         options={msiOptions}
         isMulti={isMulti}
         isSearchable={isSearchable}
