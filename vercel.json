@@ -1,6 +1,5 @@
 {
     "buildCommand": "npm run registry:build",
     "outputDirectory": "public",
-    "installCommand": "npm install",
-    "rootDirectory": "core"
+    "installCommand": "npm install"
 }
