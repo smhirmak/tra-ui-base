@@ -8,7 +8,7 @@ import { FormikErrorText } from './formik-error-text';
 interface FormikRadioButtonsProps {
   id: string;
   formik: any;
-  options?: { value: string | boolean; label?: string; disabled?: boolean }[];
+  options: { value: string | boolean; label?: string; disabled?: boolean }[];
   defaultValue?: string | boolean;
   disabled?: boolean;
   className?: string;
