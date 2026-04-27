@@ -172,12 +172,13 @@
         "yup"
       ],
       "registryDependencies": [
-        "@msi/text-field",
-        "@msi/select",
+        "@msi/input",
+        "@msi/msi-select",
         "@msi/checkbox",
         "@msi/date-picker",
-        "@msi/radio-buttons",
-        "@msi/label"
+        "@msi/radio-group",
+        "@msi/label",
+        "@msi/switch"
       ],
       "files": [
         {
@@ -204,6 +205,11 @@
           "path": "registry/tra-plugins/forms/components/formik/formik-radio-buttons.tsx",
           "type": "registry:file",
           "target": "src/components/formik/formik-radio-buttons.tsx"
+        },
+        {
+          "path": "registry/tra-plugins/forms/components/formik/formik-switch.tsx",
+          "type": "registry:file",
+          "target": "src/components/formik/formik-switch.tsx"
         },
         {
           "path": "registry/tra-plugins/forms/components/formik/index.ts",

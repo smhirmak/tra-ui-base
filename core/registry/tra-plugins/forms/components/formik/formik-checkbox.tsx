@@ -1,28 +1,56 @@
 import { useField } from 'formik';
+import { cn } from '@/lib/utils';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface FormikCheckboxProps {
   name: string;
-  label: string;
+  label?: string;
   disabled?: boolean;
   className?: string;
+  containerClassName?: string;
+  labelClassName?: string;
+  labelSide?: 'left' | 'right';
+  onChange?: (checked: boolean) => void;
 }
 
-export function FormikCheckbox({ name, label, disabled, className }: FormikCheckboxProps) {
-  const [field, meta] = useField({ name, type: 'checkbox' });
+/**
+ * Formik bağlantılı Checkbox (MSI UI Kit).
+ *
+ * @example
+ * <FormikCheckbox name="agree" label="Kabul ediyorum" />
+ */
+export function FormikCheckbox({
+  name,
+  label,
+  disabled,
+  className,
+  containerClassName,
+  labelClassName,
+  labelSide = 'right',
+  onChange,
+}: FormikCheckboxProps) {
+  const [field, meta, helpers] = useField({ name, type: 'checkbox' });
 
   return (
-    <div className={className}>
-      <label className="flex cursor-pointer items-center gap-2 text-sm text-neutral-700 dark:text-neutral-300">
-        <input
-          {...field}
-          type="checkbox"
+    <div className={cn('flex flex-col gap-1', containerClassName)}>
+      <div className="flex items-center gap-2">
+        <Checkbox
+          id={name}
+          checked={field.value ?? false}
+          onCheckedChange={(checked) => {
+            helpers.setValue(checked);
+            helpers.setTouched(true);
+            onChange?.(checked as boolean);
+          }}
           disabled={disabled}
-          className="h-4 w-4 rounded border-neutral-300 accent-primary disabled:cursor-not-allowed"
+          className={cn(className)}
+          label={label}
+          labelSide={labelSide}
+          labelClassName={cn(labelClassName)}
         />
-        {label}
-      </label>
+      </div>
       {meta.touched && meta.error && (
-        <p className="mt-1 text-xs text-red-500">{meta.error}</p>
+        <span className="text-xs font-medium text-red-500">{meta.error}</span>
       )}
     </div>
   );
