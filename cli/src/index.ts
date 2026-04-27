@@ -146,7 +146,7 @@ async function installPlugins(
   const spinner = ora('Installing plugins...').start();
 
   try {
-    await execa('npx', ['shadcn@latest', 'add', ...shadcnTargets, '-s'], {
+    await execa('npx', ['shadcn@latest', 'add', ...shadcnTargets, '-o', '-s'], {
       stdio: 'pipe',
       cwd,
     });

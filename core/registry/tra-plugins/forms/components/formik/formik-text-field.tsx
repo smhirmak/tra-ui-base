@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+import Label from '@/components/label';
+import Input from '@/components/input';
 import { FormikErrorText } from './formik-error-text';
 import { getNestedValue } from './utils';
 
@@ -19,7 +19,6 @@ interface FormikTextFieldProps {
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
   textarea?: boolean;
-  rows?: number;
   showRequiredIcon?: boolean;
   onChange?: (value: string) => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
@@ -40,7 +39,6 @@ export const FormikTextField: React.FC<FormikTextFieldProps> = ({
   startIcon,
   endIcon,
   textarea,
-  rows,
   showRequiredIcon,
   onChange,
   onKeyDown,
@@ -71,7 +69,6 @@ export const FormikTextField: React.FC<FormikTextFieldProps> = ({
       startIcon={startIcon}
       endIcon={endIcon}
       textarea={textarea}
-      rows={rows}
       autoFocus={autoFocus}
       error={Boolean(getNestedValue(formik.touched, id) && getNestedValue(formik.errors, id))}
       className={cn(className)}

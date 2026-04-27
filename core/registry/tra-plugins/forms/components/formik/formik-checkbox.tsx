@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Checkbox } from '@/components/ui/checkbox';
+import Checkbox from '@/components/checkbox';
 import { FormikErrorText } from './formik-error-text';
 import { getNestedValue } from './utils';
 
 interface FormikCheckboxProps {
   id: string;
   formik: any;
-  label?: string | React.ReactNode;
+  label?: string;
   disabled?: boolean;
   className?: string;
   containerClassName?: string;
@@ -34,7 +34,7 @@ export const FormikCheckbox: React.FC<FormikCheckboxProps> = ({
     <Checkbox
       id={id}
       checked={getNestedValue(formik.values, id) ?? false}
-      onCheckedChange={(checked) => {
+      onChange={(checked) => {
         onChange?.(checked);
         if (!onlyParentOnChange) {
           formik.setFieldValue(id, checked);

@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { cn } from '@/lib/utils';
-import DatePicker from '@/components/ui/date-picker';
-import { Label } from '@/components/ui/label';
+import DatePicker from '@/components/date-picker';
+import Label from '@/components/label';
 import type { DayPickerProps } from 'react-day-picker';
 import { FormikErrorText } from './formik-error-text';
 import { getNestedValue } from './utils';
@@ -19,7 +19,6 @@ interface FormikDatePickerProps {
   showRequiredIcon?: boolean;
   showCompleteButton?: boolean;
   showClearButton?: boolean;
-  showMonthYearPicker?: boolean;
   onBlur?: () => void;
 }
 
@@ -35,7 +34,6 @@ export const FormikDatePicker: React.FC<FormikDatePickerProps> = ({
   showRequiredIcon,
   showCompleteButton,
   showClearButton = false,
-  showMonthYearPicker = false,
   onBlur,
 }) => (
   <div className={cn(containerClassName, 'flex flex-col text-start gap-1.5')}>
@@ -48,7 +46,6 @@ export const FormikDatePicker: React.FC<FormikDatePickerProps> = ({
     <DatePicker
       mode={mode}
       disabled={disabled}
-      showMonthYearPicker={showMonthYearPicker}
       value={getNestedValue(formik.values, id) ?? ''}
       minDate={minDate}
       maxDate={maxDate}

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { cn } from '@/lib/utils';
-import Select from '@/components/ui/select';
+import Select from '@/components/select';
 import { FormikErrorText } from './formik-error-text';
 import { getNestedValue } from './utils';
 
@@ -64,7 +64,7 @@ export const FormikSelect: React.FC<FormikSelectProps> = ({
         }
       }}
       defaultValue={defaultValue}
-      placeHolder={placeholder}
+      placeholder={placeholder}
       options={options}
       isMulti={isMulti}
       isSearchable={isSearchable}
