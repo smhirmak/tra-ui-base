@@ -14,12 +14,6 @@ interface FormikSwitchProps {
     onChange?: (checked: boolean) => void;
 }
 
-/**
- * Formik bağlantılı Switch (MSI UI Kit).
- *
- * @example
- * <FormikSwitch name="isActive" label="Aktif" />
- */
 export function FormikSwitch({
     name,
     label,

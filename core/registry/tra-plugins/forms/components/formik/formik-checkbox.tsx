@@ -13,12 +13,6 @@ interface FormikCheckboxProps {
   onChange?: (checked: boolean) => void;
 }
 
-/**
- * Formik bağlantılı Checkbox (MSI UI Kit).
- *
- * @example
- * <FormikCheckbox name="agree" label="Kabul ediyorum" />
- */
 export function FormikCheckbox({
   name,
   label,

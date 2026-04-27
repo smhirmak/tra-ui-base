@@ -17,12 +17,6 @@ interface FormikDatePickerProps {
   onBlur?: () => void;
 }
 
-/**
- * Formik bağlantılı DatePicker (MSI UI Kit).
- *
- * @example
- * <FormikDatePicker name="birthDate" label="Doğum Tarihi" />
- */
 export function FormikDatePicker({
   name,
   label,

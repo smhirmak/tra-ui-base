@@ -16,12 +16,6 @@ interface FormikRadioButtonsProps {
   onChange?: (value: string) => void;
 }
 
-/**
- * Formik bağlantılı RadioGroup (MSI UI Kit RadioButtons).
- *
- * @example
- * <FormikRadioButtons name="type" options={[{ value: 'a', label: 'A' }]} />
- */
 export function FormikRadioButtons({
   name,
   label,

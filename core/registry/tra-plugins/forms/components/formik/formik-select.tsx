@@ -20,12 +20,6 @@ interface FormikSelectProps {
   onChange?: (value: unknown) => void;
 }
 
-/**
- * Formik bağlantılı Select (MSI UI Kit Select).
- *
- * @example
- * <FormikSelect name="role" label="Rol" options={[{ value: 'admin', label: 'Admin' }]} />
- */
 export function FormikSelect({
   name,
   label,
