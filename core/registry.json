@@ -172,8 +172,6 @@
         "yup"
       ],
       "registryDependencies": [
-        "@msi/input",
-        "@msi/label",
         "@msi/text-field",
         "@msi/select",
         "@msi/checkbox",

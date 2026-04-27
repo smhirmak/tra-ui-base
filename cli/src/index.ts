@@ -143,8 +143,6 @@ async function installPlugins(
   //    @msi components in registryDependencies are pulled automatically by shadcn
   const shadcnTargets = names.map((n) => `@tra/plugin-${n}`);
 
-  console.log(chalk.grey(`  → shadcn add ${shadcnTargets.join(' ')}\n`));
-
   try {
     await execa('npx', ['shadcn@latest', 'add', ...shadcnTargets, '-s'], {
       stdio: 'inherit',
