@@ -173,10 +173,10 @@
       ],
       "registryDependencies": [
         "@msi/input",
-        "@msi/msi-select",
+        "@msi/select",
         "@msi/checkbox",
         "@msi/date-picker",
-        "@msi/radio-group",
+        "@msi/radio-buttons",
         "@msi/label",
         "@msi/switch"
       ],

@@ -1,7 +1,6 @@
 import { useField } from 'formik';
 import { cn } from '@/lib/utils';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-buttons';
 
 interface Option {
   value: string;
@@ -18,7 +17,7 @@ interface FormikRadioButtonsProps {
 }
 
 /**
- * Formik bağlantılı RadioGroup (MSI UI Kit).
+ * Formik bağlantılı RadioGroup (MSI UI Kit RadioButtons).
  *
  * @example
  * <FormikRadioButtons name="type" options={[{ value: 'a', label: 'A' }]} />
@@ -41,21 +40,22 @@ export function FormikRadioButtons({
         </span>
       )}
       <RadioGroup
-        value={field.value ?? ''}
-        disabled={disabled}
-        onValueChange={(val) => {
+        defaultValue={field.value ?? ''}
+        onChange={(val) => {
           helpers.setValue(val);
           helpers.setTouched(true);
-          onChange?.(val);
+          if (val !== undefined) onChange?.(String(val));
         }}
       >
         {options.map((opt) => (
-          <div key={opt.value} className="flex items-center space-x-2">
-            <RadioGroupItem value={opt.value} id={`${name}-${opt.value}`} />
-            {opt.label && (
-              <Label htmlFor={`${name}-${opt.value}`}>{opt.label}</Label>
-            )}
-          </div>
+          <RadioGroupItem
+            key={opt.value}
+            id={`${name}-${opt.value}`}
+            value={opt.value}
+            label={opt.label}
+            name={name}
+            disabled={disabled}
+          />
         ))}
       </RadioGroup>
       {meta.touched && meta.error && (

@@ -1,23 +1,27 @@
 import { useField } from 'formik';
 import { cn } from '@/lib/utils';
-import MsiSelect, { type ISelectOption } from '@/components/ui/msi-select';
+import Select, { type ISelectOption } from '@/components/ui/select';
+
+interface FormikSelectOption {
+  value: string | number;
+  label: string;
+}
 
 interface FormikSelectProps {
   name: string;
   label?: string;
-  options: ISelectOption[];
+  options: FormikSelectOption[];
   placeholder?: string;
   disabled?: boolean;
   className?: string;
   isMulti?: boolean;
   isSearchable?: boolean;
   showRequiredIcon?: boolean;
-  hideClearOption?: boolean;
   onChange?: (value: unknown) => void;
 }
 
 /**
- * Formik bağlantılı Select (MSI UI Kit MsiSelect).
+ * Formik bağlantılı Select (MSI UI Kit Select).
  *
  * @example
  * <FormikSelect name="role" label="Rol" options={[{ value: 'admin', label: 'Admin' }]} />
@@ -32,14 +36,19 @@ export function FormikSelect({
   isMulti = false,
   isSearchable = false,
   showRequiredIcon,
-  hideClearOption,
   onChange,
 }: FormikSelectProps) {
   const [field, meta, helpers] = useField(name);
 
+  // MSI Select ISelectOption uses `content` field instead of `label`
+  const msiOptions: ISelectOption[] = options.map((o) => ({
+    value: o.value,
+    content: o.label,
+  }));
+
   return (
     <div className={cn(className)}>
-      <MsiSelect
+      <Select
         id={name}
         label={label}
         showRequiredIcon={showRequiredIcon}
@@ -50,12 +59,11 @@ export function FormikSelect({
           onChange?.(value);
         }}
         placeHolder={placeholder}
-        options={options}
+        options={msiOptions}
         isMulti={isMulti}
         isSearchable={isSearchable}
         disabled={disabled}
         error={!!(meta.touched && meta.error)}
-        hideClearOption={hideClearOption}
       />
       {meta.touched && meta.error && (
         <span className="text-xs font-medium text-red-500">{meta.error}</span>
