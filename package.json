@@ -1,0 +1,6 @@
+{
+  "name": "tra-ui-base",
+  "private": true,
+  "version": "0.0.1",
+  "description": "TRA UI Base - React project starter template and plugin system"
+}

@@ -12,20 +12,11 @@ Yeni proje iskeleti + sonradan eklenebilen modüler plugin sistemi.
 ```bash
 npx @tra-bilisim/tra-ui create my-project
 cd my-project
-npm install
 ```
 
-> `create` komutu template'i otomatik indirir, `.git` geçmişini temizler ve sonraki adımları gösterir.
+> `create` komutu template'i indirir, `npm install` ve `npx msi-ui-cli init` adımlarını otomatik çalıştırır. Proje hazır!
 
-### 2. MSI UI Kit Başlat
-
-```bash
-npx msi-ui-cli init
-```
-
-> Tema, `components.json` ve temel bileşenleri (Button, Input vb.) kurar.
-
-### 3. İstediğin Plugin'leri Ekle
+### 2. İstediğin Plugin'leri Ekle
 
 ```bash
 # İnteraktif seçim (checkbox)
@@ -48,7 +39,7 @@ npx @tra-bilisim/tra-ui add i18n http table
 | Router | TanStack Router v1 + DevTools |
 | Data Fetching | TanStack Query v5 + DevTools |
 | CSS | Tailwind CSS v4 |
-| UI Kit | MSI UI Kit (`npx msi-ui-cli init` ile kurulur) |
+| UI Kit | MSI UI Kit (create sırasında otomatik kurulur) |
 | Linting | ESLint (airbnb config) |
 
 ```

@@ -1,80 +1,80 @@
 import type { Plugin } from './types.js';
 
 /**
- * Plugin metadata listesi.
- * Dosya kopyalama işlemi artık shadcn registry üzerinden yapılıyor.
- * Bu dizi; list, info ve post-install mesajları için kullanılır.
+ * Plugin metadata list.
+ * File copying is handled via the shadcn registry.
+ * This array is used for list, info and post-install messages.
  */
 export const PLUGINS: Plugin[] = [
   {
     name: 'i18n',
     title: 'Internationalization (Paraglide)',
-    description: 'inlang Paraglide ile compile-time i18n. TR/EN dil desteği, LocaleContext, dil seçici hook',
+    description: 'Compile-time i18n with inlang Paraglide. TR/EN language support, LocaleContext, locale hook',
     packages: ['@inlang/paraglide-js', '@inlang/paraglide-vite'],
     registryDependencies: [],
     postInstall: [
       '',
-      '📦 i18n (Paraglide) kurulumu tamamlandı!',
+      '📦 i18n (Paraglide) installed!',
       '',
-      '📌 Sonraki adımlar:',
-      '  1. vite.config.ts dosyasına Paraglide plugin\'ini ekleyin:',
+      '📌 Next steps:',
+      '  1. Add the Paraglide plugin to vite.config.ts:',
       '     import { paraglide } from "@inlang/paraglide-vite"',
       '     plugins: [ paraglide({ project: "./project.inlang", outdir: "./src/paraglide" }) ]',
-      '  2. main.tsx\'e LocaleProvider\'ı sarın',
-      '  3. messages/ klasörüne çevirilerinizi ekleyin',
+      '  2. Wrap your app with LocaleProvider in main.tsx',
+      '  3. Add your translations to the messages/ folder',
     ],
   },
   {
     name: 'http',
     title: 'HTTP Client (Axios)',
-    description: 'Axios instance, token interceptor, 401 refresh, merkezi hata yönetimi, AuthContext ve BaseService',
+    description: 'Axios instance, token interceptor, 401 refresh, centralized error handling, AuthContext and BaseService',
     packages: ['axios'],
     registryDependencies: [],
     postInstall: [
       '',
-      '📦 HTTP Client (Axios) kurulumu tamamlandı!',
+      '📦 HTTP Client (Axios) installed!',
       '',
-      '📌 Sonraki adımlar:',
-      '  1. src/lib/http.ts dosyasında BASE_URL\'i güncelleyin',
-      '  2. main.tsx\'e AuthProvider\'ı (AuthContext\'ten) sarın',
-      '  3. BaseService\'i extend ederek servislerinizi oluşturun',
+      '📌 Next steps:',
+      '  1. Update BASE_URL in src/lib/http.ts',
+      '  2. Wrap your app with AuthProvider (from AuthContext) in main.tsx',
+      '  3. Extend BaseService to create your services',
     ],
   },
   {
     name: 'signalr',
     title: 'Real-time (SignalR)',
-    description: 'SignalR HubConnection yönetimi, otomatik reconnect, MessageHubContext, useSignalR hook\'ları',
+    description: 'SignalR HubConnection management, auto-reconnect, MessageHubContext, useSignalR hooks',
     packages: ['@microsoft/signalr'],
     registryDependencies: [],
     postInstall: [
       '',
-      '📦 SignalR kurulumu tamamlandı!',
+      '📦 SignalR installed!',
       '',
-      '📌 Sonraki adımlar:',
-      '  1. src/lib/signalr.ts dosyasında HUB_URL\'i güncelleyin',
-      '  2. main.tsx\'e MessageHubProvider\'ı sarın (AuthProvider\'ın içine alın)',
-      '  3. useMessageHub hook\'unu component\'lerde kullanın',
+      '📌 Next steps:',
+      '  1. Update HUB_URL in src/lib/signalr.ts',
+      '  2. Wrap your app with MessageHubProvider in main.tsx (inside AuthProvider)',
+      '  3. Use the useMessageHub hook in your components',
     ],
   },
   {
     name: 'table',
     title: 'Data Table (TanStack Table)',
-    description: 'TanStack Table wrapper, sıralama, filtreleme, sayfalama, export, skeleton',
+    description: 'TanStack Table wrapper with sorting, filtering, pagination, export and skeleton support',
     packages: ['@tanstack/react-table'],
     registryDependencies: ['@msi/skeleton', '@msi/input'],
     postInstall: [
       '',
-      '📦 Data Table (TanStack Table) kurulumu tamamlandı!',
+      '📦 Data Table (TanStack Table) installed!',
       '',
-      '📌 Kullanım:',
+      '📌 Usage:',
       '  import { CustomTable } from "@/components/custom-table"',
       '  <CustomTable columns={columns} data={data} />',
     ],
   },
   {
     name: 'forms',
-    title: 'Form Yönetimi (Formik + Yup)',
-    description: 'Formik + Yup entegrasyonu, MSI UI Kit\'e bağlı form component\'leri ve Validations sabitleri',
+    title: 'Form Management (Formik + Yup)',
+    description: 'Formik + Yup integration, MSI UI Kit-bound form components and shared Validations constants',
     packages: ['formik', 'yup'],
     registryDependencies: [
       '@msi/text-field',
@@ -86,11 +86,11 @@ export const PLUGINS: Plugin[] = [
     ],
     postInstall: [
       '',
-      '📦 Form Yönetimi (Formik + Yup) kurulumu tamamlandı!',
+      '📦 Form Management (Formik + Yup) installed!',
       '',
-      '📌 Kullanım:',
+      '📌 Usage:',
       '  import { FormikTextField, FormikSelect } from "@/components/formik"',
-      '  Validasyon şemaları: src/constants/Validations.ts',
+      '  Validation schemas: src/constants/Validations.ts',
     ],
   },
 ];

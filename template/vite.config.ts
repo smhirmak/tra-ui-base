@@ -7,7 +7,9 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   plugins: [
-    devtools({ enhancedLogs: { enabled: false } }),
+    // Devtools portu .env'den okunur (VITE_DEVTOOLS_PORT=42070)
+    // Birden fazla proje açıkken çakışmayı önlemek için her proje farklı port kullanmalı
+    devtools({ eventBusConfig: { port: Number(process.env.VITE_DEVTOOLS_PORT) || 42069 } }),
     tailwindcss(),
     tanstackRouter({
       target: 'react',
