@@ -1,7 +1,7 @@
 import { useField } from 'formik';
 import { cn } from '@/lib/utils';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
+import Switch from '@/components/switch';
+import Label from '@/components/label';
 
 interface FormikSwitchProps {
     name: string;
@@ -43,7 +43,7 @@ export function FormikSwitch({
                 <Switch
                     id={name}
                     checked={field.value ?? false}
-                    onCheckedChange={(checked) => {
+                    onChange={(checked) => {
                         helpers.setValue(checked);
                         helpers.setTouched(true);
                         onChange?.(checked);

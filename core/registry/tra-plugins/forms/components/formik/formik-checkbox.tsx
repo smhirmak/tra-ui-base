@@ -1,6 +1,6 @@
 import { useField } from 'formik';
 import { cn } from '@/lib/utils';
-import { Checkbox } from '@/components/ui/checkbox';
+import Checkbox from '@/components/checkbox';
 
 interface FormikCheckboxProps {
   name: string;
@@ -37,7 +37,7 @@ export function FormikCheckbox({
         <Checkbox
           id={name}
           checked={field.value ?? false}
-          onCheckedChange={(checked) => {
+          onChange={(checked) => {
             helpers.setValue(checked);
             helpers.setTouched(true);
             onChange?.(checked as boolean);

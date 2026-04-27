@@ -1,7 +1,7 @@
 import { useField } from 'formik';
 import { cn } from '@/lib/utils';
-import DatePicker from '@/components/ui/date-picker';
-import { Label } from '@/components/ui/label';
+import DatePicker from '@/components/date-picker';
+import Label from '@/components/label';
 import type { DayPickerProps } from 'react-day-picker';
 
 interface FormikDatePickerProps {
@@ -13,7 +13,6 @@ interface FormikDatePickerProps {
   className?: string;
   mode?: DayPickerProps['mode'];
   showRequiredIcon?: boolean;
-  showClearButton?: boolean;
   showCompleteButton?: boolean;
   onBlur?: () => void;
 }
@@ -33,8 +32,6 @@ export function FormikDatePicker({
   className,
   mode = 'single',
   showRequiredIcon,
-  showClearButton = false,
-  showCompleteButton,
   onBlur,
 }: FormikDatePickerProps) {
   const [field, meta, helpers] = useField(name);
@@ -53,8 +50,6 @@ export function FormikDatePicker({
         disabled={disabled}
         minDate={minDate}
         maxDate={maxDate}
-        showClearButton={showClearButton}
-        showCompleteButton={showCompleteButton}
         error={!!(meta.touched && meta.error)}
         onChange={(val) => {
           if (mode === 'range') {

@@ -1,11 +1,11 @@
 import { useField } from 'formik';
 import { cn } from '@/lib/utils';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import TextField from '../text-field';
 
 interface FormikTextFieldProps {
   name: string;
   label?: string;
+  labelClassName?: string;
   placeholder?: string;
   type?: string;
   disabled?: boolean;
@@ -15,21 +15,14 @@ interface FormikTextFieldProps {
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
   textarea?: boolean;
-  rows?: number;
   showRequiredIcon?: boolean;
   onChange?: (value: string) => void;
 }
 
-/**
- * Formik bağlantılı Input (MSI UI Kit).
- * Hata mesajı ve touched durumunu otomatik yönetir.
- *
- * @example
- * <FormikTextField name="email" label="E-posta" type="email" />
- */
 export function FormikTextField({
   name,
   label,
+  labelClassName,
   placeholder,
   type = 'text',
   disabled,
@@ -39,7 +32,6 @@ export function FormikTextField({
   startIcon,
   endIcon,
   textarea,
-  rows,
   showRequiredIcon,
   onChange,
 }: FormikTextFieldProps) {
@@ -47,13 +39,10 @@ export function FormikTextField({
 
   return (
     <div className={cn('flex flex-col gap-1.5', containerClassName)}>
-      {label && (
-        <Label htmlFor={name}>
-          {label}
-          {showRequiredIcon && <span className="text-red-500"> *</span>}
-        </Label>
-      )}
-      <Input
+      <TextField
+        label={label}
+        labelClassName={labelClassName}
+        showRequiredIcon={showRequiredIcon}
         id={name}
         value={field.value ?? ''}
         onChange={(e) => {
@@ -68,7 +57,6 @@ export function FormikTextField({
         startIcon={startIcon}
         endIcon={endIcon}
         textarea={textarea}
-        rows={rows}
         error={!!(meta.touched && meta.error)}
         className={cn(className)}
       />

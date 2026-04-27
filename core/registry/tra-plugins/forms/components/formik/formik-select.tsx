@@ -1,6 +1,6 @@
 import { useField } from 'formik';
 import { cn } from '@/lib/utils';
-import Select, { type ISelectOption } from '@/components/ui/select';
+import Select, { type ISelectOption } from '@/components/select';
 
 interface FormikSelectOption {
   value: string | number;
