@@ -172,12 +172,11 @@
         "yup"
       ],
       "registryDependencies": [
-        "@msi/input",
+        "@msi/text-field",
         "@msi/select",
         "@msi/checkbox",
         "@msi/date-picker",
         "@msi/radio-buttons",
-        "@msi/label",
         "@msi/switch"
       ],
       "files": [
