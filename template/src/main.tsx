@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { TanStackDevtools } from '@tanstack/react-devtools';
 import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools';
-import { ThemeProvider } from '@/contexts/theme/ThemeProvider';
+import { ThemeProvider } from '@/contexts/theme/theme-provider';
 import { routeTree } from './routeTree.gen';
 import './styles.css';
 

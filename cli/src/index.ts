@@ -282,13 +282,23 @@ async function createProject(projectName: string): Promise<void> {
 
     // 2. MSI UI Kit init — no spinner, run directly with stdio: inherit
     console.log(`\n${chalk.bold('2/2')} ${chalk.grey('Setting up MSI UI Kit...')}`);
+    let msiUiKitInstalled = false;
     try {
       await execa('npx', ['msi-ui-cli', 'init', '-y'], { stdio: 'inherit', cwd: targetDir });
       console.log(chalk.green('✔ MSI UI Kit installed'));
-      await execa('npx', ['msi-ui-cli', 'add', 'theme-mode-toggle', '-y'], { stdio: 'inherit', cwd: targetDir });
+      msiUiKitInstalled = true;
     } catch {
       console.log(chalk.yellow('⚠ MSI UI Kit setup failed — run manually: npx msi-ui-cli init'));
     }
+    if (msiUiKitInstalled) {
+      try {
+        await execa('npx', ['msi-ui-cli', 'add', 'theme-mode-toggle'], { stdio: 'inherit', cwd: targetDir });
+        console.log(chalk.green('✔ Theme Mode Toggle Component added'));
+      } catch {
+        console.log(chalk.yellow('⚠ Theme Mode Toggle setup failed — run manually: npx msi-ui-cli add theme-mode-toggle'));
+      }
+    }
+
   } catch (err: any) {
     spinner.fail(chalk.red('Failed to download template.'));
     console.log(chalk.grey(`  Error: ${String(err.message)}`));
