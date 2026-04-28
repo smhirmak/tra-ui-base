@@ -19,7 +19,8 @@ import type { PackageManager } from './types.js';
 const TRA_REGISTRY_URL = 'https://tra-ui-base.vercel.app/r/{name}.json';
 const LOCAL_REGISTRY_URL = 'http://localhost:3030/r/{name}.json';
 const MSI_REGISTRY_URL = 'https://msi-ui-kit.vercel.app/r/{name}.json';
-const TEMPLATE_REPO = 'https://git.trabilisim.tech/developers/tra-ui-base.git';
+const TEMPLATE_REPO = 'https://github.com/smhirmak/tra-ui-base.git';
+// const TEMPLATE_REPO = 'https://git.trabilisim.tech/developers/tra-ui-base.git';
 const TEMPLATE_BRANCH = 'develop';
 
 const program = new Command();
