@@ -1,7 +1,7 @@
 {
   "$schema": "https://inlang.com/schema/project-settings",
-  "sourceLanguageTag": "tr",
-  "languageTags": ["tr", "en"],
+  "baseLocale": "tr",
+  "locales": ["tr", "en"],
   "modules": [
     "https://cdn.jsdelivr.net/npm/@inlang/plugin-message-format@4/dist/index.js",
     "https://cdn.jsdelivr.net/npm/@inlang/plugin-paraglide-js-adapter@1/dist/index.js"
