@@ -65,6 +65,11 @@
           "target": "src/constants/ApiEnvironment.ts"
         },
         {
+          "path": "registry/tra-plugins/axios/constants/StorageKeys.ts",
+          "type": "registry:file",
+          "target": "src/constants/StorageKeys.ts"
+        },
+        {
           "path": "registry/tra-plugins/axios/utilities/Environment.ts",
           "type": "registry:file",
           "target": "src/utilities/Environment.ts"

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createContext, createRef, useContext, useEffect, useImperativeHandle, useMemo, useState, type ReactNode } from 'react';
 import RequestService, { setAxiosAuthToken, setAxiosLogoutCallback, type CustomAxiosResponse } from '@/lib/axios-config';
+import StorageKeys from '@/constants/StorageKeys';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 export interface AuthUser {
@@ -31,15 +32,15 @@ function isResponseSuccessful(response: CustomAxiosResponse<any>): boolean {
 // ─── Provider ────────────────────────────────────────────────────────────────
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [authToken, setAuthToken] = useState<string | null>(
-        () => localStorage.getItem('access_token'),
+        () => localStorage.getItem(StorageKeys.ACCESS_TOKEN),
     );
-    const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('access_token'));
+    const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem(StorageKeys.ACCESS_TOKEN));
     const [isLoading, setIsLoading] = useState(true);
     const [user, setUser] = useState<AuthUser | null>(null);
 
     const clearUserInfo = () => {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('user');
+        localStorage.removeItem(StorageKeys.ACCESS_TOKEN);
+        localStorage.removeItem(StorageKeys.USER);
         setAuthToken(null);
         setIsAuthenticated(false);
         setAxiosAuthToken(null);
@@ -57,7 +58,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (isResponseSuccessful(response)) {
             const token = response.data?.token ?? response.data?.accessToken;
             setAuthToken(token);
-            localStorage.setItem('access_token', token);
+            localStorage.setItem(StorageKeys.ACCESS_TOKEN, token);
             setAxiosAuthToken(token);
             setIsAuthenticated(true);
             setUser(response.data);

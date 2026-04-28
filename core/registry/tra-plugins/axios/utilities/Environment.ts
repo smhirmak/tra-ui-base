@@ -5,7 +5,7 @@ const Environment = {
     if (typeof window === 'undefined') {
       return process.env.NODE_ENV === 'development'
         ? ApiEnvironment.Type.local
-        : ApiEnvironment.Type.Release;
+        : ApiEnvironment.Type.release;
     }
 
     const { host } = window.location;
@@ -22,7 +22,7 @@ const Environment = {
     if (host.includes('10.34.60.')) {
       return ApiEnvironment.Type.localTest;
     }
-    return ApiEnvironment.Type.Release;
+    return ApiEnvironment.Type.release;
   },
 
   getBaseUrl: () => {
@@ -31,7 +31,7 @@ const Environment = {
   },
 
   isLocal: () => Environment.getEnvironment() === ApiEnvironment.Type.local,
-  isRelease: () => Environment.getEnvironment() === ApiEnvironment.Type.Release,
+  isRelease: () => Environment.getEnvironment() === ApiEnvironment.Type.release,
 };
 
 export default Environment;
