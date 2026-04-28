@@ -46,7 +46,7 @@
     },
     {
       "path": "registry/tra-plugins/i18n/project.inlang/settings.json",
-      "content": "{\r\n  \"$schema\": \"https://inlang.com/schema/project-settings\",\r\n  \"baseLocale\": \"tr\",\r\n  \"locales\": [\"tr\", \"en\"],\r\n  \"modules\": [\r\n    \"https://cdn.jsdelivr.net/npm/@inlang/plugin-message-format@4/dist/index.js\",\r\n    \"https://cdn.jsdelivr.net/npm/@inlang/plugin-paraglide-js-adapter@1/dist/index.js\"\r\n  ],\r\n  \"plugin.inlang.messageFormat\": {\r\n    \"pathPattern\": \"./messages/{languageTag}.json\"\r\n  }\r\n}\r\n",
+      "content": "{\r\n  \"$schema\": \"https://inlang.com/schema/project-settings\",\r\n  \"baseLocale\": \"tr\",\r\n  \"locales\": [\"tr\", \"en\"],\r\n  \"modules\": [\r\n    // \"https://cdn.jsdelivr.net/npm/@inlang/plugin-message-format@4/dist/index.js\",\r\n    // \"https://cdn.jsdelivr.net/npm/@inlang/plugin-paraglide-js-adapter@1/dist/index.js\"\r\n    \"https://cdn.jsdelivr.net/npm/@inlang/plugin-message-format@4/dist/index.js\"\r\n  ],\r\n  \"plugin.inlang.messageFormat\": {\r\n    \"pathPattern\": \"./messages/{languageTag}.json\"\r\n  }\r\n}\r\n",
       "type": "registry:file",
       "target": "project.inlang/settings.json"
     }

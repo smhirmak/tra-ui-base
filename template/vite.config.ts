@@ -4,6 +4,7 @@ import { tanstackRouter } from '@tanstack/router-plugin/vite';
 import { devtools } from '@tanstack/devtools-vite';
 import { fileURLToPath, URL } from 'node:url';
 import tailwindcss from '@tailwindcss/vite';
+// import { paraglide } from "@inlang/paraglide-vite"
 
 export default defineConfig({
   plugins: [
@@ -17,8 +18,7 @@ export default defineConfig({
     }),
     viteReact(),
     // [i18n] Paraglide plugin buraya eklenir (npx tra-ui add i18n sonrası):
-    // import { paraglide } from "@inlang/paraglide-vite"
-    // paraglide({ project: "./project.inlang", outdir: "./src/paraglide" })
+    // paraglide({ project: "./src/project.inlang", outdir: "./src/paraglide" })
   ],
   resolve: {
     alias: {
