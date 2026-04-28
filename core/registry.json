@@ -51,36 +51,31 @@
       ]
     },
     {
-      "name": "plugin-http",
+      "name": "plugin-axios",
       "type": "registry:block",
       "title": "HTTP Client (Axios)",
-      "description": "Axios instance, token interceptor, 401 otomatik token yenileme, merkezi hata yönetimi, AuthContext ve BaseService sınıfı.",
+      "description": "Axios instance, interceptors, token yönetimi, CustomAxiosResponse tipi, AuthContext/AuthProvider ve createService kalıbı.",
       "dependencies": [
         "axios"
       ],
       "files": [
         {
-          "path": "registry/tra-plugins/http/lib/http.ts",
+          "path": "registry/tra-plugins/axios/lib/axios-config.ts",
           "type": "registry:file",
-          "target": "src/lib/http.ts"
+          "target": "src/lib/axios-config.ts"
         },
         {
-          "path": "registry/tra-plugins/http/lib/interceptors.ts",
-          "type": "registry:file",
-          "target": "src/lib/interceptors.ts"
-        },
-        {
-          "path": "registry/tra-plugins/http/contexts/auth/AuthContext.tsx",
+          "path": "registry/tra-plugins/axios/contexts/auth/AuthContext.tsx",
           "type": "registry:file",
           "target": "src/contexts/auth/AuthContext.tsx"
         },
         {
-          "path": "registry/tra-plugins/http/hooks/useAuth.ts",
+          "path": "registry/tra-plugins/axios/hooks/useAuth.ts",
           "type": "registry:file",
           "target": "src/hooks/useAuth.ts"
         },
         {
-          "path": "registry/tra-plugins/http/services/BaseService.ts",
+          "path": "registry/tra-plugins/axios/services/BaseService.ts",
           "type": "registry:file",
           "target": "src/services/BaseService.ts"
         }

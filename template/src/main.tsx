@@ -54,7 +54,7 @@ if (rootElement && !rootElement.innerHTML) {
     <ThemeProvider defaultTheme="light" storageKey="tra-ui-theme">
       <QueryClientProvider client={queryClient}>
         {/* [i18n]      → LocaleProvider sarın (npx tra-ui add i18n) */}
-        {/* [auth/http] → AuthProvider sarın (npx tra-ui add http) */}
+        {/* [auth/axios] → AuthProvider sarın (npx tra-ui add axios) */}
         {/* [signalr]   → MessageHubProvider sarın (npx tra-ui add signalr) */}
         <RouterSetup />
         <TanStackDevtools

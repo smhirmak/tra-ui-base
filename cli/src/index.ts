@@ -306,7 +306,7 @@ function listPlugins(): void {
     `  ${chalk.yellowBright('npx tra-ui add i18n')}       ${chalk.grey('→ single plugin')}`,
   );
   console.log(
-    `  ${chalk.yellowBright('npx tra-ui add i18n http')}  ${chalk.grey('→ multiple plugins')}`,
+    `  ${chalk.yellowBright('npx tra-ui add i18n axios')} ${chalk.grey('→ multiple plugins')}`,
   );
   console.log(
     `  ${chalk.yellowBright('npx tra-ui info i18n')}      ${chalk.grey('→ plugin details')}\n`,
