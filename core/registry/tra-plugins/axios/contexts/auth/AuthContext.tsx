@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createContext, createRef, useContext, useEffect, useImperativeHandle, useMemo, useState, type ReactNode } from 'react';
-import RequestService, { setAxiosAuthToken, type CustomAxiosResponse } from '@/lib/axios-config';
+import RequestService, { setAxiosAuthToken, setAxiosLogoutCallback, type CustomAxiosResponse } from '@/lib/axios-config';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 export interface AuthUser {
@@ -76,6 +76,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     useImperativeHandle(authLogoutRef, () => ({ logout }));
+
+    // Axios interceptor'a logout callback'i kaydet
+    useEffect(() => {
+        setAxiosLogoutCallback(() => {
+            clearUserInfo();
+            setUser(null);
+        });
+    }, []);
 
     // Token doğrulama
     useEffect(() => {

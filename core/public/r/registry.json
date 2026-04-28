@@ -60,6 +60,16 @@
       ],
       "files": [
         {
+          "path": "registry/tra-plugins/axios/constants/ApiEnvironment.ts",
+          "type": "registry:file",
+          "target": "src/constants/ApiEnvironment.ts"
+        },
+        {
+          "path": "registry/tra-plugins/axios/utilities/Environment.ts",
+          "type": "registry:file",
+          "target": "src/utilities/Environment.ts"
+        },
+        {
           "path": "registry/tra-plugins/axios/lib/axios-config.ts",
           "type": "registry:file",
           "target": "src/lib/axios-config.ts"
