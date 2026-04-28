@@ -45,10 +45,22 @@ program
 
 // ─── CREATE komutu ──────────────────────────────────────────────────────────
 program
-  .command('create <project-name>')
+  .command('create [project-name]')
   .description('Creates a new TRA UI Base project.')
-  .action(async (projectName: string) => {
-    await createProject(projectName);
+  .action(async (projectName?: string) => {
+    let name = projectName;
+    if (!name) {
+      const { inputName } = await inquirer.prompt<{ inputName: string }>([
+        {
+          type: 'input',
+          name: 'inputName',
+          message: 'Project name:',
+          validate: (v: string) => v.trim().length > 0 || 'Project name is required.',
+        },
+      ]);
+      name = inputName.trim();
+    }
+    await createProject(name);
   });
 
 // ─── LIST komutu ─────────────────────────────────────────────────────────────
