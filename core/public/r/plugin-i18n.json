@@ -34,13 +34,13 @@
     },
     {
       "path": "registry/tra-plugins/i18n/messages/tr.json",
-      "content": "{\r\n  \"hello\": \"Merhaba, {name}!\",\r\n  \"welcome\": \"Hoş geldiniz\",\r\n  \"loading\": \"Yükleniyor...\",\r\n  \"error\": \"Bir hata oluştu\",\r\n  \"save\": \"Kaydet\",\r\n  \"cancel\": \"İptal\",\r\n  \"confirm\": \"Onayla\",\r\n  \"delete\": \"Sil\",\r\n  \"edit\": \"Düzenle\",\r\n  \"search\": \"Ara\",\r\n  \"noData\": \"Veri bulunamadı\"\r\n}\r\n",
+      "content": "{\r\n  \"hello\": \"Merhaba, {name}!\",\r\n  \"welcome\": \"Hoş geldiniz\",\r\n  \"loading\": \"Yükleniyor...\",\r\n  \"error\": \"Bir hata oluştu\",\r\n  \"save\": \"Kaydet\",\r\n  \"cancel\": \"İptal\",\r\n  \"confirm\": \"Onayla\",\r\n  \"delete\": \"Sil\",\r\n  \"edit\": \"Düzenle\",\r\n  \"search\": \"Ara\",\r\n  \"noData\": \"Veri bulunamadı\"\r\n}",
       "type": "registry:file",
       "target": "messages/tr.json"
     },
     {
       "path": "registry/tra-plugins/i18n/messages/en.json",
-      "content": "{\r\n  \"hello\": \"Hello, {name}!\",\r\n  \"welcome\": \"Welcome\",\r\n  \"loading\": \"Loading...\",\r\n  \"error\": \"An error occurred\",\r\n  \"save\": \"Save\",\r\n  \"cancel\": \"Cancel\",\r\n  \"confirm\": \"Confirm\",\r\n  \"delete\": \"Delete\",\r\n  \"edit\": \"Edit\",\r\n  \"search\": \"Search\",\r\n  \"noData\": \"No data found\"\r\n}\r\n",
+      "content": "{\r\n  \"hello\": \"Hello, {name}!\",\r\n  \"welcome\": \"Welcome\",\r\n  \"loading\": \"Loading...\",\r\n  \"error\": \"An error occurred\",\r\n  \"save\": \"Save\",\r\n  \"cancel\": \"Cancel\",\r\n  \"confirm\": \"Confirm\",\r\n  \"delete\": \"Delete\",\r\n  \"edit\": \"Edit\",\r\n  \"search\": \"Search\",\r\n  \"noData\": \"No data found\"\r\n}",
       "type": "registry:file",
       "target": "messages/en.json"
     },

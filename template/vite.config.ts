@@ -8,8 +8,6 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   plugins: [
-    // Devtools portu .env'den okunur (VITE_DEVTOOLS_PORT=42070)
-    // Birden fazla proje açıkken çakışmayı önlemek için her proje farklı port kullanmalı
     devtools({ eventBusConfig: { port: Number(process.env.VITE_DEVTOOLS_PORT) || 42069 } }),
     tailwindcss(),
     tanstackRouter({
@@ -17,7 +15,7 @@ export default defineConfig({
       autoCodeSplitting: true,
     }),
     viteReact(),
-    // [i18n] Paraglide plugin buraya eklenir (npx tra-ui add i18n sonrası):
+    // [i18n] Paraglide plugin buraya eklenir (npx @tra-bilisim/tra-ui add i18n sonrası):
     // paraglideVitePlugin({ project: "./src/project.inlang", outdir: "./src/paraglide" }),
   ],
   resolve: {

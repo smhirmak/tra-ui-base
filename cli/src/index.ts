@@ -285,6 +285,7 @@ async function createProject(projectName: string): Promise<void> {
     try {
       await execa('npx', ['msi-ui-cli', 'init', '-y'], { stdio: 'inherit', cwd: targetDir });
       console.log(chalk.green('✔ MSI UI Kit installed'));
+      await execa('npx', ['msi-ui-cli', 'add', 'theme-mode-toggle', '-y'], { stdio: 'inherit', cwd: targetDir });
     } catch {
       console.log(chalk.yellow('⚠ MSI UI Kit setup failed — run manually: npx msi-ui-cli init'));
     }
