@@ -9,28 +9,16 @@
   ],
   "files": [
     {
-      "path": "registry/tra-plugins/i18n/lib/i18n.ts",
-      "content": "/**\r\n * i18n — Paraglide kurulumu\r\n *\r\n * Bu dosya `npx tra-ui add i18n` tarafından projenize kopyalanır.\r\n *\r\n * Sonraki adım: vite.config.ts'e Paraglide plugin'ini ekleyin:\r\n *   import { paraglide } from \"@inlang/paraglide-vite\"\r\n *   paraglide({ project: \"./project.inlang\", outdir: \"./src/paraglide\" })\r\n */\r\nimport * as m from '@/paraglide/messages';\r\n\r\nexport type AvailableLanguageTag = 'tr' | 'en';\r\n\r\nexport const AVAILABLE_LANGUAGES: { value: AvailableLanguageTag; label: string }[] = [\r\n  { value: 'tr', label: 'Türkçe' },\r\n  { value: 'en', label: 'English' },\r\n];\r\n\r\n/** Mevcut dil etiketini döner */\r\nexport function getCurrentLanguage(): AvailableLanguageTag {\r\n  return (localStorage.getItem('tra-ui-lang') as AvailableLanguageTag) ?? 'tr';\r\n}\r\n\r\n/** Dili değiştirir ve sayfayı yeniler */\r\nexport function setLanguage(lang: AvailableLanguageTag) {\r\n  localStorage.setItem('tra-ui-lang', lang);\r\n  window.location.reload();\r\n}\r\n\r\n/** Paraglide mesaj fonksiyonlarına doğrudan erişim */\r\nexport { m };\r\n",
+      "path": "registry/tra-plugins/i18n/lib/locale.tsx",
+      "content": "import { useMemo, useSyncExternalStore } from 'react'\r\nimport { getLocale, setLocale as paraglideSetLocale } from '../paraglide/runtime.js'\r\nimport * as messages from '../paraglide/messages'\r\n\r\n// --- Locale Store ---\r\n// React dışında locale değişikliklerini takip eden basit bir store\r\n\r\nconst subscribers = new Set<() => void>()\r\n\r\nexport function setLocale(newLocale: 'en' | 'tr') {\r\n    paraglideSetLocale(newLocale, { reload: false })\r\n    subscribers.forEach((fn) => fn()) // tüm subscriber'ları bilgilendir\r\n}\r\n\r\nexport function useLocale() {\r\n    return useSyncExternalStore(\r\n        (callback) => {\r\n            subscribers.add(callback)\r\n            return () => subscribers.delete(callback) // cleanup\r\n        },\r\n        // Tek gerçek kaynak olarak doğrudan Paraglide runtime'ı oku\r\n        () => getLocale(),\r\n    )\r\n}\r\n\r\n// --- useM() hook ---\r\n// Tüm m.* çağrılarına locale'i otomatik enjekte eden Proxy döndürür\r\n// Kullanım: const m = useM()  →  m.greeting({ name: \"Ali\" })\r\n\r\nexport function useM() {\r\n    const locale = useLocale() as 'en' | 'tr'\r\n\r\n    return useMemo(\r\n        () =>\r\n            new Proxy(messages, {\r\n                get(target, key: string) {\r\n                    const fn = target[key as keyof typeof messages]\r\n                    if (typeof fn === 'function') {\r\n                        return (inputs?: object) =>\r\n                            (fn as (inputs: object, options: { locale: string }) => string)(\r\n                                inputs ?? {},\r\n                                { locale },\r\n                            )\r\n                    }\r\n                    return fn\r\n                },\r\n            }) as typeof messages,\r\n        [locale], // sadece locale değişince yeni Proxy oluştur\r\n    )\r\n}\r\n",
       "type": "registry:file",
-      "target": "src/lib/i18n.ts"
+      "target": "src/lib/locale.tsx"
     },
     {
-      "path": "registry/tra-plugins/i18n/contexts/locale/LocaleContext.tsx",
-      "content": "import { createContext, useContext } from 'react';\r\nimport type { AvailableLanguageTag } from '@/lib/i18n';\r\n\r\nexport interface LocaleContextValue {\r\n  locale: AvailableLanguageTag;\r\n  setLocale: (lang: AvailableLanguageTag) => void;\r\n}\r\n\r\nexport const LocaleContext = createContext<LocaleContextValue | null>(null);\r\n\r\nexport function useLocaleContext() {\r\n  const ctx = useContext(LocaleContext);\r\n  if (!ctx) throw new Error('useLocaleContext must be used within LocaleProvider');\r\n  return ctx;\r\n}\r\n",
+      "path": "registry/tra-plugins/i18n/lib/locales.ts",
+      "content": "// This file is auto-generated. Do not edit manually.\r\n// It exports the locales array from project.inlang/settings.json for type safety.\r\n\r\nimport settings from '../project.inlang/settings.json';\r\n\r\nexport const locales = settings.locales as readonly string[];\r\nexport type Locale = typeof locales[number];\r\n",
       "type": "registry:file",
-      "target": "src/contexts/locale/LocaleContext.tsx"
-    },
-    {
-      "path": "registry/tra-plugins/i18n/contexts/locale/LocaleProvider.tsx",
-      "content": "import { useState } from 'react';\r\nimport { LocaleContext } from './LocaleContext';\r\nimport { getCurrentLanguage, setLanguage } from '@/lib/i18n';\r\nimport type { AvailableLanguageTag } from '@/lib/i18n';\r\n\r\ninterface LocaleProviderProps {\r\n  children: React.ReactNode;\r\n}\r\n\r\nexport function LocaleProvider({ children }: LocaleProviderProps) {\r\n  const [locale, setLocaleState] = useState<AvailableLanguageTag>(getCurrentLanguage);\r\n\r\n  const handleSetLocale = (lang: AvailableLanguageTag) => {\r\n    setLocaleState(lang);\r\n    setLanguage(lang);\r\n  };\r\n\r\n  return (\r\n    <LocaleContext.Provider value={{ locale, setLocale: handleSetLocale }}>\r\n      {children}\r\n    </LocaleContext.Provider>\r\n  );\r\n}\r\n",
-      "type": "registry:file",
-      "target": "src/contexts/locale/LocaleProvider.tsx"
-    },
-    {
-      "path": "registry/tra-plugins/i18n/hooks/useLocale.ts",
-      "content": "import { useLocaleContext } from '@/contexts/locale/LocaleContext';\r\nimport { AVAILABLE_LANGUAGES } from '@/lib/i18n';\r\n\r\nexport function useLocale() {\r\n  const { locale, setLocale } = useLocaleContext();\r\n  return { locale, setLocale, availableLanguages: AVAILABLE_LANGUAGES };\r\n}\r\n",
-      "type": "registry:file",
-      "target": "src/hooks/useLocale.ts"
+      "target": "src/lib/locales.ts"
     },
     {
       "path": "registry/tra-plugins/i18n/messages/tr.json",

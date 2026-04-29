@@ -14,24 +14,14 @@
       ],
       "files": [
         {
-          "path": "registry/tra-plugins/i18n/lib/i18n.ts",
+          "path": "registry/tra-plugins/i18n/lib/locale.tsx",
           "type": "registry:file",
-          "target": "src/lib/i18n.ts"
+          "target": "src/lib/locale.tsx"
         },
         {
-          "path": "registry/tra-plugins/i18n/contexts/locale/LocaleContext.tsx",
+          "path": "registry/tra-plugins/i18n/lib/locales.ts",
           "type": "registry:file",
-          "target": "src/contexts/locale/LocaleContext.tsx"
-        },
-        {
-          "path": "registry/tra-plugins/i18n/contexts/locale/LocaleProvider.tsx",
-          "type": "registry:file",
-          "target": "src/contexts/locale/LocaleProvider.tsx"
-        },
-        {
-          "path": "registry/tra-plugins/i18n/hooks/useLocale.ts",
-          "type": "registry:file",
-          "target": "src/hooks/useLocale.ts"
+          "target": "src/lib/locales.ts"
         },
         {
           "path": "registry/tra-plugins/i18n/messages/tr.json",
