@@ -10,7 +10,7 @@ const Header = () => {
             <Link to="/">
                 <img src="/assets/logos/tra-ui-kit.png" alt="Logo" className='w-32' />
             </Link>
-            <div>
+            <div className='flex items-center gap-4'>
                 <ThemeModeToggle />
                 {/* <LanguageSelect
                     locale={locale}
