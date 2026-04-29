@@ -11,7 +11,7 @@ export const PLUGINS: Plugin[] = [
     title: 'Internationalization (Paraglide)',
     description: 'Compile-time i18n with inlang Paraglide. TR/EN language support',
     packages: ['@inlang/paraglide-js', '@inlang/paraglide-vite'],
-    registryDependencies: [],
+    registryDependencies: ['@msi/language-select'],
     postInstall: [
       '',
       '📦 i18n (Paraglide) installed!',
@@ -31,9 +31,10 @@ export const PLUGINS: Plugin[] = [
       '  Usage in components:',
       '',
       '     import { useM } from "@/lib/locale"',
-
+      '',
       '     const m = useM()',
-      '     <p>{m.hello_world()}</p>',
+      '',
+      '     <p>{m.hello({ name: "Test" })}</p>',
       '',
       '  ⚠️  src/paraglide/ folder is auto-generated. Do not edit it manually.',
     ],
