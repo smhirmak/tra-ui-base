@@ -1,7 +1,7 @@
-// import LanguageSelect from '@/components/language-select';
 import ThemeModeToggle from '@/components/theme-mode-toggle.tsx';
-// import { setLocale, useLocale } from '@/lib/locale';
 import { Link } from '@tanstack/react-router';
+// import LanguageSelect from '@/components/language-select';
+// import { setLocale, useLocale } from '@/lib/locale';
 
 const Header = () => {
     // const locale = useLocale()
