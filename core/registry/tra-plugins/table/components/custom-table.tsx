@@ -25,7 +25,7 @@ import { cn } from '@/lib/utils';
 
 import { useIsMobile } from '@/hooks/use-mobile';
 import Pagination from '@/components/pagination';
-import { CustomTableFilterSection } from './custom-table-filter-section';
+import CustomTableFilterSection from './custom-table-filter-section';
 
 declare module '@tanstack/react-table' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -61,6 +61,7 @@ const CustomTable = <T extends object>({
   filterColumns,
   headClassName = '',
   onFilteredDataChange,
+  defaultPageSize = { desktop: 8, mobile: 6 },
 }: {
   data: T[];
   columns: ColumnDef<T>[];
@@ -92,6 +93,7 @@ const CustomTable = <T extends object>({
       }
   >;
   onFilteredDataChange?: (filteredData: T[]) => void;
+  defaultPageSize?: { desktop: number; mobile: number };
 }) => {
   const isMobile = useIsMobile();
 
@@ -102,11 +104,14 @@ const CustomTable = <T extends object>({
   // const [searchText, setSearchText] = useState('')
 
   React.useEffect(() => {
-    setPagination((prev) => ({
-      ...prev,
-      pageSize: isMobile ? 6 : 8,
-    }));
-  }, [isMobile]);
+    const newPageSize = isMobile ? defaultPageSize.mobile : defaultPageSize.desktop;
+    setPagination((prev) => {
+      if (prev.pageSize !== newPageSize) {
+        return { ...prev, pageSize: newPageSize };
+      }
+      return prev;
+    });
+  }, [isMobile, defaultPageSize]);
 
   const [expanded, setExpanded] = useState<ExpandedState>(onlyExpanded ? true : {});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -274,14 +279,21 @@ const CustomTable = <T extends object>({
     }
   }, [searchText, columnFilters, data]);
 
+  const hasExpandableContent = (original: T, key: string): boolean => {
+    const record = original as Record<string, unknown>;
+    const val = record[key];
+    if (Array.isArray(val)) return val.length > 0;
+    return !!val;
+  };
+
   return (
-    <div className={cn('flex flex-col gap-9 min-h-0 justify-between', containerClassName)}>
+    <div className={cn('flex flex-col w-full gap-9 min-h-0 justify-between', containerClassName)}>
       <div className="flex flex-col gap-5">
         <CustomTableFilterSection
           table={table}
           normalizedFilterColumns={normalizedFilterColumns}
           data={data}
-          augmentedColumns={augmentedColumns}
+          augmentedColumns={augmentedColumns as unknown as { header: string; accessorKey?: string }[]}
         />
         <div
           className={cn('custom-table-container overflow-auto rounded-xl', tableWrapperClassName)}
@@ -336,20 +348,12 @@ const CustomTable = <T extends object>({
                         expandKey &&
                         !onlyExpanded &&
                         row.original &&
-                        ((Array.isArray((row.original as Record<string, any>)[expandKey]) &&
-                          (row.original as Record<string, any>)[expandKey]?.length > 0) ||
-                          (!Array.isArray((row.original as Record<string, any>)[expandKey]) &&
-                            !!(row.original as Record<string, any>)[expandKey]))
+                        hasExpandableContent(row.original, expandKey)
                           ? () => row.toggleExpanded()
                           : undefined
                       }
                       style={
-                        expandKey &&
-                        row.original &&
-                        ((Array.isArray((row.original as Record<string, any>)[expandKey]) &&
-                          (row.original as Record<string, any>)[expandKey]?.length > 0) ||
-                          (!Array.isArray((row.original as Record<string, any>)[expandKey]) &&
-                            !!(row.original as Record<string, any>)[expandKey]))
+                        expandKey && row.original && hasExpandableContent(row.original, expandKey)
                           ? { cursor: 'pointer' }
                           : undefined
                       }
@@ -369,10 +373,7 @@ const CustomTable = <T extends object>({
                               {expandKey &&
                               !onlyExpanded &&
                               row.original &&
-                              ((Array.isArray((row.original as Record<string, any>)[expandKey]) &&
-                                (row.original as Record<string, any>)[expandKey]?.length > 0) ||
-                                (!Array.isArray((row.original as Record<string, any>)[expandKey]) &&
-                                  !!(row.original as Record<string, any>)[expandKey])) ? (
+                              hasExpandableContent(row.original, expandKey) ? (
                                 <span
                                   style={{
                                     cursor: 'pointer',
@@ -437,10 +438,10 @@ const CustomTable = <T extends object>({
       {!hidePagination && (
         <div className="flex justify-center">
           <Pagination
-            mode="default"
+            mode="simple"
             totalPages={table.getPageCount()}
-            currentPage={table.getState().pagination.pageIndex}
-            onPageChange={table.setPageIndex}
+            currentPage={table.getState().pagination.pageIndex + 1}
+            onPageChange={(page) => table.setPageIndex(page - 1)}
             maxVisiblePages={6}
             hideFirstLastArrows
           />
