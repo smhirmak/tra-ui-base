@@ -61,7 +61,7 @@ const CustomTable = <T extends object>({
   filterColumns,
   headClassName = '',
   onFilteredDataChange,
-  defaultPageSize = { desktop: 8, mobile: 6 },
+  defaultPageSize = { desktop: 10, mobile: 8 },
 }: {
   data: T[];
   columns: ColumnDef<T>[];
@@ -293,7 +293,9 @@ const CustomTable = <T extends object>({
           table={table}
           normalizedFilterColumns={normalizedFilterColumns}
           data={data}
-          augmentedColumns={augmentedColumns as unknown as { header: string; accessorKey?: string }[]}
+          augmentedColumns={
+            augmentedColumns as unknown as { header: string; accessorKey?: string }[]
+          }
         />
         <div
           className={cn('custom-table-container overflow-auto rounded-xl', tableWrapperClassName)}
@@ -438,12 +440,11 @@ const CustomTable = <T extends object>({
       {!hidePagination && (
         <div className="flex justify-center">
           <Pagination
-            mode="simple"
+            mode="default"
             totalPages={table.getPageCount()}
             currentPage={table.getState().pagination.pageIndex + 1}
             onPageChange={(page) => table.setPageIndex(page - 1)}
             maxVisiblePages={6}
-            hideFirstLastArrows
           />
         </div>
       )}
