@@ -8,10 +8,11 @@ interface RouterContext {
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({
-  component: () =>
-    <div className='flex min-h-screen flex-col'>
+  component: () => (
+    <div className="flex min-h-screen flex-col">
       <Header />
       <Outlet />
       <Footer />
-    </div>,
+    </div>
+  ),
 });

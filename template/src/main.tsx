@@ -51,7 +51,10 @@ const rootElement = document.getElementById('app');
 if (rootElement && !rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
-    <ThemeProvider defaultTheme="light" storageKey="tra-ui-theme">
+    <ThemeProvider
+      defaultTheme="light"
+      storageKey="tra-ui-theme"
+    >
       <QueryClientProvider client={queryClient}>
         {/* [i18n]      → LocaleProvider sarın (npx tra-ui add i18n) */}
         {/* [auth/axios] → AuthProvider sarın (npx tra-ui add axios) */}
