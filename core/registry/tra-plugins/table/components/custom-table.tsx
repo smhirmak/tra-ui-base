@@ -1,173 +1,453 @@
+import React, { useMemo, useState } from 'react';
+
 import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  getExpandedRowModel,
   useReactTable,
-  type ColumnDef,
-} from "@tanstack/react-table";
-import { useTableState } from "@/hooks/useTableState";
-import { TableSkeleton } from "./table-skeleton";
-import { CustomTableFilterSection } from "./custom-table-filter-section";
-import { cn } from "@/lib/utils";
+} from '@tanstack/react-table';
+import type {
+  ColumnDef,
+  PaginationState,
+  FilterFn,
+  ExpandedState,
+  ColumnFiltersState,
+  VisibilityState,
+  SortingState,
+  RowData,
+} from '@tanstack/react-table';
+import { rankItem } from '@tanstack/match-sorter-utils';
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-interface CustomTableProps<TData> {
-  /** Tablo verisi */
-  data: TData[];
-  /** TanStack Table ColumnDef dizisi */
-  columns: ColumnDef<TData, unknown>[];
-  /** Veri yüklenirken skeleton göster */
-  isLoading?: boolean;
-  /** Global arama göster */
-  searchable?: boolean;
-  /** Sayfalama göster */
-  paginated?: boolean;
-  /** Ek CSS sınıfı */
-  className?: string;
+import { useIsMobile } from '@/hooks/use-mobile';
+import Pagination from '@/components/pagination';
+import { CustomTableFilterSection } from './custom-table-filter-section';
+
+declare module '@tanstack/react-table' {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  interface ColumnMeta<TData extends RowData, TValue> {
+    headerClassName?: string;
+    bodyClassName?: string;
+    headerItemClassName?: string;
+  }
+  interface FilterFns {
+    fuzzy: FilterFn<unknown>;
+  }
 }
 
-/**
- * TanStack Table tabanlı genel amaçlı tablo component'i.
- * Sıralama, filtreleme ve sayfalama desteğiyle gelir.
- *
- * @example
- * <CustomTable
- *   columns={columns}
- *   data={users}
- *   isLoading={isLoading}
- *   searchable
- *   paginated
- * />
- */
-export function CustomTable<TData>({
+const CustomTable = <T extends object>({
   data,
   columns,
-  isLoading = false,
-  searchable = true,
-  paginated = true,
-  className,
-}: CustomTableProps<TData>) {
-  const {
-    pagination,
-    setPagination,
-    sorting,
-    setSorting,
-    globalFilter,
-    setGlobalFilter,
-  } = useTableState();
+  sorting,
+  setSorting,
+  hidePagination = false,
+  renderExpandedRow,
+  tableClassName,
+  tableWrapperClassName,
+  searchText,
+  setSearchText,
+  rowClassName,
+  bodyRowClassName,
+  expandKey,
+  containerClassName,
+  headCellClassName,
+  bodyCellClassName,
+  expandRowContainerClassName,
+  onlyExpanded = false,
+  filterColumns,
+  headClassName = '',
+  onFilteredDataChange,
+}: {
+  data: T[];
+  columns: ColumnDef<T>[];
+  sorting?: SortingState;
+  setSorting?: React.Dispatch<React.SetStateAction<SortingState>>;
+  hidePagination?: boolean;
+  renderExpandedRow?: (row: import('@tanstack/react-table').Row<T>) => React.ReactNode;
+  tableClassName?: string;
+  tableWrapperClassName?: string;
+  searchText?: string;
+  setSearchText?: React.Dispatch<React.SetStateAction<string>>;
+  rowClassName?: (row: T) => string;
+  bodyRowClassName?: string;
+  expandKey?: string;
+  containerClassName?: string;
+  headCellClassName?: string;
+  bodyCellClassName?: string;
+  expandRowContainerClassName?: string;
+  onlyExpanded?: boolean;
+  headClassName?: string;
+  filterColumns?: Array<
+    | string
+    | {
+        id: string;
+        label?: string;
+        placeholder?: string;
+        columns?: string[];
+        path?: string | string[];
+      }
+  >;
+  onFilteredDataChange?: (filteredData: T[]) => void;
+}) => {
+  const isMobile = useIsMobile();
+
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: undefined as unknown as number,
+  });
+  // const [searchText, setSearchText] = useState('')
+
+  React.useEffect(() => {
+    setPagination((prev) => ({
+      ...prev,
+      pageSize: isMobile ? 6 : 8,
+    }));
+  }, [isMobile]);
+
+  const [expanded, setExpanded] = useState<ExpandedState>(onlyExpanded ? true : {});
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+
+  const fuzzyFilter: FilterFn<T> = (row, columnId, value, addMeta) => {
+    const itemRank = rankItem(row.getValue(columnId), value);
+    addMeta({
+      itemRank,
+    });
+    return itemRank.passed;
+  };
+
+  const normalizedFilterColumns = useMemo(
+    () =>
+      (filterColumns || []).map((fc) =>
+        typeof fc === 'string'
+          ? {
+              id: fc,
+              label: undefined as string | undefined,
+              placeholder: undefined as string | undefined,
+              columns: undefined as string[] | undefined,
+              path: undefined as string | string[] | undefined,
+            }
+          : fc,
+      ),
+    [filterColumns],
+  );
+
+  const augmentedColumns: ColumnDef<T>[] = useMemo(() => {
+    const existingIds = new Set(
+      (columns || []).map(
+        (c: ColumnDef<T>) =>
+          ((c as { id?: string; accessorKey?: string }).id ??
+            (c as { id?: string; accessorKey?: string }).accessorKey) as string,
+      ),
+    );
+    const syntheticColumns: ColumnDef<T>[] = [];
+
+    normalizedFilterColumns.forEach((fc) => {
+      if (fc?.columns && fc.columns.length > 0) {
+        if (!existingIds.has(fc.id)) {
+          const synthetic: ColumnDef<T> = {
+            id: fc.id,
+            header: fc.label ?? fc.id,
+            enableSorting: false,
+            meta: { headerClassName: 'hidden', bodyClassName: 'hidden' } as Record<string, string>,
+            accessorFn: (row: T) => {
+              try {
+                if (fc.path) {
+                  const getNestedByPath = (obj: unknown, path: string | string[]): string => {
+                    if (obj === null || obj === undefined) return '';
+                    if (Array.isArray(path)) {
+                      return path
+                        .map((p) =>
+                          p
+                            .split('.')
+                            .reduce(
+                              (current: Record<string, unknown>, key: string) =>
+                                current?.[key] as Record<string, unknown>,
+                              obj as Record<string, unknown>,
+                            ),
+                        )
+                        .filter((v) => v !== undefined && v !== null)
+                        .join(' ');
+                    }
+                    return String(
+                      (path as string)
+                        .split('.')
+                        .reduce(
+                          (current: Record<string, unknown>, key: string) =>
+                            current?.[key] as Record<string, unknown>,
+                          obj as Record<string, unknown>,
+                        ) ?? '',
+                    );
+                  };
+
+                  return fc
+                    .columns!.map((k) => {
+                      const value = (row as Record<string, unknown>)[k];
+                      if (Array.isArray(value)) {
+                        return value
+                          .map((item) => {
+                            const nested = getNestedByPath(item, fc.path!);
+                            return String(nested ?? '');
+                          })
+                          .join(' ');
+                      }
+                      const nested = getNestedByPath(value, fc.path!);
+                      return String(nested ?? '');
+                    })
+                    .join(' ')
+                    .trim();
+                }
+                return fc
+                  .columns!.map((k) => String((row as Record<string, unknown>)[k] ?? ''))
+                  .join(' ')
+                  .trim();
+              } catch {
+                return '';
+              }
+            },
+            cell: () => null,
+          };
+          syntheticColumns.push(synthetic);
+        }
+      }
+    });
+
+    return [...columns, ...syntheticColumns];
+  }, [columns, normalizedFilterColumns]);
+
+  React.useEffect(() => {
+    const hidden: VisibilityState = {};
+    augmentedColumns.forEach((c: ColumnDef<T>) => {
+      const meta = c.meta as { bodyClassName?: string; headerClassName?: string } | undefined;
+      const id =
+        (c as { id?: string; accessorKey?: string }).id ??
+        (c as { id?: string; accessorKey?: string }).accessorKey;
+      if ((meta?.bodyClassName === 'hidden' || meta?.headerClassName === 'hidden') && id) {
+        hidden[id] = false;
+      }
+    });
+    setColumnVisibility((prev) => ({ ...prev, ...hidden }));
+  }, [augmentedColumns]);
 
   const table = useReactTable({
+    columns: augmentedColumns,
     data,
-    columns,
-    state: { pagination, sorting, globalFilter },
-    onPaginationChange: setPagination,
-    onSortingChange: setSorting,
-    onGlobalFilterChange: setGlobalFilter,
+    debugTable: true,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    getPaginationRowModel: !hidePagination ? getPaginationRowModel() : undefined,
+    onPaginationChange: !hidePagination ? setPagination : undefined,
+    onSortingChange: setSorting,
+    state: {
+      pagination,
+      sorting,
+      expanded,
+      globalFilter: searchText,
+      columnFilters,
+      columnVisibility,
+    },
+    filterFns: {
+      fuzzy: fuzzyFilter,
+    },
+    defaultColumn: {
+      filterFn: 'fuzzy',
+    },
+    onGlobalFilterChange: setSearchText,
+    onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
+    globalFilterFn: 'fuzzy',
+    onExpandedChange: setExpanded,
+    getExpandedRowModel: getExpandedRowModel(),
+    // autoResetPageIndex: false,
   });
 
-  if (isLoading) return <TableSkeleton columns={columns.length} />;
+  // Filtrelenmiş verileri parent component'e gönder
+  React.useEffect(() => {
+    if (onFilteredDataChange) {
+      const filteredRows = table.getFilteredRowModel().rows.map((row) => row.original);
+      onFilteredDataChange(filteredRows);
+    }
+  }, [searchText, columnFilters, data]);
 
   return (
-    <div className={cn("w-full space-y-3", className)}>
-      {searchable && (
+    <div className={cn('flex flex-col gap-9 min-h-0 justify-between', containerClassName)}>
+      <div className="flex flex-col gap-5">
         <CustomTableFilterSection
-          value={globalFilter}
-          onChange={setGlobalFilter}
+          table={table}
+          normalizedFilterColumns={normalizedFilterColumns}
+          data={data}
+          augmentedColumns={augmentedColumns}
         />
-      )}
-
-      <div className="overflow-x-auto rounded-lg border border-neutral-200 dark:border-neutral-700">
-        <table className="w-full text-sm">
-          <thead className="bg-neutral-50 dark:bg-neutral-800">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <th
-                    key={header.id}
-                    className={cn(
-                      "px-4 py-3 text-left font-medium text-neutral-600 dark:text-neutral-300",
-                      header.column.getCanSort() &&
-                        "cursor-pointer select-none",
-                    )}
-                    onClick={header.column.getToggleSortingHandler()}
-                  >
-                    <div className="flex items-center gap-1">
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
+        <div
+          className={cn('custom-table-container overflow-auto rounded-xl', tableWrapperClassName)}
+        >
+          <table className={cn('w-full border border-transparent', tableClassName)}>
+            <thead className={cn(headClassName)}>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <th
+                      role="header-cell"
+                      key={header.id}
+                      colSpan={header.colSpan}
+                      className={cn(
+                        'bg-primary-15 text-start p-3.5 text-xxs md:text-xs font-medium',
+                        headCellClassName,
+                        header.column.columnDef.meta?.headerClassName as string,
                       )}
-                      {header.column.getIsSorted() === "asc" && " ↑"}
-                      {header.column.getIsSorted() === "desc" && " ↓"}
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody className="divide-y divide-neutral-200 dark:divide-neutral-700">
-            {table.getRowModel().rows.length === 0 ? (
-              <tr>
-                <td
-                  colSpan={columns.length}
-                  className="px-4 py-8 text-center text-neutral-400"
-                >
-                  Veri bulunamadı
-                </td>
-              </tr>
-            ) : (
-              table.getRowModel().rows.map((row) => (
-                <tr
-                  key={row.id}
-                  className="bg-white hover:bg-neutral-50 dark:bg-neutral-900 dark:hover:bg-neutral-800"
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <td
-                      key={cell.id}
-                      className="px-4 py-3 text-neutral-800 dark:text-neutral-200"
                     >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </td>
+                      <div
+                        {...{
+                          className: cn(
+                            'flex items-center gap-2',
+                            header.column.columnDef.meta?.headerItemClassName as string,
+                            header.column.getCanSort() ? 'cursor-pointer select-none' : '',
+                          ),
+                          onClick: header.column.getToggleSortingHandler(),
+                        }}
+                      >
+                        {flexRender(header.column.columnDef.header, header.getContext()) as string}
+                        {{
+                          asc: <ChevronUp className="size-4" />,
+                          desc: <ChevronDown className="size-4" />,
+                        }[header.column.getIsSorted() as string] ?? null}
+                      </div>
+                    </th>
                   ))}
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel()?.rows?.length > 0 ? (
+                table.getRowModel().rows.map((row) => (
+                  <React.Fragment key={row.id}>
+                    <tr
+                      className={cn(
+                        'bg-primary-5 border-b border-neutral-white hover:brightness-110 transition-all',
+                        bodyRowClassName,
+                        rowClassName ? rowClassName(row.original) : undefined,
+                      )}
+                      onClick={
+                        expandKey &&
+                        !onlyExpanded &&
+                        row.original &&
+                        ((Array.isArray((row.original as Record<string, any>)[expandKey]) &&
+                          (row.original as Record<string, any>)[expandKey]?.length > 0) ||
+                          (!Array.isArray((row.original as Record<string, any>)[expandKey]) &&
+                            !!(row.original as Record<string, any>)[expandKey]))
+                          ? () => row.toggleExpanded()
+                          : undefined
+                      }
+                      style={
+                        expandKey &&
+                        row.original &&
+                        ((Array.isArray((row.original as Record<string, any>)[expandKey]) &&
+                          (row.original as Record<string, any>)[expandKey]?.length > 0) ||
+                          (!Array.isArray((row.original as Record<string, any>)[expandKey]) &&
+                            !!(row.original as Record<string, any>)[expandKey]))
+                          ? { cursor: 'pointer' }
+                          : undefined
+                      }
+                    >
+                      {row.getVisibleCells().map((cell, idx) => (
+                        <td
+                          key={cell.id}
+                          role="body-cell"
+                          className={cn(
+                            'py-4 px-3.5 text-xxs md:text-xs font-normal',
+                            bodyCellClassName,
+                            cell.column.columnDef.meta?.bodyClassName as string,
+                          )}
+                        >
+                          {idx === 0 && renderExpandedRow ? (
+                            <span className="flex items-center">
+                              {expandKey &&
+                              !onlyExpanded &&
+                              row.original &&
+                              ((Array.isArray((row.original as Record<string, any>)[expandKey]) &&
+                                (row.original as Record<string, any>)[expandKey]?.length > 0) ||
+                                (!Array.isArray((row.original as Record<string, any>)[expandKey]) &&
+                                  !!(row.original as Record<string, any>)[expandKey])) ? (
+                                <span
+                                  style={{
+                                    cursor: 'pointer',
+                                    marginRight: 8,
+                                    userSelect: 'none',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                  }}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    row.toggleExpanded();
+                                  }}
+                                >
+                                  <ChevronUp
+                                    size={18}
+                                    className={cn(
+                                      'transition-all',
+                                      row.getIsExpanded() ? 'rotate-0' : 'rotate-180',
+                                    )}
+                                  />
+                                </span>
+                              ) : (
+                                <span className="w-5" />
+                              )}
+                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            </span>
+                          ) : (
+                            flexRender(cell.column.columnDef.cell, cell.getContext())
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                    {/* Expanded row içeriği */}
+                    {row.getIsExpanded() && renderExpandedRow && (
+                      <tr className={cn('animate-grow-down', expandRowContainerClassName)}>
+                        <td
+                          colSpan={row.getVisibleCells().length}
+                          style={{ background: 'transparent', paddingLeft: 0 }}
+                          className="p-0"
+                        >
+                          {renderExpandedRow(row)}
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    className="pt-10 text-lg md:text-2xl"
+                    align="center"
+                    colSpan={table.getAllLeafColumns().length}
+                  >
+                    No data found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
-
-      {paginated && (
-        <div className="flex items-center justify-between text-sm text-neutral-600 dark:text-neutral-400">
-          <span>Toplam {table.getFilteredRowModel().rows.length} kayıt</span>
-          <div className="flex items-center gap-2">
-            <button
-              className="rounded px-2 py-1 hover:bg-neutral-100 disabled:opacity-40 dark:hover:bg-neutral-700"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              ← Önceki
-            </button>
-            <span>
-              {table.getState().pagination.pageIndex + 1} /{" "}
-              {table.getPageCount()}
-            </span>
-            <button
-              className="rounded px-2 py-1 hover:bg-neutral-100 disabled:opacity-40 dark:hover:bg-neutral-700"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              Sonraki →
-            </button>
-          </div>
+      {!hidePagination && (
+        <div className="flex justify-center">
+          <Pagination
+            mode="default"
+            totalPages={table.getPageCount()}
+            currentPage={table.getState().pagination.pageIndex}
+            onPageChange={table.setPageIndex}
+            maxVisiblePages={6}
+            hideFirstLastArrows
+          />
         </div>
       )}
     </div>
   );
-}
+};
+
+export default CustomTable;

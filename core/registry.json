@@ -131,7 +131,8 @@
       "title": "Data Table (TanStack Table)",
       "description": "TanStack Table tabanlı veri tablosu. Sıralama, filtreleme, sayfalama, skeleton ve filtre section bileşenleri.",
       "dependencies": [
-        "@tanstack/react-table"
+        "@tanstack/react-table",
+        "@tanstack/match-sorter-utils"
       ],
       "registryDependencies": [
         "@msi/skeleton",
