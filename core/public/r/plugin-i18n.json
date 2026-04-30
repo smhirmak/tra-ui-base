@@ -3,36 +3,41 @@
   "name": "plugin-i18n",
   "title": "i18n Plugin (Paraglide)",
   "description": "inlang Paraglide ile compile-time i18n. TR/EN dil desteği, LocaleContext, LocaleProvider, useLocale hook ve örnek dil dosyaları.",
-  "dependencies": ["@inlang/paraglide-js", "@inlang/paraglide-vite"],
-  "registryDependencies": ["@msi/language-select"],
+  "dependencies": [
+    "@inlang/paraglide-js",
+    "@inlang/paraglide-vite"
+  ],
+  "registryDependencies": [
+    "@msi/language-select"
+  ],
   "files": [
     {
       "path": "registry/tra-plugins/i18n/lib/locale.tsx",
-      "content": "import { useMemo, useSyncExternalStore } from 'react'\r\nimport { getLocale, setLocale as paraglideSetLocale } from '../paraglide/runtime.js'\r\nimport * as messages from '../paraglide/messages'\r\n\r\n// --- Locale Store ---\r\n// React dışında locale değişikliklerini takip eden basit bir store\r\n\r\nconst subscribers = new Set<() => void>()\r\n\r\nexport function setLocale(newLocale: 'en' | 'tr') {\r\n    paraglideSetLocale(newLocale, { reload: false })\r\n    subscribers.forEach((fn) => fn()) // tüm subscriber'ları bilgilendir\r\n}\r\n\r\nexport function useLocale() {\r\n    return useSyncExternalStore(\r\n        (callback) => {\r\n            subscribers.add(callback)\r\n            return () => subscribers.delete(callback) // cleanup\r\n        },\r\n        // Tek gerçek kaynak olarak doğrudan Paraglide runtime'ı oku\r\n        () => getLocale(),\r\n    )\r\n}\r\n\r\n// --- useM() hook ---\r\n// Tüm m.* çağrılarına locale'i otomatik enjekte eden Proxy döndürür\r\n// Kullanım: const m = useM()  →  m.greeting({ name: \"Ali\" })\r\n\r\nexport function useM() {\r\n    const locale = useLocale() as 'en' | 'tr'\r\n\r\n    return useMemo(\r\n        () =>\r\n            new Proxy(messages, {\r\n                get(target, key: string) {\r\n                    const fn = target[key as keyof typeof messages]\r\n                    if (typeof fn === 'function') {\r\n                        return (inputs?: object) =>\r\n                            (fn as (inputs: object, options: { locale: string }) => string)(\r\n                                inputs ?? {},\r\n                                { locale },\r\n                            )\r\n                    }\r\n                    return fn\r\n                },\r\n            }) as typeof messages,\r\n        [locale], // sadece locale değişince yeni Proxy oluştur\r\n    )\r\n}\r\n",
+      "content": "import { useMemo, useSyncExternalStore } from \"react\";\nimport {\n  getLocale,\n  setLocale as paraglideSetLocale,\n} from \"../paraglide/runtime.js\";\nimport * as messages from \"../paraglide/messages\";\n\n// --- Locale Store ---\n// React dışında locale değişikliklerini takip eden basit bir store\n\nconst subscribers = new Set<() => void>();\n\nexport function setLocale(newLocale: \"en\" | \"tr\") {\n  paraglideSetLocale(newLocale, { reload: false });\n  subscribers.forEach((fn) => fn()); // tüm subscriber'ları bilgilendir\n}\n\nexport function useLocale() {\n  return useSyncExternalStore(\n    (callback) => {\n      subscribers.add(callback);\n      return () => subscribers.delete(callback); // cleanup\n    },\n    // Tek gerçek kaynak olarak doğrudan Paraglide runtime'ı oku\n    () => getLocale(),\n  );\n}\n\n// --- useM() hook ---\n// Tüm m.* çağrılarına locale'i otomatik enjekte eden Proxy döndürür\n// Kullanım: const m = useM()  →  m.greeting({ name: \"Ali\" })\n\nexport function useM() {\n  const locale = useLocale() as \"en\" | \"tr\";\n\n  return useMemo(\n    () =>\n      new Proxy(messages, {\n        get(target, key: string) {\n          const fn = target[key as keyof typeof messages];\n          if (typeof fn === \"function\") {\n            return (inputs?: object) =>\n              (fn as (inputs: object, options: { locale: string }) => string)(\n                inputs ?? {},\n                { locale },\n              );\n          }\n          return fn;\n        },\n      }) as typeof messages,\n    [locale], // sadece locale değişince yeni Proxy oluştur\n  );\n}\n",
       "type": "registry:file",
       "target": "src/lib/locale.tsx"
     },
     {
       "path": "registry/tra-plugins/i18n/lib/locales.ts",
-      "content": "// This file is auto-generated. Do not edit manually.\r\n// It exports the locales array from project.inlang/settings.json for type safety.\r\n\r\nimport settings from '../project.inlang/settings.json';\r\n\r\nexport const locales = settings.locales as readonly string[];\r\nexport type Locale = typeof locales[number];\r\n",
+      "content": "// This file is auto-generated. Do not edit manually.\n// It exports the locales array from project.inlang/settings.json for type safety.\n\nimport settings from \"../project.inlang/settings.json\";\n\nexport const locales = settings.locales as readonly string[];\nexport type Locale = (typeof locales)[number];\n",
       "type": "registry:file",
       "target": "src/lib/locales.ts"
     },
     {
       "path": "registry/tra-plugins/i18n/messages/tr.json",
-      "content": "{\r\n  \"hello\": \"Merhaba, {name}!\",\r\n  \"welcome\": \"Hoş geldiniz\",\r\n  \"loading\": \"Yükleniyor...\",\r\n  \"error\": \"Bir hata oluştu\",\r\n  \"save\": \"Kaydet\",\r\n  \"cancel\": \"İptal\",\r\n  \"confirm\": \"Onayla\",\r\n  \"delete\": \"Sil\",\r\n  \"edit\": \"Düzenle\",\r\n  \"search\": \"Ara\",\r\n  \"noData\": \"Veri bulunamadı\"\r\n}",
+      "content": "{\n  \"hello\": \"Merhaba, {name}!\",\n  \"welcome\": \"Hoş geldiniz\",\n  \"loading\": \"Yükleniyor...\",\n  \"error\": \"Bir hata oluştu\",\n  \"save\": \"Kaydet\",\n  \"cancel\": \"İptal\",\n  \"confirm\": \"Onayla\",\n  \"delete\": \"Sil\",\n  \"edit\": \"Düzenle\",\n  \"search\": \"Ara\",\n  \"noData\": \"Veri bulunamadı\"\n}\n",
       "type": "registry:file",
       "target": "messages/tr.json"
     },
     {
       "path": "registry/tra-plugins/i18n/messages/en.json",
-      "content": "{\r\n  \"hello\": \"Hello, {name}!\",\r\n  \"welcome\": \"Welcome\",\r\n  \"loading\": \"Loading...\",\r\n  \"error\": \"An error occurred\",\r\n  \"save\": \"Save\",\r\n  \"cancel\": \"Cancel\",\r\n  \"confirm\": \"Confirm\",\r\n  \"delete\": \"Delete\",\r\n  \"edit\": \"Edit\",\r\n  \"search\": \"Search\",\r\n  \"noData\": \"No data found\"\r\n}",
+      "content": "{\n  \"hello\": \"Hello, {name}!\",\n  \"welcome\": \"Welcome\",\n  \"loading\": \"Loading...\",\n  \"error\": \"An error occurred\",\n  \"save\": \"Save\",\n  \"cancel\": \"Cancel\",\n  \"confirm\": \"Confirm\",\n  \"delete\": \"Delete\",\n  \"edit\": \"Edit\",\n  \"search\": \"Search\",\n  \"noData\": \"No data found\"\n}\n",
       "type": "registry:file",
       "target": "messages/en.json"
     },
     {
       "path": "registry/tra-plugins/i18n/project.inlang/settings.json",
-      "content": "{\r\n  \"$schema\": \"https://inlang.com/schema/project-settings\",\r\n  \"baseLocale\": \"tr\",\r\n  \"locales\": [\"tr\", \"en\"],\r\n  \"modules\": [\r\n    \"https://cdn.jsdelivr.net/npm/@inlang/plugin-message-format@4/dist/index.js\"\r\n  ],\r\n  \"plugin.inlang.messageFormat\": {\r\n    \"pathPattern\": \"./messages/{languageTag}.json\"\r\n  }\r\n}\r\n",
+      "content": "{\n  \"$schema\": \"https://inlang.com/schema/project-settings\",\n  \"baseLocale\": \"tr\",\n  \"locales\": [\"tr\", \"en\"],\n  \"modules\": [\n    \"https://cdn.jsdelivr.net/npm/@inlang/plugin-message-format@4/dist/index.js\"\n  ],\n  \"plugin.inlang.messageFormat\": {\n    \"pathPattern\": \"./messages/{languageTag}.json\"\n  }\n}\n",
       "type": "registry:file",
       "target": "project.inlang/settings.json"
     }
