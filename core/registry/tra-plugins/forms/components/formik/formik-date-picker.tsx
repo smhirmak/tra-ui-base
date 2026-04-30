@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react';
-import { cn } from '@/lib/utils';
-import DatePicker from '@/components/date-picker';
-import Label from '@/components/label';
-import type { DayPickerProps } from 'react-day-picker';
-import { FormikErrorText } from './formik-error-text';
-import { getNestedValue } from './utils';
+import React from "react";
+import { cn } from "@/lib/utils";
+import DatePicker from "@/components/date-picker";
+import Label from "@/components/label";
+import type { DayPickerProps } from "react-day-picker";
+import { FormikErrorText } from "./formik-error-text";
+import { getNestedValue } from "./utils";
 
 interface FormikDatePickerProps {
   id: string;
@@ -15,7 +15,7 @@ interface FormikDatePickerProps {
   minDate?: Date;
   maxDate?: Date;
   containerClassName?: string;
-  mode?: DayPickerProps['mode'];
+  mode?: DayPickerProps["mode"];
   showRequiredIcon?: boolean;
   showCompleteButton?: boolean;
   showClearButton?: boolean;
@@ -30,13 +30,13 @@ export const FormikDatePicker: React.FC<FormikDatePickerProps> = ({
   minDate,
   maxDate,
   containerClassName,
-  mode = 'single',
+  mode = "single",
   showRequiredIcon,
   showCompleteButton,
   showClearButton = false,
   onBlur,
 }) => (
-  <div className={cn(containerClassName, 'flex flex-col text-start gap-1.5')}>
+  <div className={cn(containerClassName, "flex flex-col text-start gap-1.5")}>
     {label && (
       <Label htmlFor={id}>
         {label}
@@ -46,22 +46,25 @@ export const FormikDatePicker: React.FC<FormikDatePickerProps> = ({
     <DatePicker
       mode={mode}
       disabled={disabled}
-      value={getNestedValue(formik.values, id) ?? ''}
+      value={getNestedValue(formik.values, id) ?? ""}
       minDate={minDate}
       maxDate={maxDate}
       onChange={(e: any) => {
         if (!disabled) {
-          if (mode === 'range') {
+          if (mode === "range") {
             formik.setFieldValue(id, e);
             return;
           }
-          const cleanedDate = e instanceof Date && !Number.isNaN(e.getTime())
-            ? new Date(Date.UTC(e.getFullYear(), e.getMonth(), e.getDate()))
-            : null;
+          const cleanedDate =
+            e instanceof Date && !Number.isNaN(e.getTime())
+              ? new Date(Date.UTC(e.getFullYear(), e.getMonth(), e.getDate()))
+              : null;
           formik.setFieldValue(id, cleanedDate);
         }
       }}
-      error={Boolean(getNestedValue(formik.touched, id) && getNestedValue(formik.errors, id))}
+      error={Boolean(
+        getNestedValue(formik.touched, id) && getNestedValue(formik.errors, id),
+      )}
       showCompleteButton={showCompleteButton}
       showClearButton={showClearButton}
       onBlur={onBlur}

@@ -1,5 +1,5 @@
-import { useEffect, useCallback } from 'react';
-import { useMessageHubContext } from '@/contexts/messageHub/MessageHubContext';
+import { useEffect, useCallback } from "react";
+import { useMessageHubContext } from "@/contexts/messageHub/MessageHubContext";
 
 /**
  * SignalR hub'ına event listener bağlar.

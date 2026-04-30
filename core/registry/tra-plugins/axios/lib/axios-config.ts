@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axios from 'axios';
-import type { AxiosResponse } from 'axios';
-import Environment from '@/utilities/Environment';
+import axios from "axios";
+import type { AxiosResponse } from "axios";
+import Environment from "@/utilities/Environment";
 
 // ─── Custom Response Type ────────────────────────────────────────────────────
 export interface CustomAxiosResponse<T = any> extends AxiosResponse<T> {
@@ -23,7 +23,7 @@ const RequestService = axios.create({
   timeout: 30_000,
 });
 
-RequestService.defaults.headers.head['Content-Type'] = 'application/json';
+RequestService.defaults.headers.head["Content-Type"] = "application/json";
 RequestService.defaults.validateStatus = (status) => status < 500;
 
 // ─── Auth Token Management ───────────────────────────────────────────────────
@@ -47,7 +47,10 @@ RequestService.interceptors.response.use(
       ...response,
       message: (response.data as any)?.message ?? null,
       error: (response.data as any)?.error ?? false,
-      data: (response.data as any)?.data ?? (response.data as any)?.Result ?? response.data,
+      data:
+        (response.data as any)?.data ??
+        (response.data as any)?.Result ??
+        response.data,
     };
   },
   (error) => {
@@ -55,7 +58,7 @@ RequestService.interceptors.response.use(
     if (error?.response?.status === 401 && logoutCallback) {
       logoutCallback();
     }
-    console.error('[Axios Error]', error);
+    console.error("[Axios Error]", error);
     return Promise.reject(error);
   },
 );

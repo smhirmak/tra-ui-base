@@ -3,9 +3,7 @@
   "name": "plugin-http",
   "title": "HTTP Client (Axios)",
   "description": "Axios instance, token interceptor, 401 otomatik token yenileme, merkezi hata yönetimi, AuthContext ve BaseService sınıfı.",
-  "dependencies": [
-    "axios"
-  ],
+  "dependencies": ["axios"],
   "files": [
     {
       "path": "registry/tra-plugins/http/lib/http.ts",

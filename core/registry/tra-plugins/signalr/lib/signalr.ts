@@ -3,7 +3,7 @@ import {
   HubConnectionBuilder,
   HubConnectionState,
   LogLevel,
-} from '@microsoft/signalr';
+} from "@microsoft/signalr";
 
 export interface SignalRConfig {
   hubUrl: string;
@@ -22,7 +22,7 @@ export function createHubConnection(config: SignalRConfig): HubConnection {
   const builder = new HubConnectionBuilder()
     .withUrl(config.hubUrl, {
       accessTokenFactory: config.getAccessToken
-        ? () => config.getAccessToken!() ?? ''
+        ? () => config.getAccessToken!() ?? ""
         : undefined,
     })
     .withAutomaticReconnect()
@@ -39,7 +39,9 @@ export function createHubConnection(config: SignalRConfig): HubConnection {
   return connection;
 }
 
-export async function startConnection(connection: HubConnection): Promise<void> {
+export async function startConnection(
+  connection: HubConnection,
+): Promise<void> {
   if (connection.state === HubConnectionState.Disconnected) {
     await connection.start();
   }

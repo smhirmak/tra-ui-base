@@ -7,7 +7,7 @@ interface CustomTableFilterSectionProps {
 export function CustomTableFilterSection({
   value,
   onChange,
-  placeholder = 'Ara...',
+  placeholder = "Ara...",
 }: CustomTableFilterSectionProps) {
   return (
     <div className="flex items-center gap-2">

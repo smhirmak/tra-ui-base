@@ -1,25 +1,25 @@
-import ApiEnvironment from '@/constants/ApiEnvironment';
+import ApiEnvironment from "@/constants/ApiEnvironment";
 
 const Environment = {
   getEnvironment: () => {
-    if (typeof window === 'undefined') {
-      return process.env.NODE_ENV === 'development'
+    if (typeof window === "undefined") {
+      return process.env.NODE_ENV === "development"
         ? ApiEnvironment.Type.local
         : ApiEnvironment.Type.release;
     }
 
     const { host } = window.location;
 
-    if (host.includes('localhost') || host.includes('127.0.0.1')) {
+    if (host.includes("localhost") || host.includes("127.0.0.1")) {
       return ApiEnvironment.Type.local;
     }
-    if (host.includes('test')) {
+    if (host.includes("test")) {
       return ApiEnvironment.Type.test;
     }
-    if (host.includes('ngrok')) {
+    if (host.includes("ngrok")) {
       return ApiEnvironment.Type.local;
     }
-    if (host.includes('10.34.60.')) {
+    if (host.includes("10.34.60.")) {
       return ApiEnvironment.Type.localTest;
     }
     return ApiEnvironment.Type.release;
@@ -27,7 +27,7 @@ const Environment = {
 
   getBaseUrl: () => {
     const env = Environment.getEnvironment();
-    return ApiEnvironment.baseUrls[env] ?? '/api';
+    return ApiEnvironment.baseUrls[env] ?? "/api";
   },
 
   isLocal: () => Environment.getEnvironment() === ApiEnvironment.Type.local,

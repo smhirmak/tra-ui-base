@@ -6,11 +6,11 @@ import {
   getSortedRowModel,
   useReactTable,
   type ColumnDef,
-} from '@tanstack/react-table';
-import { useTableState } from '@/hooks/useTableState';
-import { TableSkeleton } from './table-skeleton';
-import { CustomTableFilterSection } from './custom-table-filter-section';
-import { cn } from '@/lib/utils';
+} from "@tanstack/react-table";
+import { useTableState } from "@/hooks/useTableState";
+import { TableSkeleton } from "./table-skeleton";
+import { CustomTableFilterSection } from "./custom-table-filter-section";
+import { cn } from "@/lib/utils";
 
 interface CustomTableProps<TData> {
   /** Tablo verisi */
@@ -48,8 +48,14 @@ export function CustomTable<TData>({
   paginated = true,
   className,
 }: CustomTableProps<TData>) {
-  const { pagination, setPagination, sorting, setSorting, globalFilter, setGlobalFilter } =
-    useTableState();
+  const {
+    pagination,
+    setPagination,
+    sorting,
+    setSorting,
+    globalFilter,
+    setGlobalFilter,
+  } = useTableState();
 
   const table = useReactTable({
     data,
@@ -67,7 +73,7 @@ export function CustomTable<TData>({
   if (isLoading) return <TableSkeleton columns={columns.length} />;
 
   return (
-    <div className={cn('w-full space-y-3', className)}>
+    <div className={cn("w-full space-y-3", className)}>
       {searchable && (
         <CustomTableFilterSection
           value={globalFilter}
@@ -84,15 +90,19 @@ export function CustomTable<TData>({
                   <th
                     key={header.id}
                     className={cn(
-                      'px-4 py-3 text-left font-medium text-neutral-600 dark:text-neutral-300',
-                      header.column.getCanSort() && 'cursor-pointer select-none',
+                      "px-4 py-3 text-left font-medium text-neutral-600 dark:text-neutral-300",
+                      header.column.getCanSort() &&
+                        "cursor-pointer select-none",
                     )}
                     onClick={header.column.getToggleSortingHandler()}
                   >
                     <div className="flex items-center gap-1">
-                      {flexRender(header.column.columnDef.header, header.getContext())}
-                      {header.column.getIsSorted() === 'asc' && ' ↑'}
-                      {header.column.getIsSorted() === 'desc' && ' ↓'}
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                      {header.column.getIsSorted() === "asc" && " ↑"}
+                      {header.column.getIsSorted() === "desc" && " ↓"}
                     </div>
                   </th>
                 ))}
@@ -116,8 +126,14 @@ export function CustomTable<TData>({
                   className="bg-white hover:bg-neutral-50 dark:bg-neutral-900 dark:hover:bg-neutral-800"
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id} className="px-4 py-3 text-neutral-800 dark:text-neutral-200">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    <td
+                      key={cell.id}
+                      className="px-4 py-3 text-neutral-800 dark:text-neutral-200"
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
                     </td>
                   ))}
                 </tr>
@@ -129,9 +145,7 @@ export function CustomTable<TData>({
 
       {paginated && (
         <div className="flex items-center justify-between text-sm text-neutral-600 dark:text-neutral-400">
-          <span>
-            Toplam {table.getFilteredRowModel().rows.length} kayıt
-          </span>
+          <span>Toplam {table.getFilteredRowModel().rows.length} kayıt</span>
           <div className="flex items-center gap-2">
             <button
               className="rounded px-2 py-1 hover:bg-neutral-100 disabled:opacity-40 dark:hover:bg-neutral-700"
@@ -141,7 +155,8 @@ export function CustomTable<TData>({
               ← Önceki
             </button>
             <span>
-              {table.getState().pagination.pageIndex + 1} / {table.getPageCount()}
+              {table.getState().pagination.pageIndex + 1} /{" "}
+              {table.getPageCount()}
             </span>
             <button
               className="rounded px-2 py-1 hover:bg-neutral-100 disabled:opacity-40 dark:hover:bg-neutral-700"

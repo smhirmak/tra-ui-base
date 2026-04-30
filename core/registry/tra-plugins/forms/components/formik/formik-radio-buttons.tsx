@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react';
-import { cn } from '@/lib/utils';
-import { RadioGroup, RadioGroupItem } from '@/components/radio-buttons';
-import Label from '@/components/label';
-import { FormikErrorText } from './formik-error-text';
+import React from "react";
+import { cn } from "@/lib/utils";
+import { RadioGroup, RadioGroupItem } from "@/components/radio-buttons";
+import Label from "@/components/label";
+import { FormikErrorText } from "./formik-error-text";
 
 interface FormikRadioButtonsProps {
   id: string;
@@ -43,8 +43,14 @@ export const FormikRadioButtons: React.FC<FormikRadioButtonsProps> = ({
     >
       {options?.map((option) => (
         <div className="flex items-center space-x-2" key={String(option.value)}>
-          <RadioGroupItem value={option.value as any} id={String(option.value)} disabled={option.disabled} />
-          {option?.label && <Label htmlFor={String(option.value)}>{option.label}</Label>}
+          <RadioGroupItem
+            value={option.value as any}
+            id={String(option.value)}
+            disabled={option.disabled}
+          />
+          {option?.label && (
+            <Label htmlFor={String(option.value)}>{option.label}</Label>
+          )}
         </div>
       ))}
     </RadioGroup>

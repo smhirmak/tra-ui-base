@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
 
 interface TableSkeletonProps {
   columns?: number;
@@ -28,8 +28,8 @@ export function TableSkeleton({ columns = 5, rows = 8 }: TableSkeletonProps) {
                 <td key={colIdx} className="px-4 py-3">
                   <div
                     className={cn(
-                      'h-4 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800',
-                      colIdx === 0 ? 'w-32' : 'w-20',
+                      "h-4 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800",
+                      colIdx === 0 ? "w-32" : "w-20",
                     )}
                   />
                 </td>

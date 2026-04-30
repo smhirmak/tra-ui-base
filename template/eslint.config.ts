@@ -3,11 +3,15 @@ import globals from 'globals';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import tseslint from 'typescript-eslint';
+import eslintConfigPrettier from 'eslint-config-prettier';
 
 export default tseslint.config(
-  { ignores: ['dist', 'node_modules', 'src/routeTree.gen.ts'] },
   {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+    ignores: ['dist', 'node_modules', 'src/routeTree.gen.ts'],
+  },
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
+  {
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2022,
@@ -28,4 +32,5 @@ export default tseslint.config(
       react: { version: 'detect' },
     },
   },
+  eslintConfigPrettier,
 );

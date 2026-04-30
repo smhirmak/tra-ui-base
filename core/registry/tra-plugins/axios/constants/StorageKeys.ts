@@ -4,8 +4,8 @@
  * Key değiştirmek isterseniz sadece burayı güncellemeniz yeterlidir.
  */
 const StorageKeys = {
-  ACCESS_TOKEN: 'access_token',
-  USER: 'user',
+  ACCESS_TOKEN: "access_token",
+  USER: "user",
 } as const;
 
 export default StorageKeys;

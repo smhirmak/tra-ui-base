@@ -3,9 +3,7 @@
   "name": "plugin-signalr",
   "title": "Real-time (SignalR)",
   "description": "SignalR HubConnection yönetimi, otomatik reconnect, MessageHubContext, useSignalR ve useMessageHub hook'ları.",
-  "dependencies": [
-    "@microsoft/signalr"
-  ],
+  "dependencies": ["@microsoft/signalr"],
   "files": [
     {
       "path": "registry/tra-plugins/signalr/lib/signalr.ts",

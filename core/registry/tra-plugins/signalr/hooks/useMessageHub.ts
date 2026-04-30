@@ -1,4 +1,4 @@
-import { useMessageHubContext } from '@/contexts/messageHub/MessageHubContext';
+import { useMessageHubContext } from "@/contexts/messageHub/MessageHubContext";
 
 /**
  * Hub bağlantı durumunu ve invoke metodunu döner.
@@ -10,8 +10,11 @@ import { useMessageHubContext } from '@/contexts/messageHub/MessageHubContext';
 export function useMessageHub() {
   const { connection, isConnected, connectionId } = useMessageHubContext();
 
-  const invoke = async <T = void>(methodName: string, ...args: unknown[]): Promise<T> => {
-    if (!connection) throw new Error('SignalR bağlantısı mevcut değil.');
+  const invoke = async <T = void>(
+    methodName: string,
+    ...args: unknown[]
+  ): Promise<T> => {
+    if (!connection) throw new Error("SignalR bağlantısı mevcut değil.");
     return connection.invoke<T>(methodName, ...args);
   };
 

@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react';
-import { cn } from '@/lib/utils';
-import Label from '@/components/label';
-import Input from '@/components/input';
-import { FormikErrorText } from './formik-error-text';
-import { getNestedValue } from './utils';
+import React from "react";
+import { cn } from "@/lib/utils";
+import Label from "@/components/label";
+import Input from "@/components/input";
+import { FormikErrorText } from "./formik-error-text";
+import { getNestedValue } from "./utils";
 
 interface FormikTextFieldProps {
   id: string;
@@ -21,7 +21,9 @@ interface FormikTextFieldProps {
   textarea?: boolean;
   showRequiredIcon?: boolean;
   onChange?: (value: string) => void;
-  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onKeyDown?: (
+    e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => void;
   autoFocus?: boolean;
   defaultValue?: string | number;
 }
@@ -31,7 +33,7 @@ export const FormikTextField: React.FC<FormikTextFieldProps> = ({
   formik,
   label,
   placeholder,
-  type = 'text',
+  type = "text",
   disabled,
   className,
   containerClassName,
@@ -45,7 +47,7 @@ export const FormikTextField: React.FC<FormikTextFieldProps> = ({
   autoFocus,
   defaultValue,
 }) => (
-  <div className={cn(containerClassName, 'flex flex-col text-start gap-1.5')}>
+  <div className={cn(containerClassName, "flex flex-col text-start gap-1.5")}>
     {label && (
       <Label htmlFor={id}>
         {label}
@@ -54,7 +56,7 @@ export const FormikTextField: React.FC<FormikTextFieldProps> = ({
     )}
     <Input
       id={id}
-      value={getNestedValue(formik.values, id) ?? defaultValue ?? ''}
+      value={getNestedValue(formik.values, id) ?? defaultValue ?? ""}
       onChange={(e) => {
         if (!disabled) {
           formik.setFieldValue(id, e.target.value);
@@ -70,7 +72,9 @@ export const FormikTextField: React.FC<FormikTextFieldProps> = ({
       endIcon={endIcon}
       textarea={textarea}
       autoFocus={autoFocus}
-      error={Boolean(getNestedValue(formik.touched, id) && getNestedValue(formik.errors, id))}
+      error={Boolean(
+        getNestedValue(formik.touched, id) && getNestedValue(formik.errors, id),
+      )}
       className={cn(className)}
       onKeyDown={onKeyDown}
     />

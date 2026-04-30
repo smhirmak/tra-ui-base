@@ -11,7 +11,7 @@ Yeni proje iskeleti + sonradan eklenebilen modüler plugin sistemi.
 
 ```bash
 npx @tra-bilisim/tra-ui create my-project
-cd my-project
+code -r my-project
 ```
 
 > `create` komutu template'i indirir, `npm install` ve `npx msi-ui-cli init` adımlarını otomatik çalıştırır. Proje hazır!

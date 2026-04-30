@@ -1,7 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
-import { HubConnectionState } from '@microsoft/signalr';
-import { MessageHubContext } from './MessageHubContext';
-import { createHubConnection, startConnection, stopConnection } from '@/lib/signalr';
+import { useEffect, useRef, useState } from "react";
+import { HubConnectionState } from "@microsoft/signalr";
+import { MessageHubContext } from "./MessageHubContext";
+import {
+  createHubConnection,
+  startConnection,
+  stopConnection,
+} from "@/lib/signalr";
 
 interface MessageHubProviderProps {
   children: React.ReactNode;
@@ -19,9 +23,7 @@ export function MessageHubProvider({
   getAccessToken,
   enabled = true,
 }: MessageHubProviderProps) {
-  const connectionRef = useRef(
-    createHubConnection({ hubUrl, getAccessToken }),
-  );
+  const connectionRef = useRef(createHubConnection({ hubUrl, getAccessToken }));
   const [isConnected, setIsConnected] = useState(false);
   const [connectionId, setConnectionId] = useState<string | null>(null);
 

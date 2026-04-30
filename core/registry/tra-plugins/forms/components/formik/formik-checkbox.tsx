@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react';
-import { cn } from '@/lib/utils';
-import Checkbox from '@/components/checkbox';
-import { FormikErrorText } from './formik-error-text';
-import { getNestedValue } from './utils';
+import React from "react";
+import { cn } from "@/lib/utils";
+import Checkbox from "@/components/checkbox";
+import { FormikErrorText } from "./formik-error-text";
+import { getNestedValue } from "./utils";
 
 interface FormikCheckboxProps {
   id: string;
@@ -13,7 +13,7 @@ interface FormikCheckboxProps {
   className?: string;
   containerClassName?: string;
   labelClassName?: string;
-  labelSide?: 'left' | 'right';
+  labelSide?: "left" | "right";
   onChange?: (value: any) => void;
   onlyParentOnChange?: boolean;
 }
@@ -26,11 +26,11 @@ export const FormikCheckbox: React.FC<FormikCheckboxProps> = ({
   className,
   containerClassName,
   labelClassName,
-  labelSide = 'right',
+  labelSide = "right",
   onChange,
   onlyParentOnChange,
 }) => (
-  <div className={cn('flex gap-2 items-center', containerClassName)}>
+  <div className={cn("flex gap-2 items-center", containerClassName)}>
     <Checkbox
       id={id}
       checked={getNestedValue(formik.values, id) ?? false}
@@ -41,7 +41,7 @@ export const FormikCheckbox: React.FC<FormikCheckboxProps> = ({
         }
       }}
       disabled={disabled}
-      className={cn('peer', className)}
+      className={cn("peer", className)}
       containerClassName={cn(containerClassName)}
       labelClassName={cn(labelClassName)}
       label={label}

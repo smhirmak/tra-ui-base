@@ -1,5 +1,5 @@
-import { createContext, useContext } from 'react';
-import type { HubConnection } from '@microsoft/signalr';
+import { createContext, useContext } from "react";
+import type { HubConnection } from "@microsoft/signalr";
 
 export interface MessageHubContextValue {
   connection: HubConnection | null;

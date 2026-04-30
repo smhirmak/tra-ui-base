@@ -10,4 +10,4 @@ export interface Plugin {
   postInstall: string[];
 }
 
-export type PackageManager = 'npm' | 'pnpm' | 'yarn' | 'bun';
+export type PackageManager = "npm" | "pnpm" | "yarn" | "bun";

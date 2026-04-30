@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react';
-import { cn } from '@/lib/utils';
-import Select from '@/components/select';
-import { FormikErrorText } from './formik-error-text';
-import { getNestedValue } from './utils';
+import React from "react";
+import { cn } from "@/lib/utils";
+import Select from "@/components/select";
+import { FormikErrorText } from "./formik-error-text";
+import { getNestedValue } from "./utils";
 
 interface ISelectOption {
   content: string | React.ReactNode;
@@ -33,7 +33,7 @@ export const FormikSelect: React.FC<FormikSelectProps> = ({
   formik,
   label,
   options,
-  placeholder = 'Seçiniz...',
+  placeholder = "Seçiniz...",
   disabled,
   className,
   selectClassName,
@@ -51,9 +51,10 @@ export const FormikSelect: React.FC<FormikSelectProps> = ({
       label={label}
       showRequiredIcon={showRequiredIcon}
       value={
-        getNestedValue(formik.values, id) !== undefined && getNestedValue(formik.values, id) !== ''
+        getNestedValue(formik.values, id) !== undefined &&
+        getNestedValue(formik.values, id) !== ""
           ? getNestedValue(formik.values, id)
-          : defaultValue ?? ''
+          : (defaultValue ?? "")
       }
       onChange={(value: any) => {
         if (onlyParentOnChange) {
@@ -69,7 +70,9 @@ export const FormikSelect: React.FC<FormikSelectProps> = ({
       isMulti={isMulti}
       isSearchable={isSearchable}
       disabled={disabled}
-      error={Boolean(getNestedValue(formik.touched, id) && getNestedValue(formik.errors, id))}
+      error={Boolean(
+        getNestedValue(formik.touched, id) && getNestedValue(formik.errors, id),
+      )}
       className={selectClassName}
     />
     {!hideErrorText && <FormikErrorText id={id} formik={formik} />}

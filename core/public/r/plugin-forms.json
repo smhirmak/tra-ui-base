@@ -3,10 +3,7 @@
   "name": "plugin-forms",
   "title": "Form Yönetimi (Formik + Yup)",
   "description": "Formik + Yup form altyapısı. MSI UI Kit bileşenlerine bağlı TextField, Select, Checkbox, DatePicker, RadioButtons ve ortak Validations sabitleri.",
-  "dependencies": [
-    "formik",
-    "yup"
-  ],
+  "dependencies": ["formik", "yup"],
   "registryDependencies": [
     "@msi/text-field",
     "@msi/select",
