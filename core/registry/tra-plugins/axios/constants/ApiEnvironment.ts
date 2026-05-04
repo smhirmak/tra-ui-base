@@ -13,7 +13,7 @@ const ApiEnvironment = {
 
   // TODO: Projenizin API URL'lerini buraya ekleyin
   baseUrls: {
-    local: "https://localhost:7001/api",
+          local: "https://localhost:7001/api",
     test: "https://test.example.com/api",
     localTest: "http://10.34.60.1:5000/api",
     release: "https://api.example.com/api",

@@ -2,5 +2,25 @@
   "name": "tra-ui-base",
   "private": true,
   "version": "0.0.1",
-  "description": "TRA UI Base - React project starter template and plugin system"
+  "description": "TRA UI Base - React project starter template and plugin system",
+  "scripts": {
+    "prepare": "husky",
+    "lint:cli": "cd cli && npx tsc --noEmit",
+    "lint:core": "cd core && npx tsc --noEmit"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0"
+  },
+  "lint-staged": {
+    "cli/src/**/*.ts": [
+      "bash -c 'cd cli && npx tsc --noEmit'"
+    ],
+    "core/registry/**/*.{ts,tsx}": [
+      "bash -c 'cd core && npx tsc --noEmit'"
+    ],
+    "template/src/**/*.{ts,tsx}": [
+      "bash -c 'cd template && npx eslint --max-warnings=0'"
+    ]
+  }
 }
