@@ -1,0 +1,5 @@
+node_modules
+dist
+public/r
+*.gen.ts
+src/paraglide
