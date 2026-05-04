@@ -24,7 +24,7 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 import { useIsMobile } from '@/hooks/use-mobile';
-import Pagination from '@/components/pagination';
+import Pagination from '@/components/ui/pagination';
 import CustomTableFilterSection from './custom-table-filter-section';
 
 declare module '@tanstack/react-table' {

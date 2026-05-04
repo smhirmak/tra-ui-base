@@ -142,19 +142,19 @@
       ],
       "files": [
         {
-          "path": "registry/tra-plugins/table/components/custom-table.tsx",
+          "path": "registry/tra-plugins/table/components/table/custom-table.tsx",
           "type": "registry:file",
-          "target": "src/components/custom-table.tsx"
+          "target": "src/components/table/custom-table.tsx"
         },
         {
-          "path": "registry/tra-plugins/table/components/table-skeleton.tsx",
+          "path": "registry/tra-plugins/table/components/table/table-skeleton.tsx",
           "type": "registry:file",
-          "target": "src/components/table-skeleton.tsx"
+          "target": "src/components/table/table-skeleton.tsx"
         },
         {
-          "path": "registry/tra-plugins/table/components/custom-table-filter-section.tsx",
+          "path": "registry/tra-plugins/table/components/table/custom-table-filter-section.tsx",
           "type": "registry:file",
-          "target": "src/components/custom-table-filter-section.tsx"
+          "target": "src/components/table/custom-table-filter-section.tsx"
         },
         {
           "path": "registry/tra-plugins/table/hooks/useTableState.ts",

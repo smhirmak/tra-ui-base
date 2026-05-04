@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { cn } from "@/lib/utils";
-import DatePicker from "@/components/date-picker";
-import Label from "@/components/label";
+import DatePicker from "@/components/ui/date-picker";
+import Label from "@/components/ui/label";
 import type { DayPickerProps } from "react-day-picker";
 import { FormikErrorText } from "./formik-error-text";
 import { getNestedValue } from "./utils";

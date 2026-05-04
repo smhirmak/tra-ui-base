@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { cn } from "@/lib/utils";
-import Label from "@/components/label";
-import Input from "@/components/input";
+import Label from "@/components/ui/label";
+import Input from "@/components/ui/input";
 import { FormikErrorText } from "./formik-error-text";
 import { getNestedValue } from "./utils";
 

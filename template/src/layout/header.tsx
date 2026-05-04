@@ -1,6 +1,6 @@
-import ThemeModeToggle from '@/components/theme-mode-toggle.tsx';
+import ThemeModeToggle from '@/components/ui/theme-mode-toggle.tsx';
 import { Link } from '@tanstack/react-router';
-// import LanguageSelect from '@/components/language-select';
+// import LanguageSelect from '@/components/ui/language-select';
 // import { setLocale, useLocale } from '@/lib/locale';
 
 const Header = () => {

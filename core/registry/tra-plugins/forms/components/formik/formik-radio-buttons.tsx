@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { cn } from "@/lib/utils";
-import { RadioGroup, RadioGroupItem } from "@/components/radio-buttons";
-import Label from "@/components/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-buttons";
+import Label from "@/components/ui/label";
 import { FormikErrorText } from "./formik-error-text";
 
 interface FormikRadioButtonsProps {
