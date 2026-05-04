@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState } from "react";
 
 import {
   flexRender,
@@ -8,7 +8,7 @@ import {
   getSortedRowModel,
   getExpandedRowModel,
   useReactTable,
-} from '@tanstack/react-table';
+} from "@tanstack/react-table";
 import type {
   ColumnDef,
   PaginationState,
@@ -18,16 +18,16 @@ import type {
   VisibilityState,
   SortingState,
   RowData,
-} from '@tanstack/react-table';
-import { rankItem } from '@tanstack/match-sorter-utils';
-import { ChevronDown, ChevronUp } from 'lucide-react';
-import { cn } from '@/lib/utils';
+} from "@tanstack/react-table";
+import { rankItem } from "@tanstack/match-sorter-utils";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-import { useIsMobile } from '@/hooks/use-mobile';
-import Pagination from '@/components/ui/pagination';
-import CustomTableFilterSection from './custom-table-filter-section';
+import { useIsMobile } from "@/hooks/use-mobile";
+import Pagination from "@/components/ui/pagination";
+import CustomTableFilterSection from "./custom-table-filter-section";
 
-declare module '@tanstack/react-table' {
+declare module "@tanstack/react-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface ColumnMeta<TData extends RowData, TValue> {
     headerClassName?: string;
@@ -59,7 +59,7 @@ const CustomTable = <T extends object>({
   expandRowContainerClassName,
   onlyExpanded = false,
   filterColumns,
-  headClassName = '',
+  headClassName = "",
   onFilteredDataChange,
   defaultPageSize = { desktop: 10, mobile: 8 },
 }: {
@@ -68,7 +68,7 @@ const CustomTable = <T extends object>({
   sorting?: SortingState;
   setSorting?: React.Dispatch<React.SetStateAction<SortingState>>;
   hidePagination?: boolean;
-  renderExpandedRow?: (row: import('@tanstack/react-table').Row<T>) => React.ReactNode;
+  renderExpandedRow?: (row: import("@tanstack/react-table").Row<T>) => React.ReactNode;
   tableClassName?: string;
   tableWrapperClassName?: string;
   searchText?: string;
@@ -128,7 +128,7 @@ const CustomTable = <T extends object>({
   const normalizedFilterColumns = useMemo(
     () =>
       (filterColumns || []).map((fc) =>
-        typeof fc === 'string'
+        typeof fc === "string"
           ? {
               id: fc,
               label: undefined as string | undefined,
@@ -136,9 +136,9 @@ const CustomTable = <T extends object>({
               columns: undefined as string[] | undefined,
               path: undefined as string | string[] | undefined,
             }
-          : fc,
+          : fc
       ),
-    [filterColumns],
+    [filterColumns]
   );
 
   const augmentedColumns: ColumnDef<T>[] = useMemo(() => {
@@ -146,8 +146,8 @@ const CustomTable = <T extends object>({
       (columns || []).map(
         (c: ColumnDef<T>) =>
           ((c as { id?: string; accessorKey?: string }).id ??
-            (c as { id?: string; accessorKey?: string }).accessorKey) as string,
-      ),
+            (c as { id?: string; accessorKey?: string }).accessorKey) as string
+      )
     );
     const syntheticColumns: ColumnDef<T>[] = [];
 
@@ -158,34 +158,34 @@ const CustomTable = <T extends object>({
             id: fc.id,
             header: fc.label ?? fc.id,
             enableSorting: false,
-            meta: { headerClassName: 'hidden', bodyClassName: 'hidden' } as Record<string, string>,
+            meta: { headerClassName: "hidden", bodyClassName: "hidden" } as Record<string, string>,
             accessorFn: (row: T) => {
               try {
                 if (fc.path) {
                   const getNestedByPath = (obj: unknown, path: string | string[]): string => {
-                    if (obj === null || obj === undefined) return '';
+                    if (obj === null || obj === undefined) return "";
                     if (Array.isArray(path)) {
                       return path
                         .map((p) =>
                           p
-                            .split('.')
+                            .split(".")
                             .reduce(
                               (current: Record<string, unknown>, key: string) =>
                                 current?.[key] as Record<string, unknown>,
-                              obj as Record<string, unknown>,
-                            ),
+                              obj as Record<string, unknown>
+                            )
                         )
                         .filter((v) => v !== undefined && v !== null)
-                        .join(' ');
+                        .join(" ");
                     }
                     return String(
                       (path as string)
-                        .split('.')
+                        .split(".")
                         .reduce(
                           (current: Record<string, unknown>, key: string) =>
                             current?.[key] as Record<string, unknown>,
-                          obj as Record<string, unknown>,
-                        ) ?? '',
+                          obj as Record<string, unknown>
+                        ) ?? ""
                     );
                   };
 
@@ -196,22 +196,22 @@ const CustomTable = <T extends object>({
                         return value
                           .map((item) => {
                             const nested = getNestedByPath(item, fc.path!);
-                            return String(nested ?? '');
+                            return String(nested ?? "");
                           })
-                          .join(' ');
+                          .join(" ");
                       }
                       const nested = getNestedByPath(value, fc.path!);
-                      return String(nested ?? '');
+                      return String(nested ?? "");
                     })
-                    .join(' ')
+                    .join(" ")
                     .trim();
                 }
                 return fc
-                  .columns!.map((k) => String((row as Record<string, unknown>)[k] ?? ''))
-                  .join(' ')
+                  .columns!.map((k) => String((row as Record<string, unknown>)[k] ?? ""))
+                  .join(" ")
                   .trim();
               } catch {
-                return '';
+                return "";
               }
             },
             cell: () => null,
@@ -231,7 +231,7 @@ const CustomTable = <T extends object>({
       const id =
         (c as { id?: string; accessorKey?: string }).id ??
         (c as { id?: string; accessorKey?: string }).accessorKey;
-      if ((meta?.bodyClassName === 'hidden' || meta?.headerClassName === 'hidden') && id) {
+      if ((meta?.bodyClassName === "hidden" || meta?.headerClassName === "hidden") && id) {
         hidden[id] = false;
       }
     });
@@ -260,12 +260,12 @@ const CustomTable = <T extends object>({
       fuzzy: fuzzyFilter,
     },
     defaultColumn: {
-      filterFn: 'fuzzy',
+      filterFn: "fuzzy",
     },
     onGlobalFilterChange: setSearchText,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
-    globalFilterFn: 'fuzzy',
+    globalFilterFn: "fuzzy",
     onExpandedChange: setExpanded,
     getExpandedRowModel: getExpandedRowModel(),
     // autoResetPageIndex: false,
@@ -287,7 +287,7 @@ const CustomTable = <T extends object>({
   };
 
   return (
-    <div className={cn('flex flex-col w-full gap-9 min-h-0 justify-between', containerClassName)}>
+    <div className={cn("flex flex-col w-full gap-9 min-h-0 justify-between", containerClassName)}>
       <div className="flex flex-col gap-5">
         <CustomTableFilterSection
           table={table}
@@ -298,9 +298,9 @@ const CustomTable = <T extends object>({
           }
         />
         <div
-          className={cn('custom-table-container overflow-auto rounded-xl', tableWrapperClassName)}
+          className={cn("custom-table-container overflow-auto rounded-xl", tableWrapperClassName)}
         >
-          <table className={cn('w-full border border-transparent', tableClassName)}>
+          <table className={cn("w-full border border-transparent", tableClassName)}>
             <thead className={cn(headClassName)}>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
@@ -310,17 +310,17 @@ const CustomTable = <T extends object>({
                       key={header.id}
                       colSpan={header.colSpan}
                       className={cn(
-                        'bg-primary-15 text-start p-3.5 text-xxs md:text-xs font-medium',
+                        "bg-primary-15 text-start p-3.5 text-xxs md:text-xs font-medium",
                         headCellClassName,
-                        header.column.columnDef.meta?.headerClassName as string,
+                        header.column.columnDef.meta?.headerClassName as string
                       )}
                     >
                       <div
                         {...{
                           className: cn(
-                            'flex items-center gap-2',
+                            "flex items-center gap-2",
                             header.column.columnDef.meta?.headerItemClassName as string,
-                            header.column.getCanSort() ? 'cursor-pointer select-none' : '',
+                            header.column.getCanSort() ? "cursor-pointer select-none" : ""
                           ),
                           onClick: header.column.getToggleSortingHandler(),
                         }}
@@ -342,9 +342,9 @@ const CustomTable = <T extends object>({
                   <React.Fragment key={row.id}>
                     <tr
                       className={cn(
-                        'bg-primary-5 border-b border-neutral-white hover:brightness-110 transition-all',
+                        "bg-primary-5 border-b border-neutral-white hover:brightness-110 transition-all",
                         bodyRowClassName,
-                        rowClassName ? rowClassName(row.original) : undefined,
+                        rowClassName ? rowClassName(row.original) : undefined
                       )}
                       onClick={
                         expandKey &&
@@ -356,7 +356,7 @@ const CustomTable = <T extends object>({
                       }
                       style={
                         expandKey && row.original && hasExpandableContent(row.original, expandKey)
-                          ? { cursor: 'pointer' }
+                          ? { cursor: "pointer" }
                           : undefined
                       }
                     >
@@ -365,9 +365,9 @@ const CustomTable = <T extends object>({
                           key={cell.id}
                           role="body-cell"
                           className={cn(
-                            'py-4 px-3.5 text-xxs md:text-xs font-normal',
+                            "py-4 px-3.5 text-xxs md:text-xs font-normal",
                             bodyCellClassName,
-                            cell.column.columnDef.meta?.bodyClassName as string,
+                            cell.column.columnDef.meta?.bodyClassName as string
                           )}
                         >
                           {idx === 0 && renderExpandedRow ? (
@@ -378,11 +378,11 @@ const CustomTable = <T extends object>({
                               hasExpandableContent(row.original, expandKey) ? (
                                 <span
                                   style={{
-                                    cursor: 'pointer',
+                                    cursor: "pointer",
                                     marginRight: 8,
-                                    userSelect: 'none',
-                                    display: 'flex',
-                                    alignItems: 'center',
+                                    userSelect: "none",
+                                    display: "flex",
+                                    alignItems: "center",
                                   }}
                                   onClick={(e) => {
                                     e.stopPropagation();
@@ -392,8 +392,8 @@ const CustomTable = <T extends object>({
                                   <ChevronUp
                                     size={18}
                                     className={cn(
-                                      'transition-all',
-                                      row.getIsExpanded() ? 'rotate-0' : 'rotate-180',
+                                      "transition-all",
+                                      row.getIsExpanded() ? "rotate-0" : "rotate-180"
                                     )}
                                   />
                                 </span>
@@ -410,10 +410,10 @@ const CustomTable = <T extends object>({
                     </tr>
                     {/* Expanded row içeriği */}
                     {row.getIsExpanded() && renderExpandedRow && (
-                      <tr className={cn('animate-grow-down', expandRowContainerClassName)}>
+                      <tr className={cn("animate-grow-down", expandRowContainerClassName)}>
                         <td
                           colSpan={row.getVisibleCells().length}
-                          style={{ background: 'transparent', paddingLeft: 0 }}
+                          style={{ background: "transparent", paddingLeft: 0 }}
                           className="p-0"
                         >
                           {renderExpandedRow(row)}

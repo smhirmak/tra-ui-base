@@ -33,27 +33,16 @@ program
 // ─── ADD komutu ──────────────────────────────────────────────────────────────
 program
   .command("add [plugins...]")
-  .description(
-    "Adds plugins. Runs interactive selection if no arguments are provided.",
-  )
+  .description("Adds plugins. Runs interactive selection if no arguments are provided.")
   .option("--pm <manager>", "Package manager: npm | pnpm | yarn | bun", "npm")
-  .option(
-    "--local",
-    "Use local registry (http://localhost:3030) — for testing only",
-    false,
-  )
-  .action(
-    async (
-      pluginNames: string[],
-      options: { pm: PackageManager; local: boolean },
-    ) => {
-      if (pluginNames.length === 0) {
-        await interactiveAdd(options.pm, options.local);
-      } else {
-        await installPlugins(pluginNames, options.pm, options.local);
-      }
-    },
-  );
+  .option("--local", "Use local registry (http://localhost:3030) — for testing only", false)
+  .action(async (pluginNames: string[], options: { pm: PackageManager; local: boolean }) => {
+    if (pluginNames.length === 0) {
+      await interactiveAdd(options.pm, options.local);
+    } else {
+      await installPlugins(pluginNames, options.pm, options.local);
+    }
+  });
 
 // ─── CREATE komutu ──────────────────────────────────────────────────────────
 program
@@ -67,8 +56,7 @@ program
           type: "input",
           name: "inputName",
           message: "Project name:",
-          validate: (v: string) =>
-            v.trim().length > 0 || "Project name is required.",
+          validate: (v: string) => v.trim().length > 0 || "Project name is required.",
         },
       ]);
       name = inputName.trim();
@@ -89,13 +77,8 @@ program
   .action((pluginName: string) => showPluginInfo(pluginName));
 
 // ─── Interaktif seçim ────────────────────────────────────────────────────────
-async function interactiveAdd(
-  pm: PackageManager,
-  local = false,
-): Promise<void> {
-  console.log(
-    `\n${chalk.bold.blue("TRA UI")} ${chalk.grey("— Plugin Installer")}\n`,
-  );
+async function interactiveAdd(pm: PackageManager, local = false): Promise<void> {
+  console.log(`\n${chalk.bold.blue("TRA UI")} ${chalk.grey("— Plugin Installer")}\n`);
 
   const { selected } = await inquirer.prompt<{ selected: string[] }>([
     {
@@ -119,7 +102,7 @@ async function interactiveAdd(
   }
 
   console.log(
-    `\n${chalk.green("✔")} ${selected.length} plugin(s) selected: ${selected.map((s) => chalk.cyan(s)).join(", ")}\n`,
+    `\n${chalk.green("✔")} ${selected.length} plugin(s) selected: ${selected.map((s) => chalk.cyan(s)).join(", ")}\n`
   );
 
   const { confirm } = await inquirer.prompt<{ confirm: boolean }>([
@@ -144,7 +127,7 @@ async function installPlugins(
   names: string[],
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _pm: PackageManager,
-  local = false,
+  local = false
 ): Promise<void> {
   const cwd = process.cwd();
 
@@ -152,23 +135,19 @@ async function installPlugins(
   const invalid = names.filter((n) => !PLUGINS.find((p) => p.name === n));
   if (invalid.length > 0) {
     console.log(chalk.red(`\n✗ Unknown plugin(s): ${invalid.join(", ")}`));
-    console.log(
-      `  See available plugins: ${chalk.yellowBright("npx tra-ui list")}\n`,
-    );
+    console.log(`  See available plugins: ${chalk.yellowBright("npx tra-ui list")}\n`);
     process.exit(1);
   }
 
   const plugins = names.map((n) => PLUGINS.find((p) => p.name === n)!);
   console.log(
-    `\n${chalk.bold("Plugins to install:")} ${plugins.map((p) => chalk.cyan(p.name)).join(", ")}\n`,
+    `\n${chalk.bold("Plugins to install:")} ${plugins.map((p) => chalk.cyan(p.name)).join(", ")}\n`
   );
 
   // 1. Check components.json and ensure @tra + @msi registries are present
   const traRegistryUrl = local ? LOCAL_REGISTRY_URL : TRA_REGISTRY_URL;
   if (local) {
-    console.log(
-      chalk.yellow("  ⚠ Using local registry: http://localhost:3030\n"),
-    );
+    console.log(chalk.yellow("  ⚠ Using local registry: http://localhost:3030\n"));
   }
   const registryOk = await ensureRegistries(cwd, traRegistryUrl);
   if (!registryOk) return;
@@ -187,9 +166,7 @@ async function installPlugins(
     spinner.succeed(chalk.green("Plugins installed"));
   } catch (err: any) {
     spinner.fail(chalk.red("Plugin installation failed"));
-    console.log(
-      chalk.red(`\n✗ Installation error: ${String(err.stderr || err.message)}`),
-    );
+    console.log(chalk.red(`\n✗ Installation error: ${String(err.stderr || err.message)}`));
     return;
   }
 
@@ -212,10 +189,7 @@ async function installPlugins(
 }
 
 // ─── Registry yönetimi ────────────────────────────────────────────────────────
-async function ensureRegistries(
-  cwd: string,
-  traUrl = TRA_REGISTRY_URL,
-): Promise<boolean> {
+async function ensureRegistries(cwd: string, traUrl = TRA_REGISTRY_URL): Promise<boolean> {
   const componentJsonPath = path.join(cwd, "components.json");
 
   if (!(await fs.pathExists(componentJsonPath))) {
@@ -225,10 +199,7 @@ async function ensureRegistries(
     return false;
   }
 
-  const json = (await fs.readJson(componentJsonPath)) as Record<
-    string,
-    unknown
-  > & {
+  const json = (await fs.readJson(componentJsonPath)) as Record<string, unknown> & {
     registries?: Record<string, string>;
   };
 
@@ -251,7 +222,7 @@ async function ensureRegistries(
   if (changed) {
     await fs.writeJson(componentJsonPath, json, { spaces: 2 });
     const spinner = ora("").succeed(
-      chalk.grey("components.json updated (@tra and @msi registries added)\n"),
+      chalk.grey("components.json updated (@tra and @msi registries added)\n")
     );
     void spinner;
   }
@@ -268,13 +239,9 @@ async function createProject(projectName: string): Promise<void> {
     process.exit(1);
   }
 
-  console.log(
-    `\n${chalk.bold.blue("TRA UI")} ${chalk.grey("— New Project")}\n`,
-  );
+  console.log(`\n${chalk.bold.blue("TRA UI")} ${chalk.grey("— New Project")}\n`);
   console.log(`${chalk.grey("Project:")} ${chalk.cyan(projectName)}`);
-  console.log(
-    `${chalk.grey("Source:")}  ${TEMPLATE_REPO} (${TEMPLATE_BRANCH})\n`,
-  );
+  console.log(`${chalk.grey("Source:")}  ${TEMPLATE_REPO} (${TEMPLATE_BRANCH})\n`);
 
   const spinner = ora("Downloading template...").start();
 
@@ -293,7 +260,7 @@ async function createProject(projectName: string): Promise<void> {
         TEMPLATE_REPO,
         projectName,
       ],
-      { cwd: process.cwd() },
+      { cwd: process.cwd() }
     );
 
     // Fetch only the template/ folder via sparse-checkout
@@ -315,26 +282,20 @@ async function createProject(projectName: string): Promise<void> {
     spinner.succeed(chalk.green("Template downloaded!"));
 
     // 1. npm install
-    console.log(
-      `\n${chalk.bold("1/2")} ${chalk.grey("Installing dependencies...")}`,
-    );
+    console.log(`\n${chalk.bold("1/2")} ${chalk.grey("Installing dependencies...")}`);
     try {
       await execa("npm", ["install"], { stdio: "inherit", cwd: targetDir });
       console.log(chalk.green("✔ npm install completed"));
     } catch {
       console.log(
         chalk.yellow(
-          "⚠ npm install failed — run manually: code -r " +
-            projectName +
-            " && npm install",
-        ),
+          "⚠ npm install failed — run manually: code -r " + projectName + " && npm install"
+        )
       );
     }
 
     // 2. MSI UI Kit init — no spinner, run directly with stdio: inherit
-    console.log(
-      `\n${chalk.bold("2/2")} ${chalk.grey("Setting up MSI UI Kit...")}`,
-    );
+    console.log(`\n${chalk.bold("2/2")} ${chalk.grey("Setting up MSI UI Kit...")}`);
     let msiUiKitInstalled = false;
     try {
       await execa("npx", ["msi-ui-cli", "init", "-y"], {
@@ -344,11 +305,7 @@ async function createProject(projectName: string): Promise<void> {
       console.log(chalk.green("✔ MSI UI Kit installed"));
       msiUiKitInstalled = true;
     } catch {
-      console.log(
-        chalk.yellow(
-          "⚠ MSI UI Kit setup failed — run manually: npx msi-ui-cli init",
-        ),
-      );
+      console.log(chalk.yellow("⚠ MSI UI Kit setup failed — run manually: npx msi-ui-cli init"));
     }
     if (msiUiKitInstalled) {
       try {
@@ -360,17 +317,15 @@ async function createProject(projectName: string): Promise<void> {
       } catch {
         console.log(
           chalk.yellow(
-            "⚠ Theme Mode Toggle setup failed — run manually: npx msi-ui-cli add theme-mode-toggle",
-          ),
+            "⚠ Theme Mode Toggle setup failed — run manually: npx msi-ui-cli add theme-mode-toggle"
+          )
         );
       }
     }
   } catch (err: any) {
     spinner.fail(chalk.red("Failed to download template."));
     console.log(chalk.grey(`  Error: ${String(err.message)}`));
-    console.log(
-      chalk.grey("  Is git accessible? Check your network connection."),
-    );
+    console.log(chalk.grey("  Is git accessible? Check your network connection."));
     await fs.remove(targetDir).catch(() => {});
     process.exit(1);
   }
@@ -403,36 +358,30 @@ async function createProject(projectName: string): Promise<void> {
     // If inquirer fails for any reason, fallback to printing the command
     console.log(`  ${chalk.cyan(`code -r ${projectName}`)}`);
   }
-  console.log(
-    `  ${chalk.cyan("npx @tra-bilisim/tra-ui add")}   ${chalk.grey("# Add plugins")}`,
-  );
+  console.log(`  ${chalk.cyan("npx @tra-bilisim/tra-ui add")}   ${chalk.grey("# Add plugins")}`);
   console.log();
 }
 
 // ─── List ─────────────────────────────────────────────────────────────────────
 function listPlugins(): void {
-  console.log(
-    `\n${chalk.bold.blue("TRA UI")} ${chalk.grey("— Available Plugins")}\n`,
-  );
+  console.log(`\n${chalk.bold.blue("TRA UI")} ${chalk.grey("— Available Plugins")}\n`);
 
   for (const p of PLUGINS) {
-    console.log(
-      `  ${chalk.cyan(p.name.padEnd(12))} ${chalk.grey("—")} ${p.description}`,
-    );
+    console.log(`  ${chalk.cyan(p.name.padEnd(12))} ${chalk.grey("—")} ${p.description}`);
   }
 
   console.log("\n" + chalk.grey("Usage:"));
   console.log(
-    `  ${chalk.yellowBright("npx tra-ui add")}            ${chalk.grey("→ interactive selection")}`,
+    `  ${chalk.yellowBright("npx tra-ui add")}            ${chalk.grey("→ interactive selection")}`
   );
   console.log(
-    `  ${chalk.yellowBright("npx tra-ui add i18n")}       ${chalk.grey("→ single plugin")}`,
+    `  ${chalk.yellowBright("npx tra-ui add i18n")}       ${chalk.grey("→ single plugin")}`
   );
   console.log(
-    `  ${chalk.yellowBright("npx tra-ui add i18n axios")} ${chalk.grey("→ multiple plugins")}`,
+    `  ${chalk.yellowBright("npx tra-ui add i18n axios")} ${chalk.grey("→ multiple plugins")}`
   );
   console.log(
-    `  ${chalk.yellowBright("npx tra-ui info i18n")}      ${chalk.grey("→ plugin details")}\n`,
+    `  ${chalk.yellowBright("npx tra-ui info i18n")}      ${chalk.grey("→ plugin details")}\n`
   );
 }
 
@@ -442,32 +391,24 @@ function showPluginInfo(name: string): void {
 
   if (!plugin) {
     console.log(chalk.red(`\n✗ Plugin "${name}" not found.`));
-    console.log(
-      `  Available plugins: ${PLUGINS.map((p) => chalk.cyan(p.name)).join(", ")}\n`,
-    );
+    console.log(`  Available plugins: ${PLUGINS.map((p) => chalk.cyan(p.name)).join(", ")}\n`);
     process.exit(1);
   }
 
   console.log(`\n${chalk.bold.blue(plugin.title)}\n`);
   console.log(`${chalk.grey("Description:")}  ${plugin.description}\n`);
-  console.log(
-    `${chalk.grey("shadcn name:")} ${chalk.cyan(`@tra/plugin-${plugin.name}`)}\n`,
-  );
+  console.log(`${chalk.grey("shadcn name:")} ${chalk.cyan(`@tra/plugin-${plugin.name}`)}\n`);
 
   if (plugin.packages.length > 0) {
     console.log(chalk.grey("npm dependencies:"));
-    plugin.packages.forEach((p: string) =>
-      console.log(`  ${chalk.yellowBright(p)}`),
-    );
+    plugin.packages.forEach((p: string) => console.log(`  ${chalk.yellowBright(p)}`));
   }
 
   if (plugin.registryDependencies.length > 0) {
     console.log(
-      `\n${chalk.grey("MSI UI Kit bileşenleri (registryDependencies — otomatik yüklenir):")}`,
+      `\n${chalk.grey("MSI UI Kit bileşenleri (registryDependencies — otomatik yüklenir):")}`
     );
-    plugin.registryDependencies.forEach((d: string) =>
-      console.log(`  ${chalk.magenta(d)}`),
-    );
+    plugin.registryDependencies.forEach((d: string) => console.log(`  ${chalk.magenta(d)}`));
   }
 
   if (plugin.postInstall.length > 0) {

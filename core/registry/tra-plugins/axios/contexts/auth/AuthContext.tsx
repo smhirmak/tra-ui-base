@@ -39,21 +39,16 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 // ─── Helper: Response Check ──────────────────────────────────────────────────
 function isResponseSuccessful(response: CustomAxiosResponse<any>): boolean {
-  return (
-    response &&
-    response.status >= 200 &&
-    response.status < 300 &&
-    !response.error
-  );
+  return response && response.status >= 200 && response.status < 300 && !response.error;
 }
 
 // ─── Provider ────────────────────────────────────────────────────────────────
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [authToken, setAuthToken] = useState<string | null>(() =>
-    localStorage.getItem(StorageKeys.ACCESS_TOKEN),
+    localStorage.getItem(StorageKeys.ACCESS_TOKEN)
   );
   const [isAuthenticated, setIsAuthenticated] = useState(
-    !!localStorage.getItem(StorageKeys.ACCESS_TOKEN),
+    !!localStorage.getItem(StorageKeys.ACCESS_TOKEN)
   );
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<AuthUser | null>(null);
@@ -74,10 +69,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (data: Record<string, any>) => {
     // TODO: Login endpoint'inize göre düzenleyin
-    const response: CustomAxiosResponse<any> = await RequestService.post(
-      "/auth/login",
-      data,
-    );
+    const response: CustomAxiosResponse<any> = await RequestService.post("/auth/login", data);
     if (isResponseSuccessful(response)) {
       const token = response.data?.token ?? response.data?.accessToken;
       setAuthToken(token);
@@ -147,7 +139,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       logout,
       getUserDetail,
     }),
-    [isAuthenticated, isLoading, user, authToken],
+    [isAuthenticated, isLoading, user, authToken]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

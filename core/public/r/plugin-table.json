@@ -3,16 +3,8 @@
   "name": "plugin-table",
   "title": "Data Table (TanStack Table)",
   "description": "TanStack Table tabanlı veri tablosu. Sıralama, filtreleme, sayfalama, skeleton ve filtre section bileşenleri.",
-  "dependencies": [
-    "@tanstack/react-table",
-    "@tanstack/match-sorter-utils"
-  ],
-  "registryDependencies": [
-    "@msi/skeleton",
-    "@msi/input",
-    "@msi/select",
-    "@msi/pagination"
-  ],
+  "dependencies": ["@tanstack/react-table", "@tanstack/match-sorter-utils"],
+  "registryDependencies": ["@msi/skeleton", "@msi/input", "@msi/select", "@msi/pagination"],
   "files": [
     {
       "path": "registry/tra-plugins/table/components/table/custom-table.tsx",

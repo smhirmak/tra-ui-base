@@ -51,8 +51,7 @@ export const FormikSelect: React.FC<FormikSelectProps> = ({
       label={label}
       showRequiredIcon={showRequiredIcon}
       value={
-        getNestedValue(formik.values, id) !== undefined &&
-        getNestedValue(formik.values, id) !== ""
+        getNestedValue(formik.values, id) !== undefined && getNestedValue(formik.values, id) !== ""
           ? getNestedValue(formik.values, id)
           : (defaultValue ?? "")
       }
@@ -70,9 +69,7 @@ export const FormikSelect: React.FC<FormikSelectProps> = ({
       isMulti={isMulti}
       isSearchable={isSearchable}
       disabled={disabled}
-      error={Boolean(
-        getNestedValue(formik.touched, id) && getNestedValue(formik.errors, id),
-      )}
+      error={Boolean(getNestedValue(formik.touched, id) && getNestedValue(formik.errors, id))}
       className={selectClassName}
     />
     {!hideErrorText && <FormikErrorText id={id} formik={formik} />}

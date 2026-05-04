@@ -21,14 +21,10 @@ export interface SignalRConfig {
 export function createHubConnection(config: SignalRConfig): HubConnection {
   const builder = new HubConnectionBuilder()
     .withUrl(config.hubUrl, {
-      accessTokenFactory: config.getAccessToken
-        ? () => config.getAccessToken!() ?? ""
-        : undefined,
+      accessTokenFactory: config.getAccessToken ? () => config.getAccessToken!() ?? "" : undefined,
     })
     .withAutomaticReconnect()
-    .configureLogging(
-      import.meta.env.DEV ? LogLevel.Information : LogLevel.Warning,
-    );
+    .configureLogging(import.meta.env.DEV ? LogLevel.Information : LogLevel.Warning);
 
   const connection = builder.build();
 
@@ -39,9 +35,7 @@ export function createHubConnection(config: SignalRConfig): HubConnection {
   return connection;
 }
 
-export async function startConnection(
-  connection: HubConnection,
-): Promise<void> {
+export async function startConnection(connection: HubConnection): Promise<void> {
   if (connection.state === HubConnectionState.Disconnected) {
     await connection.start();
   }

@@ -1,11 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { HubConnectionState } from "@microsoft/signalr";
 import { MessageHubContext } from "./MessageHubContext";
-import {
-  createHubConnection,
-  startConnection,
-  stopConnection,
-} from "@/lib/signalr";
+import { createHubConnection, startConnection, stopConnection } from "@/lib/signalr";
 
 interface MessageHubProviderProps {
   children: React.ReactNode;

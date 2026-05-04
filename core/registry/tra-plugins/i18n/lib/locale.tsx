@@ -1,8 +1,5 @@
 import { useMemo, useSyncExternalStore } from "react";
-import {
-  getLocale,
-  setLocale as paraglideSetLocale,
-} from "../paraglide/runtime.js";
+import { getLocale, setLocale as paraglideSetLocale } from "../paraglide/runtime.js";
 import * as messages from "../paraglide/messages";
 
 // --- Locale Store ---
@@ -22,7 +19,7 @@ export function useLocale() {
       return () => subscribers.delete(callback); // cleanup
     },
     // Tek gerçek kaynak olarak doğrudan Paraglide runtime'ı oku
-    () => getLocale(),
+    () => getLocale()
   );
 }
 
@@ -40,14 +37,13 @@ export function useM() {
           const fn = target[key as keyof typeof messages];
           if (typeof fn === "function") {
             return (inputs?: object) =>
-              (fn as (inputs: object, options: { locale: string }) => string)(
-                inputs ?? {},
-                { locale },
-              );
+              (fn as (inputs: object, options: { locale: string }) => string)(inputs ?? {}, {
+                locale,
+              });
           }
           return fn;
         },
       }) as typeof messages,
-    [locale], // sadece locale değişince yeni Proxy oluştur
+    [locale] // sadece locale değişince yeni Proxy oluştur
   );
 }

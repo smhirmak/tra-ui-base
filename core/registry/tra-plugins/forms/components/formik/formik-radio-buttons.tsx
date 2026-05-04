@@ -48,9 +48,7 @@ export const FormikRadioButtons: React.FC<FormikRadioButtonsProps> = ({
             id={String(option.value)}
             disabled={option.disabled}
           />
-          {option?.label && (
-            <Label htmlFor={String(option.value)}>{option.label}</Label>
-          )}
+          {option?.label && <Label htmlFor={String(option.value)}>{option.label}</Label>}
         </div>
       ))}
     </RadioGroup>

@@ -21,9 +21,7 @@ interface FormikTextFieldProps {
   textarea?: boolean;
   showRequiredIcon?: boolean;
   onChange?: (value: string) => void;
-  onKeyDown?: (
-    e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   autoFocus?: boolean;
   defaultValue?: string | number;
 }
@@ -72,9 +70,7 @@ export const FormikTextField: React.FC<FormikTextFieldProps> = ({
       endIcon={endIcon}
       textarea={textarea}
       autoFocus={autoFocus}
-      error={Boolean(
-        getNestedValue(formik.touched, id) && getNestedValue(formik.errors, id),
-      )}
+      error={Boolean(getNestedValue(formik.touched, id) && getNestedValue(formik.errors, id))}
       className={cn(className)}
       onKeyDown={onKeyDown}
     />

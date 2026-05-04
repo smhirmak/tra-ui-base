@@ -62,9 +62,7 @@ export const FormikDatePicker: React.FC<FormikDatePickerProps> = ({
           formik.setFieldValue(id, cleanedDate);
         }
       }}
-      error={Boolean(
-        getNestedValue(formik.touched, id) && getNestedValue(formik.errors, id),
-      )}
+      error={Boolean(getNestedValue(formik.touched, id) && getNestedValue(formik.errors, id))}
       showCompleteButton={showCompleteButton}
       showClearButton={showClearButton}
       onBlur={onBlur}

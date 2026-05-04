@@ -23,28 +23,25 @@ import type { AxiosRequestConfig } from "axios";
  */
 
 interface ServiceMethods {
-  get: <T = any>(
-    endpoint: string,
-    config?: AxiosRequestConfig,
-  ) => Promise<CustomAxiosResponse<T>>;
+  get: <T = any>(endpoint: string, config?: AxiosRequestConfig) => Promise<CustomAxiosResponse<T>>;
   post: <T = any>(
     endpoint: string,
     data?: any,
-    config?: AxiosRequestConfig,
+    config?: AxiosRequestConfig
   ) => Promise<CustomAxiosResponse<T>>;
   put: <T = any>(
     endpoint: string,
     data?: any,
-    config?: AxiosRequestConfig,
+    config?: AxiosRequestConfig
   ) => Promise<CustomAxiosResponse<T>>;
   patch: <T = any>(
     endpoint: string,
     data?: any,
-    config?: AxiosRequestConfig,
+    config?: AxiosRequestConfig
   ) => Promise<CustomAxiosResponse<T>>;
   delete: <T = any>(
     endpoint: string,
-    config?: AxiosRequestConfig,
+    config?: AxiosRequestConfig
   ) => Promise<CustomAxiosResponse<T>>;
 }
 
@@ -52,41 +49,25 @@ interface ServiceMethods {
  * Controller bazlı servis oluşturur.
  * İkinci parametre ile özel servis metodlarını tanımlayabilirsiniz.
  */
-export function createService<
-  T extends Record<string, (...args: any[]) => any>,
->(
+export function createService<T extends Record<string, (...args: any[]) => any>>(
   controller: string,
-  methods: (service: ServiceMethods) => T,
+  methods: (service: ServiceMethods) => T
 ): T & ServiceMethods {
   const baseMethods: ServiceMethods = {
     get: (endpoint, config) =>
-      RequestService.get(
-        `${controller}${endpoint}`,
-        config,
-      ) as Promise<CustomAxiosResponse>,
+      RequestService.get(`${controller}${endpoint}`, config) as Promise<CustomAxiosResponse>,
     post: (endpoint, data, config) =>
-      RequestService.post(
-        `${controller}${endpoint}`,
-        data,
-        config,
-      ) as Promise<CustomAxiosResponse>,
+      RequestService.post(`${controller}${endpoint}`, data, config) as Promise<CustomAxiosResponse>,
     put: (endpoint, data, config) =>
-      RequestService.put(
-        `${controller}${endpoint}`,
-        data,
-        config,
-      ) as Promise<CustomAxiosResponse>,
+      RequestService.put(`${controller}${endpoint}`, data, config) as Promise<CustomAxiosResponse>,
     patch: (endpoint, data, config) =>
       RequestService.patch(
         `${controller}${endpoint}`,
         data,
-        config,
+        config
       ) as Promise<CustomAxiosResponse>,
     delete: (endpoint, config) =>
-      RequestService.delete(
-        `${controller}${endpoint}`,
-        config,
-      ) as Promise<CustomAxiosResponse>,
+      RequestService.delete(`${controller}${endpoint}`, config) as Promise<CustomAxiosResponse>,
   };
 
   const customMethods = methods(baseMethods);
@@ -97,15 +78,8 @@ export function createService<
 /**
  * Response başarılı mı kontrolü.
  */
-export function isResponseSuccessful(
-  response: CustomAxiosResponse<any>,
-): boolean {
-  return (
-    response &&
-    response.status >= 200 &&
-    response.status < 300 &&
-    !response.error
-  );
+export function isResponseSuccessful(response: CustomAxiosResponse<any>): boolean {
+  return response && response.status >= 200 && response.status < 300 && !response.error;
 }
 
 export default RequestService;

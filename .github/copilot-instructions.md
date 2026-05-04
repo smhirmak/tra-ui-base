@@ -9,7 +9,7 @@ Bu dosya GitHub Copilot'un proje bağlamını her oturumda otomatik okuması iç
 `tra-ui-base`, TRA Bilişim bünyesindeki React projelerinin standart başlangıç noktasıdır.  
 İki katmanlı bir yapı sunar:
 
-1. **`template/`** — `degit` ile kopyalanan yeni proje iskeleti  
+1. **`template/`** — `degit` ile kopyalanan yeni proje iskeleti
 2. **Plugin sistemi** — `npx tra-ui add` komutu ile projeye sonradan eklenebilen bağımsız yapılar
 
 ---
@@ -67,23 +67,25 @@ tra-ui-base/
 ## Teknoloji Stack'i
 
 ### Template (Yeni Proje Tabanı)
-| Katman | Teknoloji |
-|--------|-----------|
-| Build | Vite 6 + TypeScript 5 |
-| Router | TanStack Router v1 (file-based) + DevTools |
-| Data Fetching | TanStack Query v5 + DevTools |
-| UI Kit | MSI UI Kit (`npx msi-ui-cli init`) |
-| CSS | Tailwind CSS v4 |
-| Linting | ESLint (airbnb config) |
+
+| Katman        | Teknoloji                                  |
+| ------------- | ------------------------------------------ |
+| Build         | Vite 6 + TypeScript 5                      |
+| Router        | TanStack Router v1 (file-based) + DevTools |
+| Data Fetching | TanStack Query v5 + DevTools               |
+| UI Kit        | MSI UI Kit (`npx msi-ui-cli init`)         |
+| CSS           | Tailwind CSS v4                            |
+| Linting       | ESLint (airbnb config)                     |
 
 ### Opsiyonel Plugin'ler
-| Plugin | Teknoloji | CLI Adı |
-|--------|-----------|---------|
-| i18n | Paraglide (inlang) — compile-time | `npx @tra-bilisim/tra-ui add i18n` |
-| HTTP | Axios + interceptors + AuthContext | `npx @tra-bilisim/tra-ui add http` |
-| Real-time | Microsoft SignalR + React hooks | `npx @tra-bilisim/tra-ui add signalr` |
-| Tablo | TanStack Table v8 wrapper | `npx @tra-bilisim/tra-ui add table` |
-| Form | Formik + Yup + MSI UI Kit bileşenleri | `npx @tra-bilisim/tra-ui add forms` |
+
+| Plugin    | Teknoloji                             | CLI Adı                               |
+| --------- | ------------------------------------- | ------------------------------------- |
+| i18n      | Paraglide (inlang) — compile-time     | `npx @tra-bilisim/tra-ui add i18n`    |
+| HTTP      | Axios + interceptors + AuthContext    | `npx @tra-bilisim/tra-ui add http`    |
+| Real-time | Microsoft SignalR + React hooks       | `npx @tra-bilisim/tra-ui add signalr` |
+| Tablo     | TanStack Table v8 wrapper             | `npx @tra-bilisim/tra-ui add table`   |
+| Form      | Formik + Yup + MSI UI Kit bileşenleri | `npx @tra-bilisim/tra-ui add forms`   |
 
 ---
 
@@ -97,11 +99,13 @@ registry.json  →  npm run registry:build  →  public/r/plugin-xxx.json
 ```
 
 CLI, `shadcn add @tra/plugin-xxx` komutunu çağırır. shadcn:
+
 - Dosyaları `target` path'lerine kopyalar (var olanla merge eder, ezmez)
 - `dependencies` içindeki npm paketlerini otomatik kurar
 - `registryDependencies` içindeki MSI UI Kit bileşenlerini otomatik çeker
 
 ### Registry URL'leri (components.json)
+
 ```json
 {
   "registries": {
@@ -128,11 +132,13 @@ npx @tra-bilisim/tra-ui info http        # plugin detayı
 ## Geliştirme Notları
 
 ### Plugin dosyası değiştirmek
+
 1. `core/registry/tra-plugins/<plugin>/` altında düzenle
 2. `cd core && npm run registry:build` çalıştır → `public/r/` güncellenir
 3. Deploy → değişiklik canlıya alınır
 
 ### Yeni plugin eklemek
+
 1. `core/registry/tra-plugins/<yeni-plugin>/` klasörü oluştur ve dosyaları yaz
 2. `core/registry.json`'a yeni item ekle
 3. `cli/src/plugins.ts`'e metadata ekle
@@ -140,11 +146,13 @@ npx @tra-bilisim/tra-ui info http        # plugin detayı
 5. `cd cli && npm run build`
 
 ### CLI build
+
 ```bash
 cd cli && npm run build    # → dist/index.js
 ```
 
 ### Registry build
+
 ```bash
 cd core && npm run registry:build   # → public/r/*.json
 ```

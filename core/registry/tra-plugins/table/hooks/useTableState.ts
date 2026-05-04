@@ -9,9 +9,7 @@ interface UseTableStateOptions {
  * TanStack Table için ortak state yönetimi.
  * Sayfalama, sıralama ve global filtre durumunu yönetir.
  */
-export function useTableState({
-  initialPageSize = 10,
-}: UseTableStateOptions = {}) {
+export function useTableState({ initialPageSize = 10 }: UseTableStateOptions = {}) {
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: initialPageSize,

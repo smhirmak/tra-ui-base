@@ -1,7 +1,7 @@
-import { useMemo } from 'react';
-import { useIsMobile } from '@/hooks/use-mobile';
-import type { Table } from '@tanstack/react-table';
-import Select, { type ISelectOption } from '@/components/select';
+import { useMemo } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
+import type { Table } from "@tanstack/react-table";
+import Select, { type ISelectOption } from "@/components/select";
 
 const CustomTableFilterSection = <T,>({
   table,
@@ -24,15 +24,15 @@ const CustomTableFilterSection = <T,>({
 
   const filterOptionsCache = useMemo(() => {
     const getNamedValue = (obj: unknown) => {
-      if (!obj || typeof obj !== 'object') return '';
+      if (!obj || typeof obj !== "object") return "";
       const o = obj as Record<string, unknown>;
-      const extracted = o['name'] ?? o['label'] ?? o['title'];
-      return extracted ? String(extracted).trim() : '';
+      const extracted = o["name"] ?? o["label"] ?? o["title"];
+      return extracted ? String(extracted).trim() : "";
     };
 
     const getNestedValue = (obj: unknown, path: string): unknown =>
-      path.split('.').reduce<unknown>((current, key) => {
-        if (current && typeof current === 'object') {
+      path.split(".").reduce<unknown>((current, key) => {
+        if (current && typeof current === "object") {
           return (current as Record<string, unknown>)[key];
         }
         return undefined;
@@ -48,7 +48,7 @@ const CustomTableFilterSection = <T,>({
       const columnDef = augmentedColumns.find(
         (c) =>
           (c as { accessorKey?: string }).accessorKey === fc.id ||
-          (c as { id?: string }).id === fc.id,
+          (c as { id?: string }).id === fc.id
       );
 
       data.forEach((row) => {
@@ -61,7 +61,7 @@ const CustomTableFilterSection = <T,>({
         ) {
           try {
             const value = (columnDef as { accessorFn?: (row: T) => unknown }).accessorFn!(row);
-            if (value && String(value).trim() && String(value).trim() !== '-') {
+            if (value && String(value).trim() && String(value).trim() !== "-") {
               uniqueValues.add(String(value).trim());
             }
           } catch {
@@ -75,7 +75,7 @@ const CustomTableFilterSection = <T,>({
           const combinedValue = keysToProcess
             .map((key) => {
               const value = (row as Record<string, unknown>)[key];
-              if (value === null || value === undefined) return '';
+              if (value === null || value === undefined) return "";
 
               // Path varsa nested değere eriş
               if (fc.path) {
@@ -83,32 +83,32 @@ const CustomTableFilterSection = <T,>({
                 if (Array.isArray(value)) {
                   return value
                     .map((item) => {
-                      if (item && typeof item === 'object') {
+                      if (item && typeof item === "object") {
                         // Her path için değer al ve birleştir
                         return paths
                           .map((p) => {
                             const nested = getNestedValue(item, p);
                             return nested !== null && nested !== undefined
                               ? String(nested).trim()
-                              : '';
+                              : "";
                           })
                           .filter(Boolean)
-                          .join(' ');
+                          .join(" ");
                       }
-                      return '';
+                      return "";
                     })
                     .filter(Boolean)
-                    .join(', ');
+                    .join(", ");
                 }
-                if (typeof value === 'object') {
+                if (typeof value === "object") {
                   // Tek obje için tüm path'leri birleştir
                   return paths
                     .map((p) => {
                       const nested = getNestedValue(value, p);
-                      return nested !== null && nested !== undefined ? String(nested).trim() : '';
+                      return nested !== null && nested !== undefined ? String(nested).trim() : "";
                     })
                     .filter(Boolean)
-                    .join(' ');
+                    .join(" ");
                 }
               }
 
@@ -116,25 +116,25 @@ const CustomTableFilterSection = <T,>({
               if (Array.isArray(value)) {
                 return value
                   .map((item) => {
-                    if (item && typeof item === 'object') {
+                    if (item && typeof item === "object") {
                       const obj = item as Record<string, unknown>;
-                      const nestedVal = obj['name'] ?? obj['label'] ?? obj['title'];
+                      const nestedVal = obj["name"] ?? obj["label"] ?? obj["title"];
                       return nestedVal !== null && nestedVal !== undefined
                         ? String(nestedVal).trim()
-                        : '';
+                        : "";
                     }
                     return String(item).trim();
                   })
                   .filter(Boolean)
-                  .join(' ');
+                  .join(" ");
               }
-              if (typeof value === 'object') {
+              if (typeof value === "object") {
                 return getNamedValue(value);
               }
               return String(value).trim();
             })
             .filter(Boolean)
-            .join(' ')
+            .join(" ")
             .trim();
 
           if (combinedValue) {
@@ -152,33 +152,33 @@ const CustomTableFilterSection = <T,>({
               const paths = Array.isArray(fc.path) ? fc.path : [fc.path];
               if (Array.isArray(value)) {
                 value.forEach((item) => {
-                  if (item && typeof item === 'object') {
+                  if (item && typeof item === "object") {
                     // Her path için değer al ve birleştir
                     const combined = paths
                       .map((p) => {
                         const nestedValue = getNestedValue(item, p);
                         return nestedValue !== null && nestedValue !== undefined
                           ? String(nestedValue).trim()
-                          : '';
+                          : "";
                       })
                       .filter(Boolean)
-                      .join(' ');
+                      .join(" ");
                     if (combined) {
                       uniqueValues.add(combined);
                     }
                   }
                 });
-              } else if (typeof value === 'object') {
+              } else if (typeof value === "object") {
                 // Tek obje için tüm path'leri birleştir
                 const combined = paths
                   .map((p) => {
                     const nestedValue = getNestedValue(value as Record<string, unknown>, p);
                     return nestedValue !== null && nestedValue !== undefined
                       ? String(nestedValue).trim()
-                      : '';
+                      : "";
                   })
                   .filter(Boolean)
-                  .join(' ');
+                  .join(" ");
                 if (combined) {
                   uniqueValues.add(combined);
                 }
@@ -187,7 +187,7 @@ const CustomTableFilterSection = <T,>({
               // Path yoksa, basit string çevirme
               if (Array.isArray(value)) {
                 value.forEach((item) => {
-                  if (item && typeof item === 'object') {
+                  if (item && typeof item === "object") {
                     const extracted = item.name || item.label || item.title;
                     if (extracted) {
                       uniqueValues.add(String(extracted).trim());
@@ -196,7 +196,7 @@ const CustomTableFilterSection = <T,>({
                     uniqueValues.add(String(item).trim());
                   }
                 });
-              } else if (typeof value === 'object') {
+              } else if (typeof value === "object") {
                 const extracted = getNamedValue(value);
                 if (extracted) {
                   uniqueValues.add(extracted);
@@ -210,7 +210,7 @@ const CustomTableFilterSection = <T,>({
       });
 
       cache[fc.id] = Array.from(uniqueValues)
-        .filter((v) => v !== '')
+        .filter((v) => v !== "")
         .sort()
         .map((value) => ({
           content: value,
@@ -228,16 +228,16 @@ const CustomTableFilterSection = <T,>({
           className="grid md:items-center gap-4"
           style={{
             gridTemplateColumns: isMobile
-              ? 'repeat(2, minmax(0, 1fr))'
+              ? "repeat(2, minmax(0, 1fr))"
               : `repeat(${normalizedFilterColumns?.length ?? 1}, minmax(0, 1fr))`,
           }}
         >
           {normalizedFilterColumns.map((fc) => {
             const col = table.getColumn(fc.id as string);
             if (!col) return null;
-            const value = (col.getFilterValue() as string) ?? '';
+            const value = (col.getFilterValue() as string) ?? "";
             const { header } = col.columnDef;
-            const headerText = typeof header === 'string' ? header : undefined;
+            const headerText = typeof header === "string" ? header : undefined;
             const options = filterOptionsCache[fc.id] || [];
             return (
               <Select
@@ -247,7 +247,7 @@ const CustomTableFilterSection = <T,>({
                   if (v) {
                     col.setFilterValue(v);
                   } else {
-                    col.setFilterValue('');
+                    col.setFilterValue("");
                   }
                 }}
                 options={options}

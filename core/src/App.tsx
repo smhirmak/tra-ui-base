@@ -10,9 +10,7 @@ export default function App() {
             (e.target as HTMLImageElement).style.display = "none";
           }}
         />
-        <span className="text-white/20 text-5xl tracking-widest uppercase">
-          UI Base
-        </span>
+        <span className="text-white/20 text-5xl tracking-widest uppercase">UI Base</span>
       </div>
     </div>
   );

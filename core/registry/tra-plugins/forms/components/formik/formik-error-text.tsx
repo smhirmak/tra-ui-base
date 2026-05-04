@@ -7,10 +7,7 @@ interface FormikErrorTextProps {
   formik: any;
 }
 
-export const FormikErrorText: React.FC<FormikErrorTextProps> = ({
-  id,
-  formik,
-}) => {
+export const FormikErrorText: React.FC<FormikErrorTextProps> = ({ id, formik }) => {
   const errorMessage = formikErrorCheck(formik, id);
 
   return errorMessage ? (

@@ -9,10 +9,7 @@ import { useMessageHubContext } from "@/contexts/messageHub/MessageHubContext";
  *   console.log('Yeni bildirim:', data);
  * });
  */
-export function useSignalR<T = unknown>(
-  eventName: string,
-  handler: (data: T) => void,
-) {
+export function useSignalR<T = unknown>(eventName: string, handler: (data: T) => void) {
   const { connection } = useMessageHubContext();
 
   const stableHandler = useCallback(handler, []);

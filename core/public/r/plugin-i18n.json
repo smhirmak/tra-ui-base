@@ -3,13 +3,8 @@
   "name": "plugin-i18n",
   "title": "i18n Plugin (Paraglide)",
   "description": "inlang Paraglide ile compile-time i18n. TR/EN dil desteği, LocaleContext, LocaleProvider, useLocale hook ve örnek dil dosyaları.",
-  "dependencies": [
-    "@inlang/paraglide-js",
-    "@inlang/paraglide-vite"
-  ],
-  "registryDependencies": [
-    "@msi/language-select"
-  ],
+  "dependencies": ["@inlang/paraglide-js", "@inlang/paraglide-vite"],
+  "registryDependencies": ["@msi/language-select"],
   "files": [
     {
       "path": "registry/tra-plugins/i18n/lib/locale.tsx",

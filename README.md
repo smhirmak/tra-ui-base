@@ -33,14 +33,14 @@ npx @tra-bilisim/tra-ui add i18n http table
 
 `degit` ile kopyalanan proje şunları içerir:
 
-| Katman | Teknoloji |
-|--------|-----------|
-| Build | Vite 6 + TypeScript 5 |
-| Router | TanStack Router v1 + DevTools |
-| Data Fetching | TanStack Query v5 + DevTools |
-| CSS | Tailwind CSS v4 |
-| UI Kit | MSI UI Kit (create sırasında otomatik kurulur) |
-| Linting | ESLint (airbnb config) |
+| Katman        | Teknoloji                                      |
+| ------------- | ---------------------------------------------- |
+| Build         | Vite 6 + TypeScript 5                          |
+| Router        | TanStack Router v1 + DevTools                  |
+| Data Fetching | TanStack Query v5 + DevTools                   |
+| CSS           | Tailwind CSS v4                                |
+| UI Kit        | MSI UI Kit (create sırasında otomatik kurulur) |
+| Linting       | ESLint (airbnb config)                         |
 
 ```
 src/
@@ -60,13 +60,13 @@ src/
 Her plugin `npx tra-ui add <name>` komutu ile projeye eklenir.  
 Dosyalar **projeye kopyalanır** — sürüm bağımlılığı yoktur, her proje kendi kopyasını serbestçe özelleştirebilir.
 
-| Plugin | İçerik | Komut |
-|--------|--------|-------|
-| **i18n** | Paraglide (inlang) compile-time çeviri, LocaleContext, TR/EN mesaj dosyaları | `npx @tra-bilisim/tra-ui add i18n` |
-| **http** | Axios instance, token interceptor, 401 refresh, AuthContext, BaseService | `npx @tra-bilisim/tra-ui add http` |
-| **signalr** | SignalR HubConnection, otomatik reconnect, MessageHubContext, hook'lar | `npx @tra-bilisim/tra-ui add signalr` |
-| **table** | TanStack Table v8 wrapper, filtreleme, sayfalama, skeleton | `npx @tra-bilisim/tra-ui add table` |
-| **forms** | Formik + Yup, MSI UI Kit'e bağlı form bileşenleri, Validations sabitleri | `npx @tra-bilisim/tra-ui add forms` |
+| Plugin      | İçerik                                                                       | Komut                                 |
+| ----------- | ---------------------------------------------------------------------------- | ------------------------------------- |
+| **i18n**    | Paraglide (inlang) compile-time çeviri, LocaleContext, TR/EN mesaj dosyaları | `npx @tra-bilisim/tra-ui add i18n`    |
+| **http**    | Axios instance, token interceptor, 401 refresh, AuthContext, BaseService     | `npx @tra-bilisim/tra-ui add http`    |
+| **signalr** | SignalR HubConnection, otomatik reconnect, MessageHubContext, hook'lar       | `npx @tra-bilisim/tra-ui add signalr` |
+| **table**   | TanStack Table v8 wrapper, filtreleme, sayfalama, skeleton                   | `npx @tra-bilisim/tra-ui add table`   |
+| **forms**   | Formik + Yup, MSI UI Kit'e bağlı form bileşenleri, Validations sabitleri     | `npx @tra-bilisim/tra-ui add forms`   |
 
 ### CLI Komutları
 
@@ -113,6 +113,7 @@ core/registry/tra-plugins/  →  npm run registry:build  →  core/public/r/*.js
 ```
 
 `npx tra-ui add forms` çağrıldığında CLI:
+
 1. `components.json`'a `@tra` ve `@msi` registry URL'lerini ekler
 2. `shadcn add @tra/plugin-forms` çalıştırır
 3. shadcn dosyaları `target` path'lerine kopyalar (var olan dosyayı **itmez, merge eder**)
@@ -159,8 +160,7 @@ Registry URL: `https://tra-ui-base.vercel.app/r/{name}.json`
 
 ## Bağlı Projeler
 
-| Proje | Açıklama |
-|-------|----------|
+| Proje                                                   | Açıklama                                      |
+| ------------------------------------------------------- | --------------------------------------------- |
 | [MSI UI Kit](https://github.com/TRA-Bilisim/msi-ui-kit) | Temel UI bileşen kütüphanesi (shadcn tabanlı) |
-| [msi-ui-cli](https://www.npmjs.com/package/msi-ui-cli) | MSI UI Kit CLI — `npx msi-ui-cli init` |
-
+| [msi-ui-cli](https://www.npmjs.com/package/msi-ui-cli)  | MSI UI Kit CLI — `npx msi-ui-cli init`        |

@@ -47,10 +47,7 @@ RequestService.interceptors.response.use(
       ...response,
       message: (response.data as any)?.message ?? null,
       error: (response.data as any)?.error ?? false,
-      data:
-        (response.data as any)?.data ??
-        (response.data as any)?.Result ??
-        response.data,
+      data: (response.data as any)?.data ?? (response.data as any)?.Result ?? response.data,
     };
   },
   (error) => {
@@ -60,13 +57,13 @@ RequestService.interceptors.response.use(
     }
     console.error("[Axios Error]", error);
     return Promise.reject(error);
-  },
+  }
 );
 
 // ─── Request Interceptor ─────────────────────────────────────────────────────
 RequestService.interceptors.request.use(
   (request) => request,
-  (error) => Promise.reject(error),
+  (error) => Promise.reject(error)
 );
 
 export default RequestService;
