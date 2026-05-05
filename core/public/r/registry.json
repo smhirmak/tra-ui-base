@@ -8,8 +8,13 @@
       "type": "registry:block",
       "title": "i18n Plugin (Paraglide)",
       "description": "inlang Paraglide ile compile-time i18n. TR/EN dil desteği, LocaleContext, LocaleProvider, useLocale hook ve örnek dil dosyaları.",
-      "dependencies": ["@inlang/paraglide-js", "@inlang/paraglide-vite"],
-      "registryDependencies": ["@msi/language-select"],
+      "dependencies": [
+        "@inlang/paraglide-js",
+        "@inlang/paraglide-vite"
+      ],
+      "registryDependencies": [
+        "@tra-kit/language-select"
+      ],
       "files": [
         {
           "path": "registry/tra-plugins/i18n/lib/locale.tsx",
@@ -43,7 +48,9 @@
       "type": "registry:block",
       "title": "HTTP Client (Axios)",
       "description": "Axios instance, interceptors, token yönetimi, CustomAxiosResponse tipi, AuthContext/AuthProvider ve createService kalıbı.",
-      "dependencies": ["axios"],
+      "dependencies": [
+        "axios"
+      ],
       "files": [
         {
           "path": "registry/tra-plugins/axios/constants/ApiEnvironment.ts",
@@ -87,7 +94,9 @@
       "type": "registry:block",
       "title": "Real-time (SignalR)",
       "description": "SignalR HubConnection yönetimi, otomatik reconnect, MessageHubContext, useSignalR ve useMessageHub hook'ları.",
-      "dependencies": ["@microsoft/signalr"],
+      "dependencies": [
+        "@microsoft/signalr"
+      ],
       "files": [
         {
           "path": "registry/tra-plugins/signalr/lib/signalr.ts",
@@ -121,8 +130,16 @@
       "type": "registry:block",
       "title": "Data Table (TanStack Table)",
       "description": "TanStack Table tabanlı veri tablosu. Sıralama, filtreleme, sayfalama, skeleton ve filtre section bileşenleri.",
-      "dependencies": ["@tanstack/react-table", "@tanstack/match-sorter-utils"],
-      "registryDependencies": ["@msi/skeleton", "@msi/input", "@msi/select", "@msi/pagination"],
+      "dependencies": [
+        "@tanstack/react-table",
+        "@tanstack/match-sorter-utils"
+      ],
+      "registryDependencies": [
+        "@tra-kit/skeleton",
+        "@tra-kit/input",
+        "@tra-kit/select",
+        "@tra-kit/pagination"
+      ],
       "files": [
         {
           "path": "registry/tra-plugins/table/components/table/custom-table.tsx",
@@ -155,15 +172,18 @@
       "name": "plugin-forms",
       "type": "registry:block",
       "title": "Form Yönetimi (Formik + Yup)",
-      "description": "Formik + Yup form altyapısı. MSI UI Kit bileşenlerine bağlı TextField, Select, Checkbox, DatePicker, RadioButtons ve ortak Validations sabitleri.",
-      "dependencies": ["formik", "yup"],
+      "description": "Formik + Yup form altyapısı. TRA UI Kit bileşenlerine bağlı TextField, Select, Checkbox, DatePicker, RadioButtons ve ortak Validations sabitleri.",
+      "dependencies": [
+        "formik",
+        "yup"
+      ],
       "registryDependencies": [
-        "@msi/text-field",
-        "@msi/select",
-        "@msi/checkbox",
-        "@msi/date-picker",
-        "@msi/radio-buttons",
-        "@msi/switch"
+        "@tra-kit/text-field",
+        "@tra-kit/select",
+        "@tra-kit/checkbox",
+        "@tra-kit/date-picker",
+        "@tra-kit/radio-buttons",
+        "@tra-kit/switch"
       ],
       "files": [
         {

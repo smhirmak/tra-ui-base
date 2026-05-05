@@ -11,7 +11,7 @@ export const PLUGINS: Plugin[] = [
     title: "Internationalization (Paraglide)",
     description: "Compile-time i18n with inlang Paraglide. TR/EN language support",
     packages: ["@inlang/paraglide-js", "@inlang/paraglide-vite"],
-    registryDependencies: ["@msi/language-select"],
+    registryDependencies: ["@tra-kit/language-select"],
     postInstall: [
       "",
       "📦 i18n (Paraglide) installed!",
@@ -87,7 +87,7 @@ export const PLUGINS: Plugin[] = [
     description:
       "TanStack Table wrapper with sorting, filtering, pagination, export and skeleton support",
     packages: ["@tanstack/react-table"],
-    registryDependencies: ["@msi/skeleton", "@msi/input"],
+    registryDependencies: ["@tra-kit/skeleton", "@tra-kit/input"],
     postInstall: [
       "",
       "📦 Data Table (TanStack Table) installed!",
@@ -118,15 +118,15 @@ export const PLUGINS: Plugin[] = [
     name: "forms",
     title: "Form Management (Formik + Yup)",
     description:
-      "Formik + Yup integration, MSI UI Kit-bound form components and shared Validations constants",
+      "Formik + Yup integration, TRA UI Kit-bound form components and shared Validations constants",
     packages: ["formik", "yup"],
     registryDependencies: [
-      "@msi/text-field",
-      "@msi/select",
-      "@msi/checkbox",
-      "@msi/date-picker",
-      "@msi/radio-buttons",
-      "@msi/label",
+      "@tra-kit/text-field",
+      "@tra-kit/select",
+      "@tra-kit/checkbox",
+      "@tra-kit/date-picker",
+      "@tra-kit/radio-buttons",
+      "@tra-kit/label",
     ],
     postInstall: [
       "",

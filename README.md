@@ -14,7 +14,7 @@ npx @tra-bilisim/tra-ui create my-project
 code -r my-project
 ```
 
-> `create` komutu template'i indirir, `npm install` ve `npx msi-ui-cli init` adımlarını otomatik çalıştırır. Proje hazır!
+> `create` komutu template'i indirir, `npm install` ve `npx tra-ui-cli init` adımlarını otomatik çalıştırır. Proje hazır!
 
 ### 2. İstediğin Plugin'leri Ekle
 
@@ -39,7 +39,7 @@ npx @tra-bilisim/tra-ui add i18n http table
 | Router        | TanStack Router v1 + DevTools                  |
 | Data Fetching | TanStack Query v5 + DevTools                   |
 | CSS           | Tailwind CSS v4                                |
-| UI Kit        | MSI UI Kit (create sırasında otomatik kurulur) |
+| UI Kit        | TRA UI Kit (create sırasında otomatik kurulur) |
 | Linting       | ESLint (airbnb config)                         |
 
 ```
@@ -66,7 +66,7 @@ Dosyalar **projeye kopyalanır** — sürüm bağımlılığı yoktur, her proje
 | **http**    | Axios instance, token interceptor, 401 refresh, AuthContext, BaseService     | `npx @tra-bilisim/tra-ui add http`    |
 | **signalr** | SignalR HubConnection, otomatik reconnect, MessageHubContext, hook'lar       | `npx @tra-bilisim/tra-ui add signalr` |
 | **table**   | TanStack Table v8 wrapper, filtreleme, sayfalama, skeleton                   | `npx @tra-bilisim/tra-ui add table`   |
-| **forms**   | Formik + Yup, MSI UI Kit'e bağlı form bileşenleri, Validations sabitleri     | `npx @tra-bilisim/tra-ui add forms`   |
+| **forms**   | Formik + Yup, TRA UI Kit'e bağlı form bileşenleri, Validations sabitleri     | `npx @tra-bilisim/tra-ui add forms`   |
 
 ### CLI Komutları
 
@@ -114,11 +114,11 @@ core/registry/tra-plugins/  →  npm run registry:build  →  core/public/r/*.js
 
 `npx tra-ui add forms` çağrıldığında CLI:
 
-1. `components.json`'a `@tra` ve `@msi` registry URL'lerini ekler
-2. `shadcn add @tra/plugin-forms` çalıştırır
+1. `components.json`'a `@tra-base` ve `@tra-kit` registry URL'lerini ekler
+2. `shadcn add @tra-base/plugin-forms` çalıştırır
 3. shadcn dosyaları `target` path'lerine kopyalar (var olan dosyayı **itmez, merge eder**)
 4. `formik`, `yup` npm paketlerini kurar
-5. `registryDependencies` içindeki MSI UI Kit bileşenlerini (`@msi/text-field` vb.) otomatik çeker
+5. `registryDependencies` içindeki TRA UI Kit bileşenlerini (`@tra-kit/text-field` vb.) otomatik çeker
 
 ---
 
@@ -160,7 +160,7 @@ Registry URL: `https://tra-ui-base.vercel.app/r/{name}.json`
 
 ## Bağlı Projeler
 
-| Proje                                                   | Açıklama                                      |
-| ------------------------------------------------------- | --------------------------------------------- |
-| [MSI UI Kit](https://github.com/TRA-Bilisim/msi-ui-kit) | Temel UI bileşen kütüphanesi (shadcn tabanlı) |
-| [msi-ui-cli](https://www.npmjs.com/package/msi-ui-cli)  | MSI UI Kit CLI — `npx msi-ui-cli init`        |
+| Proje                                                  | Açıklama                                      |
+| ------------------------------------------------------ | --------------------------------------------- |
+| [TRA UI Kit](https://github.com/smhirmak/tra-ui-kit)   | Temel UI bileşen kütüphanesi (shadcn tabanlı) |
+| [tra-ui-cli](https://www.npmjs.com/package/tra-ui-cli) | TRA UI Kit CLI — `npx tra-ui-cli init`        |

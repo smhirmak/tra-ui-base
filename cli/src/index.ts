@@ -18,7 +18,7 @@ import type { PackageManager } from "./types.js";
 //   https://<group>.gitlab.yourcompany.com/tra-ui-base/r/{name}.json
 const TRA_REGISTRY_URL = "https://tra-ui-base.vercel.app/r/{name}.json";
 const LOCAL_REGISTRY_URL = "http://localhost:3030/r/{name}.json";
-const MSI_REGISTRY_URL = "https://msi-ui-kit.vercel.app/r/{name}.json";
+const TRA_KIT_REGISTRY_URL = "https://ui.trabilisim.tech/r/{name}.json";
 const TEMPLATE_REPO = "https://github.com/smhirmak/tra-ui-base.git";
 // const TEMPLATE_REPO = 'https://git.trabilisim.tech/developers/tra-ui-base.git';
 const TEMPLATE_BRANCH = "develop";
@@ -144,7 +144,7 @@ async function installPlugins(
     `\n${chalk.bold("Plugins to install:")} ${plugins.map((p) => chalk.cyan(p.name)).join(", ")}\n`
   );
 
-  // 1. Check components.json and ensure @tra + @msi registries are present
+  // 1. Check components.json and ensure @tra-base + @tra-kit registries are present
   const traRegistryUrl = local ? LOCAL_REGISTRY_URL : TRA_REGISTRY_URL;
   if (local) {
     console.log(chalk.yellow("  ⚠ Using local registry: http://localhost:3030\n"));
@@ -152,9 +152,9 @@ async function installPlugins(
   const registryOk = await ensureRegistries(cwd, traRegistryUrl);
   if (!registryOk) return;
 
-  // 2. shadcn add @tra/plugin-xxx ... — all in one call
-  //    @msi components in registryDependencies are pulled automatically by shadcn
-  const shadcnTargets = names.map((n) => `@tra/plugin-${n}`);
+  // 2. shadcn add @tra-base/plugin-xxx ... — all in one call
+  //    @tra-kit components in registryDependencies are pulled automatically by shadcn
+  const shadcnTargets = names.map((n) => `@tra-base/plugin-${n}`);
 
   const spinner = ora("Installing plugins...").start();
 
@@ -194,8 +194,8 @@ async function ensureRegistries(cwd: string, traUrl = TRA_REGISTRY_URL): Promise
 
   if (!(await fs.pathExists(componentJsonPath))) {
     console.log(chalk.red("\n✗ components.json not found."));
-    console.log("  Please initialize MSI UI Kit first:");
-    console.log(chalk.yellowBright("  npx msi-ui-cli init\n"));
+    console.log("  Please initialize TRA UI Kit first:");
+    console.log(chalk.yellowBright("  npx tra-ui-cli init\n"));
     return false;
   }
 
@@ -207,22 +207,22 @@ async function ensureRegistries(cwd: string, traUrl = TRA_REGISTRY_URL): Promise
 
   if (!json.registries) json.registries = {};
 
-  // @tra — source for plugins
-  if (!json.registries["@tra"] || json.registries["@tra"] !== traUrl) {
-    json.registries["@tra"] = traUrl;
+  // @tra-base — source for plugins
+  if (!json.registries["@tra-base"] || json.registries["@tra-base"] !== traUrl) {
+    json.registries["@tra-base"] = traUrl;
     changed = true;
   }
 
-  // @msi — pulled automatically via registryDependencies for forms/table plugins
-  if (!json.registries["@msi"]) {
-    json.registries["@msi"] = MSI_REGISTRY_URL;
+  // @tra-kit — pulled automatically via registryDependencies for forms/table plugins
+  if (!json.registries["@tra-kit"]) {
+    json.registries["@tra-kit"] = TRA_KIT_REGISTRY_URL;
     changed = true;
   }
 
   if (changed) {
     await fs.writeJson(componentJsonPath, json, { spaces: 2 });
     const spinner = ora("").succeed(
-      chalk.grey("components.json updated (@tra and @msi registries added)\n")
+      chalk.grey("components.json updated (@tra-base and @tra-kit registries added)\n")
     );
     void spinner;
   }
@@ -294,22 +294,22 @@ async function createProject(projectName: string): Promise<void> {
       );
     }
 
-    // 2. MSI UI Kit init — no spinner, run directly with stdio: inherit
-    console.log(`\n${chalk.bold("2/2")} ${chalk.grey("Setting up MSI UI Kit...")}`);
-    let msiUiKitInstalled = false;
+    // 2. TRA UI Kit init — no spinner, run directly with stdio: inherit
+    console.log(`\n${chalk.bold("2/2")} ${chalk.grey("Setting up TRA UI Kit...")}`);
+    let traUiKitInstalled = false;
     try {
-      await execa("npx", ["msi-ui-cli", "init", "-y"], {
+      await execa("npx", ["tra-ui-cli", "init", "-y"], {
         stdio: "inherit",
         cwd: targetDir,
       });
-      console.log(chalk.green("✔ MSI UI Kit installed"));
-      msiUiKitInstalled = true;
+      console.log(chalk.green("✔ TRA UI Kit installed"));
+      traUiKitInstalled = true;
     } catch {
-      console.log(chalk.yellow("⚠ MSI UI Kit setup failed — run manually: npx msi-ui-cli init"));
+      console.log(chalk.yellow("⚠ TRA UI Kit setup failed — run manually: npx tra-ui-cli init"));
     }
-    if (msiUiKitInstalled) {
+    if (traUiKitInstalled) {
       try {
-        await execa("npx", ["msi-ui-cli", "add", "theme-mode-toggle"], {
+        await execa("npx", ["tra-ui-cli", "add", "theme-mode-toggle"], {
           stdio: "inherit",
           cwd: targetDir,
         });
@@ -317,7 +317,7 @@ async function createProject(projectName: string): Promise<void> {
       } catch {
         console.log(
           chalk.yellow(
-            "⚠ Theme Mode Toggle setup failed — run manually: npx msi-ui-cli add theme-mode-toggle"
+            "⚠ Theme Mode Toggle setup failed — run manually: npx tra-ui-cli add theme-mode-toggle"
           )
         );
       }
@@ -397,7 +397,7 @@ function showPluginInfo(name: string): void {
 
   console.log(`\n${chalk.bold.blue(plugin.title)}\n`);
   console.log(`${chalk.grey("Description:")}  ${plugin.description}\n`);
-  console.log(`${chalk.grey("shadcn name:")} ${chalk.cyan(`@tra/plugin-${plugin.name}`)}\n`);
+  console.log(`${chalk.grey("shadcn name:")} ${chalk.cyan(`@tra-base/plugin-${plugin.name}`)}\n`);
 
   if (plugin.packages.length > 0) {
     console.log(chalk.grey("npm dependencies:"));
@@ -406,7 +406,7 @@ function showPluginInfo(name: string): void {
 
   if (plugin.registryDependencies.length > 0) {
     console.log(
-      `\n${chalk.grey("MSI UI Kit bileşenleri (registryDependencies — otomatik yüklenir):")}`
+      `\n${chalk.grey("TRA UI Kit bileşenleri (registryDependencies — otomatik yüklenir):")}`
     );
     plugin.registryDependencies.forEach((d: string) => console.log(`  ${chalk.magenta(d)}`));
   }

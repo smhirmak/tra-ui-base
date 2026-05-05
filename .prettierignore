@@ -3,3 +3,5 @@ dist
 public/r
 *.gen.ts
 src/paraglide
+
+core/public/r

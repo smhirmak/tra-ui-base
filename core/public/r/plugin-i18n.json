@@ -3,12 +3,17 @@
   "name": "plugin-i18n",
   "title": "i18n Plugin (Paraglide)",
   "description": "inlang Paraglide ile compile-time i18n. TR/EN dil desteği, LocaleContext, LocaleProvider, useLocale hook ve örnek dil dosyaları.",
-  "dependencies": ["@inlang/paraglide-js", "@inlang/paraglide-vite"],
-  "registryDependencies": ["@msi/language-select"],
+  "dependencies": [
+    "@inlang/paraglide-js",
+    "@inlang/paraglide-vite"
+  ],
+  "registryDependencies": [
+    "@tra-kit/language-select"
+  ],
   "files": [
     {
       "path": "registry/tra-plugins/i18n/lib/locale.tsx",
-      "content": "import { useMemo, useSyncExternalStore } from \"react\";\nimport {\n  getLocale,\n  setLocale as paraglideSetLocale,\n} from \"../paraglide/runtime.js\";\nimport * as messages from \"../paraglide/messages\";\n\n// --- Locale Store ---\n// React dışında locale değişikliklerini takip eden basit bir store\n\nconst subscribers = new Set<() => void>();\n\nexport function setLocale(newLocale: \"en\" | \"tr\") {\n  paraglideSetLocale(newLocale, { reload: false });\n  subscribers.forEach((fn) => fn()); // tüm subscriber'ları bilgilendir\n}\n\nexport function useLocale() {\n  return useSyncExternalStore(\n    (callback) => {\n      subscribers.add(callback);\n      return () => subscribers.delete(callback); // cleanup\n    },\n    // Tek gerçek kaynak olarak doğrudan Paraglide runtime'ı oku\n    () => getLocale(),\n  );\n}\n\n// --- useM() hook ---\n// Tüm m.* çağrılarına locale'i otomatik enjekte eden Proxy döndürür\n// Kullanım: const m = useM()  →  m.greeting({ name: \"Ali\" })\n\nexport function useM() {\n  const locale = useLocale() as \"en\" | \"tr\";\n\n  return useMemo(\n    () =>\n      new Proxy(messages, {\n        get(target, key: string) {\n          const fn = target[key as keyof typeof messages];\n          if (typeof fn === \"function\") {\n            return (inputs?: object) =>\n              (fn as (inputs: object, options: { locale: string }) => string)(\n                inputs ?? {},\n                { locale },\n              );\n          }\n          return fn;\n        },\n      }) as typeof messages,\n    [locale], // sadece locale değişince yeni Proxy oluştur\n  );\n}\n",
+      "content": "import { useMemo, useSyncExternalStore } from \"react\";\nimport { getLocale, setLocale as paraglideSetLocale } from \"../paraglide/runtime.js\";\nimport * as messages from \"../paraglide/messages\";\n\n// --- Locale Store ---\n// React dışında locale değişikliklerini takip eden basit bir store\n\nconst subscribers = new Set<() => void>();\n\nexport function setLocale(newLocale: \"en\" | \"tr\") {\n  paraglideSetLocale(newLocale, { reload: false });\n  subscribers.forEach((fn) => fn()); // tüm subscriber'ları bilgilendir\n}\n\nexport function useLocale() {\n  return useSyncExternalStore(\n    (callback) => {\n      subscribers.add(callback);\n      return () => subscribers.delete(callback); // cleanup\n    },\n    // Tek gerçek kaynak olarak doğrudan Paraglide runtime'ı oku\n    () => getLocale()\n  );\n}\n\n// --- useM() hook ---\n// Tüm m.* çağrılarına locale'i otomatik enjekte eden Proxy döndürür\n// Kullanım: const m = useM()  →  m.greeting({ name: \"Ali\" })\n\nexport function useM() {\n  const locale = useLocale() as \"en\" | \"tr\";\n\n  return useMemo(\n    () =>\n      new Proxy(messages, {\n        get(target, key: string) {\n          const fn = target[key as keyof typeof messages];\n          if (typeof fn === \"function\") {\n            return (inputs?: object) =>\n              (fn as (inputs: object, options: { locale: string }) => string)(inputs ?? {}, {\n                locale,\n              });\n          }\n          return fn;\n        },\n      }) as typeof messages,\n    [locale] // sadece locale değişince yeni Proxy oluştur\n  );\n}\n",
       "type": "registry:file",
       "target": "src/lib/locale.tsx"
     },
@@ -32,7 +37,7 @@
     },
     {
       "path": "registry/tra-plugins/i18n/project.inlang/settings.json",
-      "content": "{\n  \"$schema\": \"https://inlang.com/schema/project-settings\",\n  \"baseLocale\": \"tr\",\n  \"locales\": [\"tr\", \"en\"],\n  \"modules\": [\n    \"https://cdn.jsdelivr.net/npm/@inlang/plugin-message-format@4/dist/index.js\"\n  ],\n  \"plugin.inlang.messageFormat\": {\n    \"pathPattern\": \"./messages/{languageTag}.json\"\n  }\n}\n",
+      "content": "{\n  \"$schema\": \"https://inlang.com/schema/project-settings\",\n  \"baseLocale\": \"tr\",\n  \"locales\": [\"tr\", \"en\"],\n  \"modules\": [\"https://cdn.jsdelivr.net/npm/@inlang/plugin-message-format@4/dist/index.js\"],\n  \"plugin.inlang.messageFormat\": {\n    \"pathPattern\": \"./messages/{languageTag}.json\"\n  }\n}\n",
       "type": "registry:file",
       "target": "project.inlang/settings.json"
     }

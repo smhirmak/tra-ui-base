@@ -20,7 +20,7 @@ Bu dosya GitHub Copilot'un proje bağlamını her oturumda otomatik okuması iç
 tra-ui-base/
 ├── template/                  # degit ile kopyalanan proje iskeleti
 │   ├── src/
-│   │   ├── contexts/theme/    # ThemeProvider (msi-ui-kit dark/light)
+│   │   ├── contexts/theme/    # ThemeProvider (tra-ui-kit dark/light)
 │   │   ├── lib/utils.ts       # cn() yardımcısı
 │   │   ├── routes/            # TanStack Router (file-based)
 │   │   │   ├── __root.tsx
@@ -73,7 +73,7 @@ tra-ui-base/
 | Build         | Vite 6 + TypeScript 5                      |
 | Router        | TanStack Router v1 (file-based) + DevTools |
 | Data Fetching | TanStack Query v5 + DevTools               |
-| UI Kit        | MSI UI Kit (`npx msi-ui-cli init`)         |
+| UI Kit        | TRA UI Kit (`npx tra-ui-cli init`)         |
 | CSS           | Tailwind CSS v4                            |
 | Linting       | ESLint (airbnb config)                     |
 
@@ -85,7 +85,7 @@ tra-ui-base/
 | HTTP      | Axios + interceptors + AuthContext    | `npx @tra-bilisim/tra-ui add http`    |
 | Real-time | Microsoft SignalR + React hooks       | `npx @tra-bilisim/tra-ui add signalr` |
 | Tablo     | TanStack Table v8 wrapper             | `npx @tra-bilisim/tra-ui add table`   |
-| Form      | Formik + Yup + MSI UI Kit bileşenleri | `npx @tra-bilisim/tra-ui add forms`   |
+| Form      | Formik + Yup + TRA UI Kit bileşenleri | `npx @tra-bilisim/tra-ui add forms`   |
 
 ---
 
@@ -98,19 +98,19 @@ registry.json  →  npm run registry:build  →  public/r/plugin-xxx.json
                                               (Vercel'e deploy edilir)
 ```
 
-CLI, `shadcn add @tra/plugin-xxx` komutunu çağırır. shadcn:
+CLI, `shadcn add @tra-base/plugin-xxx` komutunu çağırır. shadcn:
 
 - Dosyaları `target` path'lerine kopyalar (var olanla merge eder, ezmez)
 - `dependencies` içindeki npm paketlerini otomatik kurar
-- `registryDependencies` içindeki MSI UI Kit bileşenlerini otomatik çeker
+- `registryDependencies` içindeki TRA UI Kit bileşenlerini otomatik çeker
 
 ### Registry URL'leri (components.json)
 
 ```json
 {
   "registries": {
-    "@tra": "https://tra-ui-base.vercel.app/r/{name}.json",
-    "@msi": "https://msi-ui-kit.vercel.app/r/{name}.json"
+    "@tra-base": "https://tra-ui-base.vercel.app/r/{name}.json",
+    "@tra-kit": "https://ui.trabilisim.tech/r/{name}.json"
   }
 }
 ```
@@ -163,5 +163,5 @@ cd core && npm run registry:build   # → public/r/*.json
 
 - `core/public/r/` klasörü **build çıktısıdır**, elle düzenleme yapma — her zaman `registry:build` ile üret
 - `plugins/` klasörü **silinmiştir** — canonical kaynak `core/registry/tra-plugins/`
-- Template içindeki `components.json` **`npx msi-ui-cli init`** tarafından eklenir, template'e dahil değildir
+- Template içindeki `components.json` **`npx tra-ui-cli init`** tarafından eklenir, template'e dahil değildir
 - Plugin'ler projeye kopyalandıktan sonra projede yaşar — `tra-ui-base`'e bağımlılık yoktur
