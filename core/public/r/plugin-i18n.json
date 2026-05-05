@@ -8,7 +8,8 @@
     "@inlang/paraglide-vite"
   ],
   "registryDependencies": [
-    "@tra-kit/language-select, @tra-kit/language-toggle"
+    "@tra-kit/language-select",
+    "@tra-kit/language-toggle"
   ],
   "files": [
     {
