@@ -5,3 +5,6 @@ public/r
 src/paraglide
 
 core/public/r
+
+# template kendi .prettierrc ile yönetilir
+template/

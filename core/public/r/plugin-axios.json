@@ -9,7 +9,7 @@
   "files": [
     {
       "path": "registry/tra-plugins/axios/constants/ApiEnvironment.ts",
-      "content": "/**\r\n * API ortam yapılandırması.\r\n * Projenizin ortamlarına göre baseUrl değerlerini düzenleyin.\r\n */\r\n\r\nconst ApiEnvironment = {\r\n  Type: {\r\n    local: \"local\",\r\n    test: \"test\",\r\n    localTest: \"localTest\",\r\n    release: \"release\",\r\n  } as const,\r\n\r\n  // TODO: Projenizin API URL'lerini buraya ekleyin\r\n  baseUrls: {\r\n    local: \"https://localhost:7001/api\",\r\n    test: \"https://test.example.com/api\",\r\n    localTest: \"http://10.34.60.1:5000/api\",\r\n    release: \"https://api.example.com/api\",\r\n  } as Record<string, string>,\r\n};\r\n\r\nexport type EnvironmentType = (typeof ApiEnvironment.Type)[keyof typeof ApiEnvironment.Type];\r\n\r\nexport default ApiEnvironment;\r\n",
+      "content": "/**\n * API ortam yapılandırması.\n * Projenizin ortamlarına göre baseUrl değerlerini düzenleyin.\n */\n\nconst ApiEnvironment = {\n  Type: {\n    local: \"local\",\n    test: \"test\",\n    localTest: \"localTest\",\n    release: \"release\",\n  } as const,\n\n  // TODO: Projenizin API URL'lerini buraya ekleyin\n  baseUrls: {\n    local: \"https://localhost:7001/api\",\n    test: \"https://test.example.com/api\",\n    localTest: \"http://10.34.60.1:5000/api\",\n    release: \"https://api.example.com/api\",\n  } as Record<string, string>,\n};\n\nexport type EnvironmentType = (typeof ApiEnvironment.Type)[keyof typeof ApiEnvironment.Type];\n\nexport default ApiEnvironment;\n",
       "type": "registry:file",
       "target": "src/constants/ApiEnvironment.ts"
     },

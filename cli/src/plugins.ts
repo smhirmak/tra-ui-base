@@ -11,7 +11,7 @@ export const PLUGINS: Plugin[] = [
     title: "Internationalization (Paraglide)",
     description: "Compile-time i18n with inlang Paraglide. TR/EN language support",
     packages: ["@inlang/paraglide-js", "@inlang/paraglide-vite"],
-    registryDependencies: ["@tra-kit/language-select"],
+    registryDependencies: ["@tra-kit/language-select, @tra-kit/language-toggle"],
     postInstall: [
       "",
       "📦 i18n (Paraglide) installed!",

@@ -14,8 +14,11 @@
     "prettier": "^3.8.3"
   },
   "lint-staged": {
-    "**/*.{ts,tsx,js,json,css,md}": [
+    "!(template)/**/*.{ts,tsx,js,json,css,md}": [
       "prettier --check"
+    ],
+    "template/**/*.{ts,tsx,js,json,css,md}": [
+      "bash -c 'cd template && npx prettier --check'"
     ],
     "cli/src/**/*.ts": [
       "bash -c 'cd cli && npx tsc --noEmit'"

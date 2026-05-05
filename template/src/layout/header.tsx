@@ -1,6 +1,8 @@
 import ThemeModeToggle from '@/components/ui/theme-mode-toggle.tsx';
 import { Link } from '@tanstack/react-router';
 // import LanguageSelect from '@/components/ui/language-select';
+// or
+// import LanguageToggle from '@/components/ui/language-toggle';
 // import { setLocale, useLocale } from '@/lib/locale';
 
 const Header = () => {
@@ -17,6 +19,12 @@ const Header = () => {
       <div className="flex items-center gap-4">
         <ThemeModeToggle />
         {/* <LanguageSelect
+          locale={locale}
+          setLocale={setLocale as (locale: string) => void}
+          defaultValue="en"
+        /> */}
+        {/* or */}
+        {/* <LanguageToggle
           locale={locale}
           setLocale={setLocale as (locale: string) => void}
           defaultValue="en"
