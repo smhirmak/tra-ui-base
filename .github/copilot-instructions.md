@@ -41,14 +41,14 @@ tra-ui-base/
 │   ├── vite.config.ts
 │   ├── public/r/              # BUILD ÇIKTISI — deploy edilir
 │   │   ├── plugin-i18n.json
-│   │   ├── plugin-http.json
+│   │   ├── plugin-axios.json
 │   │   ├── plugin-signalr.json
 │   │   ├── plugin-table.json
 │   │   ├── plugin-forms.json
 │   │   └── registry.json
 │   └── registry/tra-plugins/  # shadcn'ın okuduğu kaynak dosyalar
-│       ├── i18n/              # lib/, contexts/, hooks/, messages/, project.inlang/
-│       ├── http/              # lib/, contexts/auth/, hooks/, services/
+│       ├── i18n/              # lib/, messages/, project.inlang/
+│       ├── axios/             # constants/, utilities/, lib/, contexts/auth/, hooks/, services/
 │       ├── signalr/           # lib/, contexts/messageHub/, hooks/
 │       ├── table/             # components/, hooks/, types/
 │       └── forms/             # components/formik/, constants/
@@ -79,13 +79,13 @@ tra-ui-base/
 
 ### Opsiyonel Plugin'ler
 
-| Plugin    | Teknoloji                             | CLI Adı                               |
-| --------- | ------------------------------------- | ------------------------------------- |
-| i18n      | Paraglide (inlang) — compile-time     | `npx @tra-bilisim/tra-ui add i18n`    |
-| HTTP      | Axios + interceptors + AuthContext    | `npx @tra-bilisim/tra-ui add http`    |
-| Real-time | Microsoft SignalR + React hooks       | `npx @tra-bilisim/tra-ui add signalr` |
-| Tablo     | TanStack Table v8 wrapper             | `npx @tra-bilisim/tra-ui add table`   |
-| Form      | Formik + Yup + TRA UI Kit bileşenleri | `npx @tra-bilisim/tra-ui add forms`   |
+| Plugin    | Teknoloji                                                           | CLI Adı                               |
+| --------- | ------------------------------------------------------------------- | ------------------------------------- |
+| i18n      | Paraglide (inlang) — compile-time                                   | `npx @tra-bilisim/tra-ui add i18n`    |
+| axios     | Axios + interceptors + token yönetimi + AuthContext + createService | `npx @tra-bilisim/tra-ui add axios`   |
+| Real-time | Microsoft SignalR + React hooks                                     | `npx @tra-bilisim/tra-ui add signalr` |
+| Tablo     | TanStack Table v8 wrapper                                           | `npx @tra-bilisim/tra-ui add table`   |
+| Form      | Formik + Yup + TRA UI Kit bileşenleri                               | `npx @tra-bilisim/tra-ui add forms`   |
 
 ---
 
@@ -122,9 +122,9 @@ CLI, `shadcn add @tra-base/plugin-xxx` komutunu çağırır. shadcn:
 ```bash
 npx @tra-bilisim/tra-ui add              # interaktif checkbox ile çoklu seçim
 npx @tra-bilisim/tra-ui add i18n         # tek plugin
-npx @tra-bilisim/tra-ui add i18n http    # birden fazla
+npx @tra-bilisim/tra-ui add i18n axios   # birden fazla
 npx @tra-bilisim/tra-ui list             # mevcut plugin'leri listele
-npx @tra-bilisim/tra-ui info http        # plugin detayı
+npx @tra-bilisim/tra-ui info axios       # plugin detayı
 ```
 
 ---
