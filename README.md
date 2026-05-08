@@ -60,22 +60,22 @@ src/
 Her plugin `npx tra-ui add <name>` komutu ile projeye eklenir.  
 Dosyalar **projeye kopyalanır** — sürüm bağımlılığı yoktur, her proje kendi kopyasını serbestçe özelleştirebilir.
 
-| Plugin      | İçerik                                                                       | Komut                                 |
-| ----------- | ---------------------------------------------------------------------------- | ------------------------------------- |
-| **i18n**    | Paraglide (inlang) compile-time çeviri, LocaleContext, TR/EN mesaj dosyaları | `npx @tra-bilisim/tra-ui add i18n`    |
-| **http**    | Axios instance, token interceptor, 401 refresh, AuthContext, BaseService     | `npx @tra-bilisim/tra-ui add http`    |
-| **signalr** | SignalR HubConnection, otomatik reconnect, MessageHubContext, hook'lar       | `npx @tra-bilisim/tra-ui add signalr` |
-| **table**   | TanStack Table v8 wrapper, filtreleme, sayfalama, skeleton                   | `npx @tra-bilisim/tra-ui add table`   |
-| **forms**   | Formik + Yup, TRA UI Kit'e bağlı form bileşenleri, Validations sabitleri     | `npx @tra-bilisim/tra-ui add forms`   |
+| Plugin      | İçerik                                                                                                                    | Komut                                 |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| **i18n**    | Paraglide (inlang) compile-time çeviri, LocaleContext, TR/EN mesaj dosyaları                                              | `npx @tra-bilisim/tra-ui add i18n`    |
+| **axios**   | Axios instance, interceptors, token yönetimi, AuthContext/AuthProvider, createService kalıbı, ApiEnvironment, BaseService | `npx @tra-bilisim/tra-ui add axios`   |
+| **signalr** | SignalR HubConnection, otomatik reconnect, MessageHubContext, hook'lar                                                    | `npx @tra-bilisim/tra-ui add signalr` |
+| **table**   | TanStack Table v8 wrapper, filtreleme, sayfalama, skeleton                                                                | `npx @tra-bilisim/tra-ui add table`   |
+| **forms**   | Formik + Yup, TRA UI Kit'e bağlı form bileşenleri, Validations sabitleri                                                  | `npx @tra-bilisim/tra-ui add forms`   |
 
 ### CLI Komutları
 
 ```bash
 npx @tra-bilisim/tra-ui add              # interaktif checkbox seçimi
 npx @tra-bilisim/tra-ui add i18n         # tek plugin
-npx @tra-bilisim/tra-ui add i18n http    # birden fazla
+npx @tra-bilisim/tra-ui add i18n axios   # birden fazla
 npx @tra-bilisim/tra-ui list             # mevcut plugin'leri listele
-npx @tra-bilisim/tra-ui info http        # plugin hakkında detay
+npx @tra-bilisim/tra-ui info axios       # plugin hakkında detay
 ```
 
 ---
@@ -90,7 +90,7 @@ tra-ui-base/
 │   ├── public/r/              # Build çıktısı — Vercel'e deploy edilir
 │   └── registry/tra-plugins/  # Plugin kaynak dosyaları
 │       ├── i18n/
-│       ├── http/
+│       ├── axios/
 │       ├── signalr/
 │       ├── table/
 │       └── forms/
@@ -112,13 +112,13 @@ core/registry/tra-plugins/  →  npm run registry:build  →  core/public/r/*.js
                                                            (Vercel deploy)
 ```
 
-`npx tra-ui add forms` çağrıldığında CLI:
+`npx tra-ui add axios` çağrıldığında CLI:
 
 1. `components.json`'a `@tra-base` ve `@tra-kit` registry URL'lerini ekler
-2. `shadcn add @tra-base/plugin-forms` çalıştırır
+2. `shadcn add @tra-base/plugin-axios` çalıştırır
 3. shadcn dosyaları `target` path'lerine kopyalar (var olan dosyayı **itmez, merge eder**)
-4. `formik`, `yup` npm paketlerini kurar
-5. `registryDependencies` içindeki TRA UI Kit bileşenlerini (`@tra-kit/text-field` vb.) otomatik çeker
+4. `axios` npm paketini kurar
+5. Dosyalar `src/constants/`, `src/utilities/`, `src/lib/`, `src/contexts/auth/`, `src/hooks/`, `src/services/` altına yerleştirilir
 
 ---
 
