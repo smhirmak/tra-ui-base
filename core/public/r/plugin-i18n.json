@@ -4,8 +4,8 @@
   "title": "i18n Plugin (Paraglide)",
   "description": "inlang Paraglide ile compile-time i18n. TR/EN dil desteği, LocaleContext, LocaleProvider, useLocale hook ve örnek dil dosyaları.",
   "dependencies": [
-    "@inlang/paraglide-js",
-    "@inlang/paraglide-vite"
+    "@inlang/paraglide-js@2.18.0",
+    "@inlang/paraglide-vite@1.4.0"
   ],
   "registryDependencies": [
     "@tra-kit/language-select",

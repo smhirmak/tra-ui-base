@@ -4,8 +4,8 @@
   "title": "Data Table (TanStack Table)",
   "description": "TanStack Table tabanlı veri tablosu. Sıralama, filtreleme, sayfalama, skeleton ve filtre section bileşenleri.",
   "dependencies": [
-    "@tanstack/react-table",
-    "@tanstack/match-sorter-utils"
+    "@tanstack/react-table@8.21.3",
+    "@tanstack/match-sorter-utils@8.19.4"
   ],
   "registryDependencies": [
     "@tra-kit/skeleton",

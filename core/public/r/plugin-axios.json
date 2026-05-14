@@ -4,7 +4,7 @@
   "title": "HTTP Client (Axios)",
   "description": "Axios instance, interceptors, token yönetimi, CustomAxiosResponse tipi, AuthContext/AuthProvider ve createService kalıbı.",
   "dependencies": [
-    "axios"
+    "axios@1.16.0"
   ],
   "files": [
     {
