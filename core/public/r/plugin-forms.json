@@ -4,8 +4,8 @@
   "title": "Form Yönetimi (Formik + Yup)",
   "description": "Formik + Yup form altyapısı. TRA UI Kit bileşenlerine bağlı TextField, Select, Checkbox, DatePicker, RadioButtons ve ortak Validations sabitleri.",
   "dependencies": [
-    "formik",
-    "yup"
+    "formik@2.4.9",
+    "yup@1.7.1"
   ],
   "registryDependencies": [
     "@tra-kit/text-field",

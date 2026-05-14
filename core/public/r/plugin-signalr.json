@@ -4,7 +4,7 @@
   "title": "Real-time (SignalR)",
   "description": "SignalR HubConnection yönetimi, otomatik reconnect, MessageHubContext, useSignalR ve useMessageHub hook'ları.",
   "dependencies": [
-    "@microsoft/signalr"
+    "@microsoft/signalr@10.0.0"
   ],
   "files": [
     {
